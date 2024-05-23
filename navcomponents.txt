@@ -1,0 +1,54 @@
+// NavbarComponent.js
+import React, { useState } from 'react';
+import 'rsuite/dist/rsuite.min.css';
+import { CustomProvider, Container, Header, Content, Footer, Navbar, Nav, Toggle } from 'rsuite';
+import CogIcon from '@rsuite/icons/legacy/Cog';
+
+function NavbarComponent() {
+    const [theme, setTheme] = useState('dark');
+
+    const handleThemeChange = (checked) => {
+      setTheme(checked ? 'dark' : 'light');
+    };
+  
+    return (
+      <CustomProvider theme={theme}>
+        <div className="show-fake-browser navbar-page">
+          <Container>
+            <Header>
+              <Navbar appearance="inverse">
+                <Navbar.Brand>
+                  NetQuest
+                </Navbar.Brand>
+                <Nav>
+                  <Nav.Item>Home</Nav.Item>
+                  <Nav.Item>News</Nav.Item>
+                  <Nav.Item>Products</Nav.Item>
+                  <Nav.Menu title="About">
+                    <Nav.Item>Company</Nav.Item>
+                    <Nav.Item>Team</Nav.Item>
+                    <Nav.Item>Contact</Nav.Item>
+                  </Nav.Menu>
+                </Nav>
+                <Nav pullRight>
+                  <Nav.Item icon={<CogIcon />}>Profile</Nav.Item>
+                
+                <Toggle
+                  checked={theme === 'dark'}
+                  onChange={handleThemeChange}
+                  checkedChildren={"Dark"}
+                  unCheckedChildren={"Light"}
+                  style={{ paddingTop: '16px', marginLeft: '10px' }}
+                />
+                </Nav>
+              </Navbar>
+            </Header>
+            <Content>Here appears the futsal contents.</Content>
+          </Container>
+          <Footer>Copyright and contact details.</Footer>
+        </div>
+      </CustomProvider>
+    );
+}
+
+export default NavbarComponent;

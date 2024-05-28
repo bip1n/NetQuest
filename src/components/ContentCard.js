@@ -1,4 +1,4 @@
-import { Panel, Rate, Text, Button } from 'rsuite';
+import { Panel, Rate, Text, Button, Badge} from 'rsuite';
 import { FaLocationDot } from "react-icons/fa6";
 
 
@@ -186,7 +186,11 @@ const ContentCard = () => (
         </div>
     </Panel>   <Panel header="Top Rated ⭐" shaded>
         <div style={{ display: 'flex', overflowX: 'auto' }}>
+            
+
+           
             <div style={{ display: 'inline-block', marginRight: '15px' }}>
+            <Badge content="HOT">
                 <Panel shaded bordered bodyFill style={{ width: '380px' }}>
                     <img src="https://www.allsportamerica.com/wp-content/uploads/Futsal3.jpg"  alt='Futsal1' height="380" />
                     <Panel> 
@@ -214,6 +218,7 @@ const ContentCard = () => (
                         </div>
                     </Panel>
                 </Panel>
+                </Badge>
             </div>
             
             <div style={{ display: 'inline-block', marginRight: '15px' }}>

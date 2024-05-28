@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react';
 import { Panel, Carousel,Text, Rate, Button } from 'rsuite';
 import { FaLocationDot } from "react-icons/fa6";
 import 'rsuite/dist/rsuite.min.css';
+import BookingTable from './BookingTable';
+
 
 const FutsalCard = () => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -56,7 +58,7 @@ const FutsalCard = () => {
                     <div>
                     <Panel> 
                             <Text weight="semibold" size={'xl'}>
-                                Futsal 2 <Rate defaultValue={2} disabled color="yellow" allowHalf size='xs'/>
+                                Futsal 1 <Rate defaultValue={5} disabled color="yellow" allowHalf size='xs'/>
                             </Text>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <div style={{ display: 'inline-block', marginRight: '5px' }}><FaLocationDot /></div>
@@ -64,17 +66,18 @@ const FutsalCard = () => {
                             </div >  
                             <div >
                                 <Text weight="regular">Amenities: </Text>
-                                <Text weight="medium" >___i. 2 Bottle Water</Text>
-                                <Text weight="medium" >___ii. Locker</Text>
-                                <Text weight="medium" >___iii. Shower</Text>
+                                <Text weight="medium" >&nbsp;&nbsp;&nbsp;&nbsp;i. 2 Bottle Water</Text>
+                                <Text weight="medium" >&nbsp;&nbsp;&nbsp;&nbsp;ii. Locker</Text>
+                                <Text weight="medium" >&nbsp;&nbsp;&nbsp;&nbsp;iii. Shower</Text>
 
                             </div>
                         </Panel>
                     </div>
                 </div>
             </Panel> 
-            <Panel>
-                Bookings
+            <Panel header="Booking">
+              <BookingTable/>
+
             </Panel>
         </div>
     );

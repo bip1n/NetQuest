@@ -7,7 +7,7 @@ MongoDB, Expressjs, React, Nodejs
 </p>
 
 
-## clone or download
+## Clone or Download
 
 ```terminal
 $ git clone https://github.com/bip1n/NetQuest.git
@@ -19,7 +19,7 @@ $ npm run dev
 ```
 
 
-## project structure
+## Project Structure
 
 ```terminal
 package.json
@@ -34,7 +34,6 @@ client/
    src/
    package.json
    .env
-...
 ```
 
 ### Sneak Peak:

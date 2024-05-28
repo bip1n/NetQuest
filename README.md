@@ -33,7 +33,6 @@ client/
    public/
    src/
    package.json
-   .env
 ```
 
 ### Sneak Peak:

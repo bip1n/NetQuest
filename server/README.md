@@ -74,21 +74,6 @@ router.post("/login", authCtrl.login);
 ```
 
 
-## Folder Structure
-
-```
-my-express-app/
-├── index.js
-├── .env
-├── app/
-│   ├── controllers/ (Folder used for logic )
-│   ├── middleware/ (Folder used for auth verify, Token verify ) shits that goes between any task 
-│   ├── models/ (Folder used to create DB schema)
-│   ├── routers/ (Folder used to specify the API routes and then diverted to middleware -> controllers or direct to controllers according to needs)
-│   
-```
-
-
 ## Dot env Structure
 
 ```

@@ -35,25 +35,26 @@ const authCtrl = {
 
     register: async (req, res) => {
         try {
-            const {fullname, username, email, password, } = req.body;
+            const {username, phone, email, password, } = req.body;
+
+            if (!phone) {return res.status(400).json({ error: 'Phone number is required' });}
+            if (!username) {return res.status(400).json({ error: 'username is required' });}
+            if (!email) {return res.status(400).json({ error: 'email is required' });}
+            if (!password) {return res.status(400).json({ error: 'password is required' });}
+
             const user = await Users.findOne({email});
             if (user) return res.status(400).json({msg: "The email already exists."});
-            if (password.length < 6) return res.status(400).json({msg: "Password must be at least 6 characters long."});
-            // using encryption
-            const passwordHash = await bcrypt.hash(password, 10);
-            const newUser = new Users({
-                fullname, email, username, password: passwordHash
-            });
-            // Save mongodb
-            await newUser.save();
-            // Then create jsonwebtoken to authentication
-            const access_token = createAccessToken({id: newUser._id, email: newUser.email});
 
-            res.cookie("__AcessToken", access_token, {
-                httpOnly: true,
-                // path: "/api/refresh_token",  // this is the path for refresh token
-                maxAge: 2 * 24 * 60 * 60 * 1000, //validity of 2 days
+            if (password.length < 6) return res.status(400).json({msg: "Password must be at least 6 characters long."});
+            const passwordHash = await bcrypt.hash(password, 10);
+
+            const newUser = new Users({
+                username, email, phone, password: passwordHash
             });
+            await newUser.save();
+          
+            // sucess msg to react client for register sucess with status code
+            return res.status(200).json({msg: "Register Success!"});
 
         } catch (err) {
           return res.status(500).json({ msg: err.message });
@@ -64,9 +65,30 @@ const authCtrl = {
 
 const createAccessToken = (payload) => {
     return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "2d",
+      expiresIn: "1h",
     });
-  };
+};
+
+const createRefreshToken = (payload) => {
+    return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+      expiresIn: "7d",
+    });
+}
 
 module.exports = authCtrl;
+
+  // Then create jsonwebtoken to authentication
+            // const access_token = createAccessToken({id: newUser._id, email: newUser.email});
+            // const refresh_token = createRefreshToken({id: newUser._id, email: newUser.email});
+
+            // res.cookie("__AcessToken", access_token, {
+            //     httpOnly: true,
+            // });
+
+            // res.cookie("__RefreshToken", refresh_token, {
+            //     httpOnly: true,
+            //     // path: "/api/refresh_token",  // this is the path for refresh token
+            //     maxAge: 7 * 24 * 60 * 60 * 1000, //validity of 7 days
+            // });
+
 

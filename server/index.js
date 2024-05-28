@@ -7,15 +7,13 @@ const cors = require("cors");
 const app = express();
 
 app.use(express.json())  
-
 app.use(cors());
-
 
 
 app.use("/api", require("./app/routers/authRouter"));
 
 app.get("/", (req, res) => {
-  res.send("Hi Welcome to MERN TEST API .....");
+  res.send("Hi Welcome to NET QUEST API .....");
 });
 
 // Connecting to MongoDB using Mongoose

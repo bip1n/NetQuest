@@ -13,10 +13,15 @@ import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 import SigninModel from "./signinmodel";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@nextui-org/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Button } from "@nextui-org/react";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
+import {UserIcon} from './Assets/UserIcon';
+import {SavedIcon} from './Assets/SavedIcon';
+import {NotificationIcon} from './Assets/NotificationIcon'
+import {HistoryIcon} from './Assets/HistoryIcon'
+import {LogoutIcon} from './Assets/LogoutIcon'
 
 export const Navigationbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -95,12 +100,11 @@ export const Navigationbar = () => {
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold ">Ram Bahadur</p>
             </DropdownItem>
-            <DropdownItem key="settings">Profile Settings</DropdownItem>
-            <DropdownItem key="team_settings">Bookings</DropdownItem>
-            <DropdownItem key="analytics">Notifications</DropdownItem>
-            <DropdownItem key="system">Bookmarks</DropdownItem>
-
-            <DropdownItem key="logout" color="danger">Log Out</DropdownItem>
+            <DropdownItem key="settings" startContent={<UserIcon/>} >Profile Settings</DropdownItem>
+            <DropdownItem key="team_settings" startContent={<HistoryIcon/>}>Bookings</DropdownItem>
+            <DropdownItem key="analytics" startContent={<NotificationIcon/>} >Notifications</DropdownItem>
+            <DropdownItem key="system"  startContent={<SavedIcon/>} >Saved</DropdownItem>
+            <DropdownItem key="logout" color="danger"  startContent={<LogoutIcon/>} >Log Out</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>

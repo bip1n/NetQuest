@@ -7,7 +7,7 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { Navbar } from "@/components/navbar";
+import { Navigationbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { TopRated } from "@/components/TopRated";
 import { Searchbar } from "@/components/searchbar";
@@ -50,7 +50,7 @@ export default function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
-            <Navbar />
+            <Navigationbar />
             <Searchbar />
 
             <main className="flex-grow">{children}</main> {/* Render children here */}

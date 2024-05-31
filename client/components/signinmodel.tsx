@@ -12,12 +12,12 @@ export default function SigninModel() {
   return (
     <div>
       <Button onPress={handleOpen}>SignIn</Button>
-      <Modal backdrop={"blur"} isOpen={isOpen} onOpenChange={setIsOpen}>
+      <Modal backdrop={"opaque"} isOpen={isOpen} onOpenChange={setIsOpen}>
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">Sign In</ModalHeader>
-              <ModalBody>
+              <ModalBody >
                 <p> 
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Nullam pulvinar risus non risus hendrerit venenatis.

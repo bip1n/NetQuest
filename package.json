@@ -3,18 +3,21 @@
   "version": "1.0.0",
   "description": "Futsal booking system",
   "scripts": {
-      "start:client": "cd client && npm run dev",
-      "start:server": "cd server && nodemon index.js",
-      "dev": "concurrently \"npm run start:client\" \"npm run start:server\"",
-      "build": "cd client && npm run build",
-      "package": "npm i && cd client && npm i && cd ../server && npm i && cd .."
+    "start:client": "cd client && npm run dev",
+    "start:server": "cd server && nodemon index.js",
+    "dev": "concurrently \"npm run start:client\" \"npm run start:server\"",
+    "build": "cd client && npm run build",
+    "package": "npm i && cd client && npm i && cd ../server && npm i && cd .."
   },
   "dependencies": {
-      "@draft-js-plugins/image": "^4.1.4",
-      "history": "^5.3.0"
+    "@draft-js-plugins/image": "^4.1.4",
+    "@nextui-org/navbar": "^2.0.32",
+    "@nextui-org/react": "^2.4.1",
+    "framer-motion": "^11.2.10",
+    "history": "^5.3.0"
   },
   "devDependencies": {
-      "concurrently": "^7.6.0",
-      "nodemon": "^2.0.15"
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.15"
   }
 }

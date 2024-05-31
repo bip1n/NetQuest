@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button ,Input} from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button ,Input, Link} from "@nextui-org/react";
 import { Logo } from "@/components/icons";
 import {EyeFilledIcon} from "./Assets/EyeFilledIcon";
 import {EyeSlashFilledIcon} from "./Assets/EyeSlashFilledIcon";
@@ -18,8 +18,8 @@ export default function SigninModel() {
 
   return (
     <div>
-      <Button onPress={handleOpen}>SignIn</Button>
-      <Modal backdrop={"opaque"} isOpen={isOpen} onOpenChange={setIsOpen}>
+      <Button color="secondary" onClick={handleOpen}>SignIn</Button>
+      <Modal backdrop={"blur"} isOpen={isOpen} onOpenChange={setIsOpen}>
         <ModalContent>
           {(onClose) => (
             <> 
@@ -27,27 +27,33 @@ export default function SigninModel() {
                <ModalHeader className="flex flex-row gap-1">  <span>  <Logo /> </span>  <p className="font-bold text-inherit mt-1">NetQuest</p></ModalHeader>
               <ModalHeader className="flex flex-col gap-1">Sign In</ModalHeader>
              
+             <ModalBody>
+                <span className="text-red-500" >ERROR HERE!</span>
+             </ModalBody>
+            
              
               <ModalBody >
                 <Input type="email" label="Email" />
               </ModalBody>
               
+              
               <ModalBody >
               <Input
-                  type="email"
-                  label="Password"
-                 
-                  endContent={
-                    <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                      {isVisible ? (
-                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                      ) : (
-                        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                      )}
-                    </button>
-                  }
-                  type={isVisible ? "text" : "password"}
-                />
+                type={isVisible ? "text" : "password"}
+                label="Password"
+                endContent={
+                  <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                    {isVisible ? (
+                      <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                    ) : (
+                      <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                    )}
+                  </button>
+                  }>
+              </Input>
+              </ModalBody>
+              <ModalBody>
+              <Link href="#"  size="sm" underline="hover">Forgot Password?</Link>
               </ModalBody>
              
               <ModalFooter>

@@ -12,11 +12,11 @@ const adminSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    venue_name: {
+    venueName: {
         type: String,
         required: true,
     },
-    pan_number: {
+    panNumber: {
         type: Number,
         required: true,
     },

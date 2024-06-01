@@ -55,15 +55,16 @@ const authCtrl = {
           return res.status(500).json({ msg: err.message });
         }
     },
-
+    
+    
     register_admin: async (req, res) => {
         try {
-
-            const {fullname, phone, venue_name, pan_number, mapCoord, email, password} = req.body;
+            console.log(req);
+            const {fullname, phone, venueName, panNumber, mapCoord, email, password} = req.body;
             if (!fullname) {return res.status(400).json({ error: 'fullname is required' });}
             if (!phone) {return res.status(400).json({ error: 'Phone number is required' });}
-            if (!venue_name) {return res.status(400).json({ error: 'venue name is required' });}
-            if (!pan_number) {return res.status(400).json({ error: 'pan number is required' });}
+            if (!venueName) {return res.status(400).json({ error: 'venue name is required' });}
+            if (!panNumber) {return res.status(400).json({ error: 'pan number is required' });}
             if (!mapCoord) {return res.status(400).json({ error: 'mapCoord is required' });}
             if (!email) {return res.status(400).json({ error: 'email is required' });}
             if (!password) {return res.status(400).json({ error: 'password is required' });}
@@ -78,7 +79,7 @@ const authCtrl = {
             const passwordHash = await bcrypt.hash(password, 10);
 
             const newUser = new Admin({
-                fullname, phone, venue_name, pan_number, mapCoord, email, password: passwordHash
+                fullname, phone, venueName, panNumber, mapCoord, email, password: passwordHash
             });
             await newUser.save();
 

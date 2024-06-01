@@ -1,25 +1,18 @@
 const mongoose = require("mongoose");
 
 const adminSchema = new mongoose.Schema({
-    username: {
+    fullname: {
         type: String,
         required: true,
         trim: true,
         maxlength: 25,
-        unique: true,
     },
     phone: {
         type: Number,
         required: true,
         unique: true,
     },
-    email: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true,
-    },
-    mapCoord: {
+    venue_name: {
         type: String,
         required: true,
     },
@@ -27,10 +20,22 @@ const adminSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    password: {
+    mapCoord: {
         type: String,
         required: true,
     },
+    email: {
+        type: String,
+        required: true,
+        trim: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    }, 
 });
 
-module.exports = mongoose.model("Admin", adminSchema);
+const Admin = mongoose.model('Admin', adminSchema);
+
+module.exports = Admin;

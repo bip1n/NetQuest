@@ -1,4 +1,6 @@
 const Users = require("../models/userModel");
+const Admin = require("../models/adminModel");
+const Venue = require("../models/venueModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -16,17 +18,11 @@ const authCtrl = {
             }
             // If login success, create access token and refresh token
             const access_token = createAccessToken({id: user._id, email: user.email});
+            const refresh_token = createRefreshToken({id: user._id, email: user.email});
 
-            res.cookie("__AcessToken", refresh_token, {
-                httpOnly: true,
-                // path: "/api/refresh_token",  // this is the path for refresh token
-                maxAge: 2 * 24 * 60 * 60 * 1000, //validity of 2 days
-            });
-
-            // storing acess token on client is not recommended, but doing this for simplicity
-
-            res.json({access_token, user: {email: user.email}});
-
+            // send the access token and refresh token to the client with status code
+            return res.status(200).json({msg: "Login Success!", access_token, refresh_token});
+            
           
         } catch (err) {
           return res.status(500).json({ msg: err.message });
@@ -36,10 +32,9 @@ const authCtrl = {
     register_user: async (req, res) => {
         try {
             const {username, phone, email, password, } = req.body;
-
-            if (!phone) {return res.status(400).json({ error: 'Phone number is required' });}
             if (!username) {return res.status(400).json({ error: 'username is required' });}
             if (!email) {return res.status(400).json({ error: 'email is required' });}
+            if (!phone) {return res.status(400).json({ error: 'Phone number is required' });}
             if (!password) {return res.status(400).json({ error: 'password is required' });}
 
             const user = await Users.findOne({email});
@@ -63,24 +58,49 @@ const authCtrl = {
 
     register_admin: async (req, res) => {
         try {
-            const {username, phone, email, password, } = req.body;
 
+            const {fullname, phone, venue_name, pan_number, mapCoord, email, password} = req.body;
+            if (!fullname) {return res.status(400).json({ error: 'fullname is required' });}
             if (!phone) {return res.status(400).json({ error: 'Phone number is required' });}
-            if (!username) {return res.status(400).json({ error: 'username is required' });}
+            if (!venue_name) {return res.status(400).json({ error: 'venue name is required' });}
+            if (!pan_number) {return res.status(400).json({ error: 'pan number is required' });}
+            if (!mapCoord) {return res.status(400).json({ error: 'mapCoord is required' });}
             if (!email) {return res.status(400).json({ error: 'email is required' });}
             if (!password) {return res.status(400).json({ error: 'password is required' });}
 
-            const user = await Users.findOne({email});
-            if (user) return res.status(400).json({msg: "The email already exists."});
+            const reg_email = await Admin.findOne({email});
+            if (reg_email) return res.status(400).json({msg: "The email already exists."});
+
+            const reg_phone = await Admin.findOne({phone});
+            if (reg_phone) return res.status(400).json({msg: "The phone number already exists."});
 
             if (password.length < 6) return res.status(400).json({msg: "Password must be at least 6 characters long."});
             const passwordHash = await bcrypt.hash(password, 10);
 
-            const newUser = new Users({
-                username, email, phone, password: passwordHash
+            const newUser = new Admin({
+                fullname, phone, venue_name, pan_number, mapCoord, email, password: passwordHash
             });
             await newUser.save();
-          
+
+            //get newUser id
+            const newUserId = newUser._id;
+
+            const { images, videos } = req.body;
+            if (!Array.isArray(images) || images.length === 0) {
+                return res.status(400).json({ error: 'images are required and should be an array' });
+            }
+            if (!Array.isArray(videos) || videos.length === 0) {
+                return res.status(400).json({ error: 'videos are required and should be an array' });
+            }
+            
+            const newVenue = new Venue({
+                admin_id: newUserId,
+                images,
+                videos
+            });
+            
+            await newVenue.save();
+            
             // sucess msg to react client for register sucess with status code
             return res.status(200).json({msg: "Register Success!"});
 
@@ -104,19 +124,4 @@ const createRefreshToken = (payload) => {
 }
 
 module.exports = authCtrl;
-
-  // Then create jsonwebtoken to authentication
-            // const access_token = createAccessToken({id: newUser._id, email: newUser.email});
-            // const refresh_token = createRefreshToken({id: newUser._id, email: newUser.email});
-
-            // res.cookie("__AcessToken", access_token, {
-            //     httpOnly: true,
-            // });
-
-            // res.cookie("__RefreshToken", refresh_token, {
-            //     httpOnly: true,
-            //     // path: "/api/refresh_token",  // this is the path for refresh token
-            //     maxAge: 7 * 24 * 60 * 60 * 1000, //validity of 7 days
-            // });
-
 

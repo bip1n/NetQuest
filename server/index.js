@@ -11,6 +11,8 @@ app.use(cors());
 
 
 app.use("/api", require("./app/routers/authRouter"));
+app.use("/api", require("./app/routers/userRouter.js"));
+
 
 app.get("/", (req, res) => {
   res.send("Hi Welcome to NET QUEST API .....");

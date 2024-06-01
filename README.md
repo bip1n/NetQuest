@@ -37,7 +37,5 @@ client/
 
 ### Sneak Peak:
 
-<img width = "800" src="https://i.imgur.com/pG6FA2U.png"/>  
-
 
 

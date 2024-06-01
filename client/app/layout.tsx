@@ -51,22 +51,7 @@ export default function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
-            <Navigationbar />
-            <Searchbar />
-
             <main className="flex-grow">{children}</main> {/* Render children here */}
-            
-            <footer className="w-full flex items-center justify-center py-3">
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current"
-                href="#"
-                title="nextui.org homepage"
-              >
-                <span className="text-default-600">Designed by</span>
-                <p className="text-primary">Team Inferno</p>
-              </Link>
-            </footer>
           </div>
         </Providers>
       </body>

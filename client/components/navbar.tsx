@@ -9,6 +9,8 @@ import {
   NavbarItem,
 } from "@nextui-org/navbar";
 
+import {Divider} from "@nextui-org/divider";
+
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
@@ -82,7 +84,7 @@ export const Navigationbar = () => {
 
       <NavbarContent as="div" justify="end">
         <ThemeSwitch />
-        {/* <SigninModel /> */}
+        <SigninModel />
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Avatar
@@ -100,11 +102,11 @@ export const Navigationbar = () => {
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold ">Ram Bahadur</p>
             </DropdownItem>
-            <DropdownItem key="settings" startContent={<UserIcon/>} >Profile Settings</DropdownItem>
-            <DropdownItem key="team_settings" startContent={<HistoryIcon/>}>Bookings</DropdownItem>
-            <DropdownItem key="analytics" startContent={<NotificationIcon/>} >Notifications</DropdownItem>
-            <DropdownItem key="system"  startContent={<SavedIcon/>} >Saved</DropdownItem>
-            <DropdownItem key="logout" color="danger"  startContent={<LogoutIcon/>} >Log Out</DropdownItem>
+            <DropdownItem key="settings">Profile Settings</DropdownItem>
+            <DropdownItem key="team_settings">Bookings</DropdownItem>
+            <DropdownItem key="analytics" >Notifications</DropdownItem>
+            <DropdownItem key="system" >Saved</DropdownItem>
+            <DropdownItem key="logout" color="danger">Log Out</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>

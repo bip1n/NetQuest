@@ -1,11 +1,14 @@
 import React from 'react'
 import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
+import { Searchbar } from "@/components/searchbar";
+
 
 interface Props {}
 
 const HomePage = (props: Props) => {
   return (
     <div className="shadow-xl">
+      <Searchbar/>
       
     <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex-shrink-0 py-4 ml-5"> <h4> Top Rated</h4></div>
     <div  className="flex overflow-x-auto h-96 space-x-4">

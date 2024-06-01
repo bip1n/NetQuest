@@ -16,8 +16,11 @@ export default function SignupPage() {
     <>
     <Card className="w-full min-w-[400px] md:min-w-[500px] max-w-[500px]">
       <CardHeader className="flex gap-3">
+        <Link color="foreground" href="/">
         <span><Logo /></span>
         <p className="font-bold text-inherit mt-1">NetQuest</p>
+        </Link>
+        
       </CardHeader>
 
       <CardHeader className="flex justify-between items-center">
@@ -25,7 +28,7 @@ export default function SignupPage() {
             <Link
                 isExternal
                 showAnchorIcon
-                href="/"
+                href="/registervenue"
             >
                 Register as a venue owner.
             </Link>

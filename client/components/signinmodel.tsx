@@ -17,7 +17,7 @@ export default function SigninModel() {
   return (
     <div>
       <Button color="secondary" onClick={handleOpen}>SignIn</Button>
-      <Modal backdrop={"blur"} isOpen={isOpen} onOpenChange={setIsOpen}>
+      <Modal placement="center" backdrop={"blur"} isOpen={isOpen} onOpenChange={setIsOpen}>
         <ModalContent>
           {(onClose) => (
             <> 

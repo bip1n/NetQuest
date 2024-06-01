@@ -4,13 +4,15 @@ const authCtrl = require('../controllers/authCtrl');
 const loginLimiter = require('../middleware/loginLimiter');
 
 // Define route for user registration
-router.post('/register', authCtrl.register);  
+router.post('/register', authCtrl.register_user);  
 
 // if you want test register using postMan use /api/register since, authRouter is mouth with /auth routes on index.js
 // same goes for /login
 
 // Define route for user login
 router.post("/login", loginLimiter, authCtrl.login);
+
+router.post("/adminregister", authCtrl.register_admin);
 
 
 // Export the router to be used in other parts of the application

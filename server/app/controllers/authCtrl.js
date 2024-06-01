@@ -33,7 +33,35 @@ const authCtrl = {
         }
     },
 
-    register: async (req, res) => {
+    register_user: async (req, res) => {
+        try {
+            const {username, phone, email, password, } = req.body;
+
+            if (!phone) {return res.status(400).json({ error: 'Phone number is required' });}
+            if (!username) {return res.status(400).json({ error: 'username is required' });}
+            if (!email) {return res.status(400).json({ error: 'email is required' });}
+            if (!password) {return res.status(400).json({ error: 'password is required' });}
+
+            const user = await Users.findOne({email});
+            if (user) return res.status(400).json({msg: "The email already exists."});
+
+            if (password.length < 6) return res.status(400).json({msg: "Password must be at least 6 characters long."});
+            const passwordHash = await bcrypt.hash(password, 10);
+
+            const newUser = new Users({
+                username, email, phone, password: passwordHash
+            });
+            await newUser.save();
+          
+            // sucess msg to react client for register sucess with status code
+            return res.status(200).json({msg: "Register Success!"});
+
+        } catch (err) {
+          return res.status(500).json({ msg: err.message });
+        }
+    },
+
+    register_admin: async (req, res) => {
         try {
             const {username, phone, email, password, } = req.body;
 

@@ -46,11 +46,11 @@ export default function SigninModel() {
                     </button>
                   }
                 ></Input>
-                  <Link href="#" size="sm" underline="hover">Forgot Password?</Link>
+                  <Link href="#" size="sm">Forgot Password?</Link>
               </ModalBody>
 
               <ModalBody>
-                <Link href="/signup" size="sm" underline="hover">Don't have an account? Signup.</Link>
+                <Link href="/signup" size="sm" >Don't have an account? Signup.</Link>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>

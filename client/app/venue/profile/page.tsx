@@ -1,32 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Navigationbar } from "../../../components/navbar";
-import { FooterContent } from "../../../components/footer";
-import { Card, CardFooter, CardHeader, Image, CardBody, Link, Divider, Input, Button, Avatar,ScrollShadow, TableHeader, Table,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  Chip,
-  Tabs,
-  Tab,
-  User,
-  Pagination,
-  Checkbox,} from "@nextui-org/react";
+import { Navigationbar } from "@/components/navbar";
+import { FooterContent } from "@/components/footer";
+import { Card, CardFooter, CardHeader, Image, CardBody, Link, Button, Avatar,ScrollShadow, } from "@nextui-org/react";
 
-  import {PlusIcon} from "../../../components/Assets/PlusIcon";
-import {VerticalDotsIcon} from "../../../components/Assets/VerticalDotsIcon";
-import {SearchIcon} from "../../../components/Assets/SearchIcon";
-import {ChevronDownIcon} from "../../../components/Assets/ChevronDownIcon";
-import {columns, users, statusOptions} from "../../../components/Assets/data";
-import {capitalize} from "../../../components/Assets/utils";
-
-
+import {BookingTable} from "../../../components/BookingTable"
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
 
@@ -105,121 +84,7 @@ export default function VenueProfile() {
             <CardBody> </CardBody>
           </CardBody>
 
-          <CardBody>
-
-            <h4 className="font-medium text-lg">Bookings</h4>
-           
-           
-                    <Tabs aria-label="Options">
-                      <Tab key="photos" title="May 2">
-                        <Card className="max-w-[420px]">
-                          <Table aria-label="Example static collection table">
-                              <TableHeader>
-                                <TableColumn>TIME</TableColumn>
-                                <TableColumn>RATE</TableColumn>
-                                <TableColumn>STATUS</TableColumn>
-                                
-                              </TableHeader>
-                              <TableBody>
-                                <TableRow key="1">
-                                  <TableCell>7:00 AM</TableCell>
-                                  <TableCell>1200</TableCell>
-                                  <TableCell><Button radius="sm" size="sm"color="success">
-                                  AVAILABLE
-      </Button>  
-     
-      </TableCell>
-                                 
-                                </TableRow>
-                                <TableRow key="2">
-                                  <TableCell>8:00 AM</TableCell>
-                                  <TableCell>1100</TableCell>
-                                  <TableCell> <Button isDisabled radius="sm" size="sm" color="warning">
-        RESERVED
-      </Button>  </TableCell>
-                                 
-                                </TableRow>
-                                <TableRow key="3">
-                                  <TableCell>9:00 AM</TableCell>
-                                  <TableCell>1400</TableCell>
-                                  <TableCell> <Button isDisabled radius="sm" size="sm" color="danger">
-        BOOKED
-      </Button> </TableCell>
-                                 
-                                </TableRow>
-                                <TableRow key="4">
-                                  <TableCell>10:00 AM</TableCell>
-                                  <TableCell>1400</TableCell>
-                                  <TableCell> <Button isDisabled radius="sm" size="sm" color="warning">
-        RESERVED
-      </Button>  </TableCell>
-                                 
-                                </TableRow>
-                                <TableRow key="5">
-                                  <TableCell>11:00 AM</TableCell>
-                                  <TableCell>1000</TableCell>
-                                  <TableCell><Button radius="sm" size="sm"color="success">
-                                  AVAILABLE
-      </Button> </TableCell>
-                                 
-                                </TableRow>
-                                <TableRow key="6">
-                                  <TableCell>12:00 PM</TableCell>
-                                  <TableCell>1200</TableCell>
-                                  <TableCell><Button radius="sm" size="sm"color="success">
-        AVAILABLE
-      </Button> </TableCell>
-                                 
-                                </TableRow>
-                                <TableRow key="7">
-                                  <TableCell>1:00 PM</TableCell>
-                                  <TableCell>1250</TableCell>
-                                  <TableCell> <Button isDisabled radius="sm" size="sm" color="warning">
-        RESERVED
-      </Button>  </TableCell>
-                                 
-                                </TableRow>
-                                <TableRow key="8">
-                                  <TableCell>2:00 PM</TableCell>
-                                  <TableCell>1250</TableCell>
-                                  <TableCell> <Button isDisabled radius="sm" size="sm" color="danger">
-        BOOKED
-      </Button> </TableCell>
-                                 
-                                </TableRow>
-                                <TableRow key="9">
-                                  <TableCell>3:00 PM</TableCell>
-                                  <TableCell>1200</TableCell>
-                                  <TableCell> <Button isDisabled radius="sm" size="sm" color="danger">
-        BOOKED
-      </Button> </TableCell>
-                                 
-                                </TableRow>
-                              </TableBody>
-                            </Table>
-         
-            </Card>  
-                </Tab>
-                    <Tab key="music" title="May 3">
-                      <Card>
-                        <CardBody>
-                          here
-                        </CardBody>
-                      </Card>  
-                    </Tab>
-                    <Tab key="videos" title="May 4">
-                      <Card>
-                        <CardBody>
-                          here
-                        </CardBody>
-                      </Card>  
-                    </Tab>
-                  </Tabs>
-              
-            
-           
-          </CardBody>
-
+          
           
         </Card>
      
@@ -228,5 +93,6 @@ export default function VenueProfile() {
 
       <FooterContent />
     </>
-  );
-}
+   );
+  }
+  

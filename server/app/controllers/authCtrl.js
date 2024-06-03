@@ -100,33 +100,21 @@ const authCtrl = {
                 return res.status(400).json({ error: 'A video is required.' });
             }
 
-            console.log("images");
 
-            // Upload images to Cloudinary
-            const imageUrls = await Promise.all(images.map(async (image) => {
-                const result = await cloudinary.uploader.upload_stream({
-                    folder: 'images'
-                }).end(image.buffer);
-                return result.secure_url;
-            }));
+            const uploadResult = await cloudinary.uploader.upload("https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg", {
+                public_id: "shoes"
+            }).catch((error)=>{console.log(error)});
 
-            console.log("vdo");
-
-            // Upload video to Cloudinary
-            const videoResult = await cloudinary.uploader.upload_stream({
-                folder: 'videos',
-                resource_type: 'video'
-            }).end(video.buffer);
-
-            const videoUrl = videoResult.secure_url;
+            console.log(uploadResult);
 
             console.log("finished uploading images and video");
 
-            const newVenue = new Venue({
-                admin_id: newUserId,
-                images: imageUrls,
-                video: videoUrl
-            });
+            // const newVenue = new Venue({
+            //     admin_id: newUserId,
+            //     images: imageUrls,
+            //     video: videoUrl
+            // });
+
 
             // await newVenue.save();
 

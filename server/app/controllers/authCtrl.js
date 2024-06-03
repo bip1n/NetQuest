@@ -59,10 +59,12 @@ const authCtrl = {
     
     register_admin: async (req, res) => {
         try {
-            console.log(req);
+            console.log(req.body);
+            
             const {fullname, phone, venueName, panNumber, mapCoord, email, password} = req.body;
-            if (!fullname) {return res.status(400).json({ error: 'fullname is required' });}
+   
             if (!phone) {return res.status(400).json({ error: 'Phone number is required' });}
+            if (!fullname) {return res.status(400).json({ error: 'fullname is required' });}
             if (!venueName) {return res.status(400).json({ error: 'venue name is required' });}
             if (!panNumber) {return res.status(400).json({ error: 'pan number is required' });}
             if (!mapCoord) {return res.status(400).json({ error: 'mapCoord is required' });}

@@ -50,7 +50,7 @@ export default function SigninModel() {
               </ModalBody>
 
               <ModalBody>
-                <Link href="/signup" size="sm" >Don't have an account? Signup.</Link>
+                <Link href="/user/signup" size="sm" >Don't have an account? Signup.</Link>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>

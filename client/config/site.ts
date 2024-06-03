@@ -10,13 +10,13 @@ export const siteConfig = {
     },
     {
       label: "Futsals",
-      href: "/allfutsal",
+      href: "/user/futsal",
     },
   ],
   navMenuItems: [
     {
       label: "Profile",
-      href: "/profile",
+      href: "/user/profile-setting",
     },
     {
       label: "Notification",

@@ -3,8 +3,8 @@
 import React , {useState} from "react";
 import {Button, Card, CardHeader, CardBody, CardFooter,Checkbox, Divider, Link, Input} from "@nextui-org/react";
 import { Logo } from "@/components/icons";
-import { EyeFilledIcon } from "../../components/Assets/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "../../components/Assets/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "../../../components/Assets/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../../../components/Assets/EyeSlashFilledIcon";
 import { FooterContent } from "@/components/footer";
 
 export default function SignupPage() {
@@ -14,7 +14,7 @@ export default function SignupPage() {
   
   return (
     <>
-    <Card className="w-full min-w-[400px] md:min-w-[500px] max-w-[500px]">
+    <Card className="w-full max-w-[100%] md:max-w-[600px]">
       <CardHeader className="flex gap-3">
         <Link color="foreground" href="/">
         <span><Logo /></span>
@@ -28,7 +28,7 @@ export default function SignupPage() {
             <Link
                 isExternal
                 showAnchorIcon
-                href="/registervenue"
+                href="/venue/register"
             >
                 Register as a venue owner.
             </Link>

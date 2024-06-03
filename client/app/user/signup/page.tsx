@@ -28,7 +28,7 @@ export default function SignupPage() {
             <Link
                 isExternal
                 showAnchorIcon
-                href="/registervenue"
+                href="/venue/register"
             >
                 Register as a venue owner.
             </Link>

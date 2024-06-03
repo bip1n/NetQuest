@@ -8,9 +8,6 @@ import {
   NavbarBrand,
   NavbarItem,
 } from "@nextui-org/navbar";
-
-import {Divider} from "@nextui-org/divider";
-
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
@@ -19,11 +16,6 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Button }
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
-import {UserIcon} from './Assets/UserIcon';
-import {SavedIcon} from './Assets/SavedIcon';
-import {NotificationIcon} from './Assets/NotificationIcon'
-import {HistoryIcon} from './Assets/HistoryIcon'
-import {LogoutIcon} from './Assets/LogoutIcon'
 
 export const Navigationbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

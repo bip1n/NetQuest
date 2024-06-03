@@ -1,18 +1,19 @@
-
-require('dotenv').config()
+require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
 
-app.use(express.json())  
+// Enable CORS for all origins
 app.use(cors());
 
+// Middleware to parse JSON requests
+app.use(express.json());
 
+// Use the authRouter for authentication-related routes
 app.use("/api", require("./app/routers/authRouter"));
 app.use("/api", require("./app/routers/userRouter.js"));
-
 
 app.get("/", (req, res) => {
   res.send("Hi Welcome to NET QUEST API .....");

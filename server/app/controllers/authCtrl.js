@@ -1,6 +1,8 @@
 const Users = require("../models/userModel");
 const Admin = require("../models/adminModel");
 const Venue = require("../models/venueModel");
+const cloudinary = require("../utils/cloudinary");
+// const { bucket } = require('../firebase');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -59,59 +61,83 @@ const authCtrl = {
     
     register_admin: async (req, res) => {
         try {
-            console.log(req.body);
-            
-            const {fullname, phone, venueName, panNumber, mapCoord, email, password} = req.body;
-   
-            if (!phone) {return res.status(400).json({ error: 'Phone number is required' });}
-            if (!fullname) {return res.status(400).json({ error: 'fullname is required' });}
-            if (!venueName) {return res.status(400).json({ error: 'venue name is required' });}
-            if (!panNumber) {return res.status(400).json({ error: 'pan number is required' });}
-            if (!mapCoord) {return res.status(400).json({ error: 'mapCoord is required' });}
-            if (!email) {return res.status(400).json({ error: 'email is required' });}
-            if (!password) {return res.status(400).json({ error: 'password is required' });}
+            const { fullname, phone, venueName, panNumber, mapCoord, email, password } = req.body;
 
-            const reg_email = await Admin.findOne({email});
-            if (reg_email) return res.status(400).json({msg: "The email already exists."});
+            if (!phone) return res.status(400).json({ error: 'Phone number is required' });
+            if (!fullname) return res.status(400).json({ error: 'fullname is required' });
+            if (!venueName) return res.status(400).json({ error: 'venue name is required' });
+            if (!panNumber) return res.status(400).json({ error: 'pan number is required' });
+            if (!mapCoord) return res.status(400).json({ error: 'mapCoord is required' });
+            if (!email) return res.status(400).json({ error: 'email is required' });
+            if (!password) return res.status(400).json({ error: 'password is required' });
 
-            const reg_phone = await Admin.findOne({phone});
-            if (reg_phone) return res.status(400).json({msg: "The phone number already exists."});
+            const reg_email = await Admin.findOne({ email });
+            if (reg_email) return res.status(400).json({ error: "The email already exists." });
 
-            if (password.length < 6) return res.status(400).json({msg: "Password must be at least 6 characters long."});
+            const reg_phone = await Admin.findOne({ phone });
+            if (reg_phone) return res.status(400).json({ error: "The phone number already exists." });
+
+            if (password.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters long." });
             const passwordHash = await bcrypt.hash(password, 10);
 
-            const newUser = new Admin({
+            const newAdmin = new Admin({
                 fullname, phone, venueName, panNumber, mapCoord, email, password: passwordHash
             });
-            await newUser.save();
 
-            //get newUser id
-            const newUserId = newUser._id;
+            // await newAdmin.save();
 
-            const { images, videos } = req.body;
-            if (!Array.isArray(images) || images.length === 0) {
-                return res.status(400).json({ error: 'images are required and should be an array' });
+            // Get newUser id
+            const newUserId = newAdmin._id;
+
+            const images = req.files['images'];
+            const video = req.files['video'] ? req.files['video'][0] : null;
+
+            if (!images || images.length === 0) {
+                return res.status(400).json({ error: 'At least one image is required.' });
             }
-            if (!Array.isArray(videos) || videos.length === 0) {
-                return res.status(400).json({ error: 'videos are required and should be an array' });
+
+            if (!video) {
+                return res.status(400).json({ error: 'A video is required.' });
             }
-            
+
+            console.log("images");
+
+            // Upload images to Cloudinary
+            const imageUrls = await Promise.all(images.map(async (image) => {
+                const result = await cloudinary.uploader.upload_stream({
+                    folder: 'images'
+                }).end(image.buffer);
+                return result.secure_url;
+            }));
+
+            console.log("vdo");
+
+            // Upload video to Cloudinary
+            const videoResult = await cloudinary.uploader.upload_stream({
+                folder: 'videos',
+                resource_type: 'video'
+            }).end(video.buffer);
+
+            const videoUrl = videoResult.secure_url;
+
+            console.log("finished uploading images and video");
+
             const newVenue = new Venue({
                 admin_id: newUserId,
-                images,
-                videos
+                images: imageUrls,
+                video: videoUrl
             });
-            
-            await newVenue.save();
-            
-            // sucess msg to react client for register sucess with status code
-            return res.status(200).json({msg: "Register Success!"});
+
+            // await newVenue.save();
+
+            // Success message to react client for register success with status code
+            return res.status(200).json({ msg: "Register Success!" });
 
         } catch (err) {
-          return res.status(500).json({ msg: err.message });
+            console.log("error:", err);
+            return res.status(500).json({ error: err.message });
         }
-    },
-
+    }
 }
 
 const createAccessToken = (payload) => {

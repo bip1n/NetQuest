@@ -16,7 +16,7 @@ export const siteConfig = {
   navMenuItems: [
     {
       label: "Profile",
-      href: "/user/profile-setting",
+      href: "/venue/profile",
     },
     {
       label: "Notification",

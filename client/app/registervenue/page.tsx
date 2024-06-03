@@ -13,6 +13,17 @@ export default function RegisterVenue() {
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [videoError, setVideoError] = useState<string>("");
 
+  const [fullname, setfullname] = useState("");
+  const [phone, setphone] = useState("");
+  const [venueName, setVenueName] = useState("");
+  const [panNumber, setPanNumber] = useState("");
+  const [mapCoord, setmapCoord] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [error, setError] = useState("");
+
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,129 +49,186 @@ export default function RegisterVenue() {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!termsAgreed) {
+      setError("You must agree to the terms and conditions.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("fullname", fullname);
+    formData.append("phone", phone);
+    formData.append("venueName", venueName);
+    formData.append("panNumber", panNumber);
+    formData.append("mapCoord", mapCoord);
+    formData.append("email", email);
+    formData.append("password", password);
+    selectedImages.forEach((image, index) => {
+      formData.append(`images`, image);
+    });
+    if (selectedVideo) {
+      formData.append("video", selectedVideo);
+    }
+
+    try {
+      console.log(formData)
+      const response = await fetch("http://localhost:4000/api/adminregister", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        setError(errorResponse.error);
+      } else {
+        // Handle successful registration
+        const responseData = await response.json();
+        console.log("Registration successful:", responseData);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setError("Failed to register the venue. Please try again.");
+    }
+  };
+
   return (
     <>
-      <Card className="w-full max-w-[100%] md:max-w-[600px]">
-        <CardHeader className="flex gap-3">
-          <Link color="foreground" href="/">
-            <span><Logo /></span>
-            <p className="font-bold text-inherit mt-1">NetQuest</p>
-          </Link>
-        </CardHeader>
+      <form onSubmit={handleSubmit}>
+        <Card className="w-full min-w-[400px] md:min-w-[500px] max-w-[500px]">
+          <CardHeader className="flex gap-3">
+            <Link color="foreground" href="/">
+              <span><Logo /></span>
+              <p className="font-bold text-inherit mt-1">NetQuest</p>
+            </Link>
+          </CardHeader>
 
-        <CardHeader className="flex justify-between items-center">
-          <p className="font-bold text-inherit mt-1">Register your venue in NetQuest!</p>
-        </CardHeader>
+          <CardHeader className="flex justify-between items-center">
+            <p className="font-bold text-inherit mt-1">Register your venue in NetQuest!</p>
+          </CardHeader>
 
-        <CardBody>
-          <span className="text-red-500">ERROR HERE!</span>
-        </CardBody>
+          <CardBody>
+            {error && <span className="text-red-500">{error}</span>}
+          </CardBody>
 
-                <CardBody className="flex gap-4">
-                <div className="flex flex-1 gap-4">
-                    <Input fullWidth type="text" label="Name of Owner" required />
-                    <Input fullWidth type="text" label="Venue Name" required />
-                    
-                </div>
-                </CardBody>
+          <CardBody className="flex gap-4">
+            <div className="flex flex-1 gap-4">
+              <Input fullWidth type="text" label="Name of Owner" required value={fullname} onChange={(e) => setfullname(e.target.value)} />
+              <Input fullWidth type="number" placeholder="98XXXXXXXX" label="Phone Number" required value={phone} onChange={(e) => setphone(e.target.value)} />
+            </div>
+          </CardBody>
 
-                <CardBody className="flex gap-4">
-                    <Input fullWidth type="number" placeholder="98XXXXXXXX" label="Phone Number" required />
-                    <Input fullWidth type="number" label="PAN Number" required />
-              
-                </CardBody>
+          <CardBody className="flex gap-4">
+            <div className="flex flex-1 gap-4">
+              <Input fullWidth type="text" label="Registered Name of Venue" required value={venueName} onChange={(e) => setVenueName(e.target.value)} />
+              <Input fullWidth type="number" label="PAN Number" required value={panNumber} onChange={(e) => setPanNumber(e.target.value)} />
+            </div>
+          </CardBody>
 
-                <CardBody>
-                <Input fullWidth type="text" label="Google Maps Coordinate" required />
-                </CardBody>
-       
-            <CardBody>
-            <Input fullWidth type="email" label="Email" required />
-            </CardBody>
+          <CardBody>
+            <Input fullWidth type="text" label="Google Maps Coordinate" required value={mapCoord} onChange={(e) => setmapCoord(e.target.value)} />
+          </CardBody>
 
-            <CardBody>
+          <CardBody>
+            <Input fullWidth type="email" label="Email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+          </CardBody>
+
+          <CardBody>
             <Input required
-                type={isVisible ? "text" : "password"}
-                label="Password"
-                endContent={
+              type={isVisible ? "text" : "password"}
+              label="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              endContent={
                 <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                    {isVisible ? (
+                  {isVisible ? (
                     <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                    ) : (
+                  ) : (
                     <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                    )}
+                  )}
                 </button>
-                }
+              }
             >
             </Input>
-            </CardBody>
+          </CardBody>
 
-            <CardBody>
+          <CardBody>
             <Input required
-                type={isVisible ? "text" : "password"}
-                label="Confirm Password"
-                endContent={
+              type={isVisible ? "text" : "password"}
+              label="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              endContent={
                 <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                    {isVisible ? (
+                  {isVisible ? (
                     <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                    ) : (
+                  ) : (
                     <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                    )}
+                  )}
                 </button>
-                }
+              }
             >
-                </Input>
-            </CardBody>
-        <CardBody className="flex gap-4">
-          <div className="flex flex-1 gap-4">
-            <Input fullWidth type="text" readOnly value={"Upload 3-6 Images"} />
-            <Input  fullWidth type="file" accept="image/*" multiple onChange={handleImageChange} required />  
-          </div>
-          {imageError && <p className="text-red-500">{imageError}</p>}
-        </CardBody>
+            </Input>
+          </CardBody>
 
-        <CardBody>
-          {selectedImages.length > 0 && (
-            <div className="grid grid-cols-3 gap-4">
-              {selectedImages.map((image, index) => (
-                <img
-                  key={index}
-                  src={URL.createObjectURL(image)}
-                  alt={`Selected Image ${index + 1}`}
-                  className="h-32 w-full object-cover"
-                />
-              ))}
+          <CardBody className="flex gap-4">
+            <div className="flex flex-1 gap-4">
+              <Input fullWidth type="text" readOnly value={"Upload 3-6 Images"} />
+              <Input fullWidth type="file" accept="image/*" multiple onChange={handleImageChange} required />
             </div>
-          )}
-        </CardBody>
+            {imageError && <p className="text-red-500">{imageError}</p>}
+          </CardBody>
 
-        <CardBody className="flex gap-4">
-          <div className="flex flex-1 gap-4">
-            <Input fullWidth type="text" readOnly value={"Upload Video"} />
-            <Input  fullWidth type="file" accept="video/*"  onChange={handleVideoChange} required />  
-          </div>
-          {videoError && <p className="text-red-500">{videoError}</p>}
-        </CardBody>
+          <CardBody>
+            {selectedImages.length > 0 && (
+              <div className="grid grid-cols-3 gap-4">
+                {selectedImages.map((image, index) => (
+                  <img
+                    key={index}
+                    src={URL.createObjectURL(image)}
+                    alt={`Selected Image ${index + 1}`}
+                    className="h-32 w-full object-cover"
+                  />
+                ))}
+              </div>
+            )}
+          </CardBody>
 
-        <CardBody>
-          {selectedVideo && (
-            <video className="w-full" controls>
-              <source src={URL.createObjectURL(selectedVideo)} type={selectedVideo.type} />
-              Your browser does not support the video tag.
-            </video>
-          )}
-        </CardBody>
+          <CardBody className="flex gap-4">
+            <div className="flex flex-1 gap-4">
+              <Input fullWidth type="text" readOnly value={"Upload Video"} />
+              <Input fullWidth type="file" accept="video/*" onChange={handleVideoChange} required />
+            </div>
+            {videoError && <p className="text-red-500">{videoError}</p>}
+          </CardBody>
 
-        <CardBody>
-          <Checkbox>I agree to the <Link href="/termsandconditionsforvenueowners">terms and conditions.</Link></Checkbox>
-        </CardBody>
+          <CardBody>
+            {selectedVideo && (
+              <video className="w-full" controls>
+                <source src={URL.createObjectURL(selectedVideo)} type={selectedVideo.type} />
+                Your browser does not support the video tag.
+              </video>
+            )}
+          </CardBody>
+          <CardBody>
+            <Checkbox checked={termsAgreed} onChange={(e) => setTermsAgreed(e.target.checked)}>
+              I agree to the <Link href="/termsandconditionsforvenueowners">terms and conditions.</Link>
+            </Checkbox>
+          </CardBody>
 
-        <CardFooter className="flex justify-center">
-          <Button color="primary" radius="lg" className="w-full">Register</Button>
-        </CardFooter>
+          <CardFooter className="flex justify-center">
+            <Button color="primary" radius="lg" className="w-full" type="submit">Register</Button>
+          </CardFooter>
 
-        <Divider />
-      </Card>
+          <Divider />
+        </Card>
+      </form>
       <FooterContent />
     </>
   );

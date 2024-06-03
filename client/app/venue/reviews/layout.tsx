@@ -1,5 +1,4 @@
-
-export default function SignupLayout({
+export default function ReviewsLayout({
     children,
   }: {
     children: React.ReactNode;

@@ -9,7 +9,7 @@ export default function ProfileSetting() {
   return (
     <>
     <Navigationbar/>
-   
+   User ko profile
     </>
     
   );

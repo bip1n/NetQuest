@@ -1,11 +1,10 @@
-
-export default function SignupLayout({
+export default function VenueProfileLayout({
     children,
   }: {
     children: React.ReactNode;
   }) {
     return (
-      <section>
+      <section >
           {children}
       </section>
     );

@@ -1,5 +1,5 @@
 const Users = require("../models/userModel");
-const Admin = require("../models/adminModel");
+const Admin = require("../models/ownerModel");
 const VenueStatus = require("../models/venueStatus");
 const cloudinary = require("../utils/cloudinary");
 const bcrypt = require("bcrypt");
@@ -60,6 +60,7 @@ const authCtrl = {
     
     register_admin: async (req, res) => {
         try {
+            
             const { fullname, phone, venueName, panNumber, mapCoord, email, password } = req.body;
 
             if (!phone) return res.status(400).json({ error: 'Phone number is required' });
@@ -85,7 +86,6 @@ const authCtrl = {
 
             await newAdmin.save();
 
-
             const images = req.files['images'];
             const video = req.files['video'] ? req.files['video'][0] : null;
 
@@ -104,9 +104,6 @@ const authCtrl = {
 
             const videoResult = await cloudinary.uploader.upload(video.path, { folder: 'venue_videos', resource_type: 'video' });
             const videoUrl = videoResult.secure_url;
-
-            console.log("video Url:", videoUrl);
-
 
             const newVenueStatus = new VenueStatus({
                 admin_id: newAdmin._id, status: "Not Verified", admin_comment: "", images: imageUrls, videos: [videoUrl]

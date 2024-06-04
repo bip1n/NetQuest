@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const StatusSchema = new mongoose.Schema({
     admin_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Admin",
+        ref: "Owner",
         required: true,
     },
     status: {

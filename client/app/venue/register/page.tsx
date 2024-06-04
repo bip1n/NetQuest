@@ -90,6 +90,8 @@ export default function RegisterVenue() {
         // Handle successful registration
         const responseData = await response.json();
         console.log("Registration successful:", responseData);
+        setError("Registration successful:");
+        // redirect to login
       }
     } catch (error) {
       console.error("Error submitting form:", error);

@@ -1,8 +1,7 @@
 const Users = require("../models/userModel");
 const Admin = require("../models/adminModel");
-const Venue = require("../models/venueModel");
+const VenueStatus = require("../models/venueStatus");
 const cloudinary = require("../utils/cloudinary");
-// const { bucket } = require('../firebase');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -84,10 +83,8 @@ const authCtrl = {
                 fullname, phone, venueName, panNumber, mapCoord, email, password: passwordHash
             });
 
-            // await newAdmin.save();
+            await newAdmin.save();
 
-            // Get newUser id
-            const newUserId = newAdmin._id;
 
             const images = req.files['images'];
             const video = req.files['video'] ? req.files['video'][0] : null;
@@ -100,23 +97,22 @@ const authCtrl = {
                 return res.status(400).json({ error: 'A video is required.' });
             }
 
+            const imageUrls = await Promise.all(images.map(async (file) => {
+                const result = await cloudinary.uploader.upload(file.path, { folder: 'venue_images' });
+                return result.secure_url;
+            }));
 
-            const uploadResult = await cloudinary.uploader.upload("https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg", {
-                public_id: "shoes"
-            }).catch((error)=>{console.log(error)});
+            const videoResult = await cloudinary.uploader.upload(video.path, { folder: 'venue_videos', resource_type: 'video' });
+            const videoUrl = videoResult.secure_url;
 
-            console.log(uploadResult);
-
-            console.log("finished uploading images and video");
-
-            // const newVenue = new Venue({
-            //     admin_id: newUserId,
-            //     images: imageUrls,
-            //     video: videoUrl
-            // });
+            console.log("video Url:", videoUrl);
 
 
-            // await newVenue.save();
+            const newVenueStatus = new VenueStatus({
+                admin_id: newAdmin._id, status: "Not Verified", admin_comment: "", images: imageUrls, videos: [videoUrl]
+            });
+
+            await newVenueStatus.save();
 
             // Success message to react client for register success with status code
             return res.status(200).json({ msg: "Register Success!" });

@@ -1,9 +1,9 @@
 "use client"
 import React, { useState } from "react";
 import { Button, Card, CardHeader, CardBody, CardFooter, Checkbox, Divider, Link, Input } from "@nextui-org/react";
-import { Logo } from "../../../components/icons";
-import { EyeFilledIcon } from "../../../components/Assets/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "../../../components/Assets/EyeSlashFilledIcon";
+import { Logo } from "@/components/icons";
+import { EyeFilledIcon } from "@/components/Assets/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "@/components/Assets/EyeSlashFilledIcon";
 import { FooterContent } from "@/components/footer";
 
 export default function RegisterVenue() {

@@ -54,27 +54,27 @@ export default function AboutPage() {
     <>
       <Navigationbar/>
       <Card className="w-full h-full flex flex-col items-center justify-center overflow-auto pt-4">
-        <h5 className="text-xl font-bold">MEET THE DEV</h5>
+        <h5 className="text-xl font-bold">THE DEV TEAM</h5>
         <div className="flex flex-col md:flex-row items-center justify-center w-full mt-4 md:space-x-4">
           <DeveloperCard
             name="Bhabishwar Khanal"
             role="Frontend Developer"
             github="https://www.github.com/bip1n"
             instagram="https://www.instagram.com/bip1n_"
-            image="https://res.cloudinary.com/dwc7juq50/image/upload/v1717431727/About/bipi1n_xcxvjh.jpg"
+            image="https://res.cloudinary.com/dwc7juq50/image/upload/q_81/v1717431727/About/bipi1n_xcxvjh.avif"
           />
           <DeveloperCard
             name="Prajwol Ghimire"
             role="Backend Developer"
             github="https://www.github.com/prajwol-ghimire"
-            instagram="https://www.instagram.com/_prajwol.ghimire/"
+            instagram="https://www.instagram.com/_prajwol.ghimire"
             image="https://res.cloudinary.com/dwc7juq50/image/upload/v1717429755/About/prajwol_isxunh.jpg"
           />
           <DeveloperCard
             name="Subodh Dhami"
             role="Nalla"
             github="https://www.github.com/subodhami"
-            instagram="https://www.instagram.com/subodhami/"
+            instagram="https://www.instagram.com/subodhami"
             image="https://res.cloudinary.com/dwc7juq50/image/upload/v1717429705/About/subodh_nfchh8.jpg"
           />
         </div>

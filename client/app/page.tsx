@@ -6,10 +6,13 @@ import { FooterContent } from '@/components/footer';
 interface Props {}
 
 const HomePage = (props: Props) => {
+  
+
   return (
     <>
       <Navigationbar />
       <Searchbar/>
+      
       <FooterContent/>
     </>
   

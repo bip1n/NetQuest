@@ -14,7 +14,7 @@ export default function SignupPage() {
   
   return (
     <>
-    <Card className="w-full max-w-[100%] md:max-w-[600px]">
+    <Card className="w-full min-w-[400px] md:min-w-[500px] max-w-[500px]">
       <CardHeader className="flex gap-3">
         <Link color="foreground" href="/">
         <span><Logo /></span>

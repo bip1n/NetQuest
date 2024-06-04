@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const StatusSchema = new mongoose.Schema({
     admin_id: {
@@ -20,10 +20,19 @@ const StatusSchema = new mongoose.Schema({
     videos: [{
         type: String,
         required: true,
-    }]
+    }],
+    isActivated: {
+        type: Boolean,
+        default: false,
+    }
 });
 
-const VenueStatus = mongoose.model('Status', StatusSchema);
+// Pre-save middleware
+StatusSchema.pre('save', function(next) {
+    this.isActivated = this.status === 'verified';
+    next();
+});
 
-module.exports = VenueStatus;
+const Status = mongoose.model('Status', StatusSchema);
 
+module.exports = Status;

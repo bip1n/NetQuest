@@ -5,7 +5,7 @@ const loginLimiter = require('../middleware/loginLimiter');
 const upload = require("../middleware/multer");
 
 // Define route for user registration
-router.post('/register', authCtrl.register_user);
+router.post('/register', upload.fields([]), authCtrl.register_user);
 
 // Define route for user login
 router.post('/login', loginLimiter, authCtrl.login);

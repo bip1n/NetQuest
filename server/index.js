@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 });
 
 // Connecting to MongoDB using Mongoose
-mongoose.connect(process.env.mongoDBURL, { })
+mongoose.connect(process.env.mongoDBURL, {})
   .then(() => { 
     console.log('MongoDB Connected');
     app.listen(process.env.PORT, () => {
@@ -30,3 +30,9 @@ mongoose.connect(process.env.mongoDBURL, { })
   .catch(err => {
     console.error('Database connection error:', err);
   });
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});

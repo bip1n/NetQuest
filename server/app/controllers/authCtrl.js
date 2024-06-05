@@ -108,7 +108,7 @@ const authCtrl = {
             const videoUrl = videoResult.secure_url;
 
             const newVenueStatus = new VenueStatus({
-                admin_id: newAdmin._id, status: "Not Verified", admin_comment: "", images: imageUrls, videos: [videoUrl]
+                admin_id: newAdmin._id, status: "pending", admin_comment: "", images: imageUrls, videos: [videoUrl]
             });
 
             await newVenueStatus.save();

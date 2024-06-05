@@ -8,7 +8,8 @@ const StatusSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        required: true,
+        enum: ['pending', 'verified', 'rejected'],
+        default: 'pending',
     },
     admin_comment: { 
         type: String,

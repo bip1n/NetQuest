@@ -16,12 +16,13 @@ import {
   ModalContent,
   ModalFooter
 } from "@nextui-org/react";
-import { Logo } from "@/components/icons";
+import { Logo } from "@/components/Icons";
 import { EyeFilledIcon } from "@/components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/Assets/EyeSlashFilledIcon";
-import { FooterContent } from "@/components/footer";
+import { FooterContent } from "@/components/Footer";
 
-export default function SigninPage() {
+
+export default function Signin() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState("");

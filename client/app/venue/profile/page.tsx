@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Navigationbar } from "@/components/navbar";
-import { FooterContent } from "@/components/footer";
+import { Navigationbar } from "@/components/Navbar";
+import { FooterContent } from "@/components/Footer";
 import { Card, CardFooter, CardHeader, Image, CardBody, Link, Button, Avatar,ScrollShadow, } from "@nextui-org/react";
 
 import {BookingTable} from "../../../components/BookingTable"

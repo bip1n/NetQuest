@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { Button, Card, CardHeader, CardBody, CardFooter, Checkbox, Divider, Link, Input, Spinner } from "@nextui-org/react";
-import { Logo } from "../../../components/icons";
+import { Logo } from "../../../components/Icons";
 import { EyeFilledIcon } from "../../../components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../../../components/Assets/EyeSlashFilledIcon";
 import { FooterContent } from "@/components/footer";

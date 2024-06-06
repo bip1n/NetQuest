@@ -7,10 +7,10 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { Navigationbar } from "@/components/navbar";
-import { Hero } from "@/components/hero";
+import { Navigationbar } from "@/components/Navigationbar";
+import { Hero } from "@/components/Hero";
 import { TopRated } from "@/components/TopRated";
-import { Searchbar } from "@/components/searchbar";
+import { Searchbar } from "@/components/Searchbar";
 import { Inter } from "next/font/google";
 
 export const metadata: Metadata = {

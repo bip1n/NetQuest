@@ -1,7 +1,7 @@
 import React from 'react'
-import { Navigationbar } from "@/components/navbar";
-import { Searchbar } from "@/components/searchbar";
-import { FooterContent } from '@/components/footer';
+import { Navigationbar } from "@/components/Navigationbar";
+import { Searchbar } from "@/components/Searchbar";
+import { FooterContent } from '@/components/Footer';
 
 interface Props {}
 

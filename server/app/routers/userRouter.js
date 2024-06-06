@@ -1,6 +1,8 @@
 // Import required modules
 const router = require('express').Router();
 const userCtrl = require('../controllers/userCtrl.js');
+const verifyToken = require('../middleware/verifyToken');
+
 
 // Define route for user registration
 router.post('/viewpost', userCtrl.viewpost);  

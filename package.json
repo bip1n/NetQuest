@@ -13,6 +13,7 @@
     "@draft-js-plugins/image": "^4.1.4",
     "@nextui-org/navbar": "^2.0.32",
     "@nextui-org/react": "^2.4.1",
+    "cloudinary": "^2.2.0",
     "framer-motion": "^11.2.10",
     "history": "^5.3.0"
   },

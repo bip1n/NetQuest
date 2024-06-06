@@ -56,7 +56,7 @@ export default function SigninModel() {
                 <Button color="danger" variant="light" onPress={onClose}>
                   Cancel
                 </Button>
-                <Button color="primary" onPress={onClose}>
+                <Button color="primary">
                   Sign In
                 </Button>
               </ModalFooter>

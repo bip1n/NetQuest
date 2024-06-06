@@ -10,7 +10,7 @@ const loginLimiter = rateLimit({
     windowMs: 30 * 1000,
 
     // Defining the maximum number of login requests allowed per IP within the specified window
-    max: 3,
+    max: 5,
 
     // Message to be sent when the maximum limit is exceeded
     message: { message: 'Too many login attempts from this IP, please try again after a 60-second pause' },

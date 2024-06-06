@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const venueSchema = new mongoose.Schema({
     admin_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Admin",
+        ref: "Owner",
         required: true,
     },
     images: [{

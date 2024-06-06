@@ -1,9 +1,9 @@
 "use client"
 import React, { useState } from "react";
 import { Button, Card, CardHeader, CardBody, CardFooter, Checkbox, Divider, Link, Input } from "@nextui-org/react";
-import { Logo } from "@/components/icons";
-import { EyeFilledIcon } from "@/components/Assets/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "@/components/Assets/EyeSlashFilledIcon";
+import { Logo } from "../../../components/icons";
+import { EyeFilledIcon } from "../../../components/Assets/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../../../components/Assets/EyeSlashFilledIcon";
 import { FooterContent } from "@/components/footer";
 
 export default function RegisterVenue() {
@@ -23,6 +23,7 @@ export default function RegisterVenue() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -77,7 +78,12 @@ export default function RegisterVenue() {
       formData.append("video", selectedVideo);
     }
 
+    setLoading(true);
+    console.log("Submitting form, please wait...");
+
     try {
+      console.log(formData)
+      console.log(JSON.stringify(formData))
       const response = await fetch("http://localhost:4000/api/adminregister", {
         method: "POST",
         body: formData,
@@ -90,10 +96,15 @@ export default function RegisterVenue() {
         // Handle successful registration
         const responseData = await response.json();
         console.log("Registration successful:", responseData);
+        setError("Registration successful:");
+        // redirect to login
       }
     } catch (error) {
       console.error("Error submitting form:", error);
       setError("Failed to register the venue. Please try again.");
+    } finally {
+      setLoading(false);
+      console.log("Form submission complete.");
     }
   };
 
@@ -222,7 +233,9 @@ export default function RegisterVenue() {
           </CardBody>
 
           <CardFooter className="flex justify-center">
-            <Button color="primary" radius="lg" className="w-full" type="submit">Register</Button>
+            <Button color="primary" radius="lg" className="w-full" type="submit" disabled={loading}>
+              {loading ? "Registering..." : "Register"}
+            </Button>
           </CardFooter>
 
           <Divider />

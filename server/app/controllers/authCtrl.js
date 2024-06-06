@@ -1,8 +1,7 @@
 const Users = require("../models/userModel");
-const Admin = require("../models/adminModel");
-const Venue = require("../models/venueModel");
+const Admin = require("../models/ownerModel");
+const VenueStatus = require("../models/venueStatus");
 const cloudinary = require("../utils/cloudinary");
-// const { bucket } = require('../firebase');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -33,16 +32,18 @@ const authCtrl = {
 
     register_user: async (req, res) => {
         try {
-            const {username, phone, email, password, } = req.body;
+
+            const {username, phone, email, password} = req.body;
+
             if (!username) {return res.status(400).json({ error: 'username is required' });}
             if (!email) {return res.status(400).json({ error: 'email is required' });}
             if (!phone) {return res.status(400).json({ error: 'Phone number is required' });}
             if (!password) {return res.status(400).json({ error: 'password is required' });}
 
             const user = await Users.findOne({email});
-            if (user) return res.status(400).json({msg: "The email already exists."});
+            if (user) return res.status(400).json({error: "The email already exists."});
 
-            if (password.length < 6) return res.status(400).json({msg: "Password must be at least 6 characters long."});
+            if (password.length < 6) return res.status(400).json({error: "Password must be at least 6 characters long."});
             const passwordHash = await bcrypt.hash(password, 10);
 
             const newUser = new Users({
@@ -51,16 +52,17 @@ const authCtrl = {
             await newUser.save();
           
             // sucess msg to react client for register sucess with status code
-            return res.status(200).json({msg: "Register Success!"});
+            return res.status(200).json({error: "Register Success!"});
 
         } catch (err) {
-          return res.status(500).json({ msg: err.message });
+          return res.status(500).json({ error: err.message });
         }
     },
     
     
     register_admin: async (req, res) => {
         try {
+            
             const { fullname, phone, venueName, panNumber, mapCoord, email, password } = req.body;
 
             if (!phone) return res.status(400).json({ error: 'Phone number is required' });
@@ -84,10 +86,7 @@ const authCtrl = {
                 fullname, phone, venueName, panNumber, mapCoord, email, password: passwordHash
             });
 
-            // await newAdmin.save();
-
-            // Get newUser id
-            const newUserId = newAdmin._id;
+            await newAdmin.save();
 
             const images = req.files['images'];
             const video = req.files['video'] ? req.files['video'][0] : null;
@@ -100,23 +99,19 @@ const authCtrl = {
                 return res.status(400).json({ error: 'A video is required.' });
             }
 
+            const imageUrls = await Promise.all(images.map(async (file) => {
+                const result = await cloudinary.uploader.upload(file.path, { folder: 'venue_images' });
+                return result.secure_url;
+            }));
 
-            const uploadResult = await cloudinary.uploader.upload("https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg", {
-                public_id: "shoes"
-            }).catch((error)=>{console.log(error)});
+            const videoResult = await cloudinary.uploader.upload(video.path, { folder: 'venue_videos', resource_type: 'video' });
+            const videoUrl = videoResult.secure_url;
 
-            console.log(uploadResult);
+            const newVenueStatus = new VenueStatus({
+                admin_id: newAdmin._id, status: "pending", admin_comment: "", images: imageUrls, videos: [videoUrl]
+            });
 
-            console.log("finished uploading images and video");
-
-            // const newVenue = new Venue({
-            //     admin_id: newUserId,
-            //     images: imageUrls,
-            //     video: videoUrl
-            // });
-
-
-            // await newVenue.save();
+            await newVenueStatus.save();
 
             // Success message to react client for register success with status code
             return res.status(200).json({ msg: "Register Success!" });

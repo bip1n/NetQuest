@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const adminSchema = new mongoose.Schema({
+const ownerSchema = new mongoose.Schema({
     fullname: {
         type: String,
         required: true,
@@ -37,10 +37,9 @@ const adminSchema = new mongoose.Schema({
     joindate:{
         type: Date,
         default: Date.now
-    
     }
 });
 
-const Admin = mongoose.model('Admin', adminSchema);
+const Owner = mongoose.model('Owner', ownerSchema);
 
-module.exports = Admin;
+module.exports = Owner;

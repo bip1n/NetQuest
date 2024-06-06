@@ -11,10 +11,10 @@ import {
   Link,
   Input,
 } from "@nextui-org/react";
-import { Logo } from "@/components/icons";
+import { Logo } from "@/components/Icons";
 import { EyeFilledIcon } from "@/components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/Assets/EyeSlashFilledIcon";
-import { FooterContent } from "@/components/footer";
+import { FooterContent } from "@/components/Footer";
 
 export default function SignupPage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -85,6 +85,7 @@ export default function SignupPage() {
 
   return (
     <>
+     <div className="flex items-center justify-center mt-8">
       <form onSubmit={handleSubmit}>
         <Card className="w-full min-w-[400px] md:min-w-[500px] max-w-[500px]">
           <CardHeader className="flex gap-3">
@@ -210,7 +211,9 @@ export default function SignupPage() {
           </CardFooter>
         </Card>
       </form>
+      </div>
       <FooterContent />
+    
     </>
   );
 }

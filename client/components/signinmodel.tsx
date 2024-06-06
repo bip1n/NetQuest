@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Link } from "@nextui-org/react";
-import { Logo } from "@/components/icons";
+import { Logo } from "@/components/Icons";
 import { EyeFilledIcon } from "./Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "./Assets/EyeSlashFilledIcon";
+import { SigninPage } from "./Signin";
 
 export default function SigninModel() {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,7 +57,7 @@ export default function SigninModel() {
                 <Button color="danger" variant="light" onPress={onClose}>
                   Cancel
                 </Button>
-                <Button color="primary" onPress={onClose}>
+                <Button color="primary" >
                   Sign In
                 </Button>
               </ModalFooter>

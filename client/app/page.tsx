@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navigationbar } from "@/components/navbar";
+import { Navigationbar } from "@/components/Navigationbar";
 import { Searchbar } from "@/components/searchbar";
 import { FooterContent } from '@/components/footer';
 

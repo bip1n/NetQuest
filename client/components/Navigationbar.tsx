@@ -11,16 +11,24 @@ import {
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import SigninModel from "./signinmodel";
+import SigninModel from "./Signinmodel";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Button } from "@nextui-org/react";
 import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { Logo } from "@/components/icons";
+import { ThemeSwitch } from "@/components/ThemeSwitch";
+import { Logo } from "@/components/Icons";
+
+
+  const loginStatus = false;
+  // const [isLogin, setIsLoginTrue] = useState(false); 
+  // setIsLoginTrue (loginStatus);
+
 
 export const Navigationbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleMenuToggle = () => setIsMenuOpen(!isMenuOpen);
+
+  
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky" shouldHideOnScroll>
@@ -31,7 +39,7 @@ export const Navigationbar = () => {
         />
       </NavbarContent>
 
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+      <NavbarContent className="basis-1/5 sm:basis-full" justify="center">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
@@ -74,9 +82,10 @@ export const Navigationbar = () => {
         ))}
       </NavbarMenu>
 
-      <NavbarContent as="div" justify="end">
+      {loginStatus ?
+        <NavbarContent as="div" justify="end">
         <ThemeSwitch />
-        <SigninModel />
+        
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Avatar
@@ -102,6 +111,12 @@ export const Navigationbar = () => {
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>
+       : 
+       <NavbarContent as="div" justify="end">
+          <ThemeSwitch />
+          <SigninModel /> 
+        </NavbarContent>}
+      
     </NextUINavbar>
   );
 };

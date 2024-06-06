@@ -1,8 +1,8 @@
 import React from 'react'
 import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
-import { Searchbar } from "@/components/searchbar";
-import {Navigationbar} from '@/components/navbar';
-import { FooterContent } from '@/components/footer';
+import { Searchbar } from "@/components/Searchbar";
+import {Navigationbar} from '@/components/Navigationbar';
+import { FooterContent } from '@/components/Footer';
 
 interface Props {}
 

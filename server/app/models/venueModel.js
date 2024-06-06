@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const venueSchema = new mongoose.Schema({
-    admin_id: {
+    owner_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Owner",
         required: true,

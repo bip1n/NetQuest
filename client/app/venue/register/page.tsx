@@ -1,11 +1,12 @@
 "use client"
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
-import { Button, Card, CardHeader, CardBody, CardFooter, Checkbox, Divider, Link, Input } from "@nextui-org/react";
+import { Button, Card, CardHeader, CardBody, CardFooter, Checkbox, Divider, Link, Input, Spinner } from "@nextui-org/react";
 import { Logo } from "../../../components/Icons";
 import { EyeFilledIcon } from "../../../components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../../../components/Assets/EyeSlashFilledIcon";
-import { FooterContent } from "@/components/Footer";
+import { FooterContent } from "@/components/footer";
+
 
 export default function RegisterVenue() {
   const router = useRouter();
@@ -55,7 +56,8 @@ export default function RegisterVenue() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-   
+    // Client-side redirect to login
+
     // The rest of the form handling logic (currently commented out)
     if (!termsAgreed) {
       setError("You must agree to the terms and conditions.");
@@ -87,6 +89,7 @@ export default function RegisterVenue() {
 
     try {
       console.log(formData)
+      
       console.log(JSON.stringify(formData))
       const response = await fetch("http://localhost:4000/api/adminregister", {
         method: "POST",
@@ -101,9 +104,9 @@ export default function RegisterVenue() {
         const responseData = await response.json();
         console.log("Registration successful:", responseData);
         setError("Registration successful:");
+
         // redirect to login
         router.push('/login');
-
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -135,24 +138,24 @@ export default function RegisterVenue() {
 
           <CardBody className="flex gap-4">
             <div className="flex flex-1 gap-4">
-              <Input fullWidth type="text" label="Name of Owner"  value={fullname} onChange={(e) => setfullname(e.target.value)} />
-              <Input fullWidth type="number" placeholder="98XXXXXXXX" label="Phone Number"  value={phone} onChange={(e) => setphone(e.target.value)} />
+              <Input fullWidth type="text" label="Name of Owner"  value={fullname} required onChange={(e) => setfullname(e.target.value)} />
+              <Input fullWidth type="number" placeholder="98XXXXXXXX" label="Phone Number" required value={phone} onChange={(e) => setphone(e.target.value)} />
             </div>
           </CardBody>
 
           <CardBody className="flex gap-4">
             <div className="flex flex-1 gap-4">
-              <Input fullWidth type="text" label="Registered Name of Venue"  value={venueName} onChange={(e) => setVenueName(e.target.value)} />
-              <Input fullWidth type="number" label="PAN Number"  value={panNumber} onChange={(e) => setPanNumber(e.target.value)} />
+              <Input fullWidth type="text" label="Registered Name of Venue"  value={venueName} required onChange={(e) => setVenueName(e.target.value)} />
+              <Input fullWidth type="number" label="PAN Number"  value={panNumber} required onChange={(e) => setPanNumber(e.target.value)} />
             </div>
           </CardBody>
 
           <CardBody>
-            <Input fullWidth type="text" label="Google Maps Coordinate"  value={mapCoord} onChange={(e) => setmapCoord(e.target.value)} />
+            <Input fullWidth type="text" label="Google Maps Coordinate"  value={mapCoord} required onChange={(e) => setmapCoord(e.target.value)} />
           </CardBody>
 
           <CardBody>
-            <Input fullWidth type="email" label="Email"  value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input fullWidth type="email" label="Email"  value={email} required onChange={(e) => setEmail(e.target.value)} />
           </CardBody>
 
           <CardBody>
@@ -240,9 +243,13 @@ export default function RegisterVenue() {
 
           <CardFooter className="flex justify-center">
             <Button color="primary" radius="lg" className="w-full" type="submit" disabled={loading}>
-              {loading ? "Registering..." : "Register"}
+              {loading ? "Registering..." : "Register" } 
             </Button>
+            {loading && <Spinner color="danger"/>}
+            
           </CardFooter>
+
+         
 
           <Divider />
         </Card>

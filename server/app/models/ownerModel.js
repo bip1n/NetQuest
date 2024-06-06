@@ -34,6 +34,10 @@ const ownerSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    mailverified:{
+        type: Boolean,
+        default : false
+    },
     joindate:{
         type: Date,
         default: Date.now

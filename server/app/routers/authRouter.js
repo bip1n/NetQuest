@@ -3,6 +3,8 @@ const router = require('express').Router();
 const authCtrl = require('../controllers/authCtrl');
 const loginLimiter = require('../middleware/loginLimiter');
 const upload = require("../middleware/multer");
+const verifyToken = require('../middleware/verifyToken');
+
 
 // Define route for user registration
 router.post('/register', upload.fields([]), authCtrl.register_user);

@@ -103,10 +103,10 @@ export const Navigationbar = () => {
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold ">Ram Bahadur</p>
             </DropdownItem>
-            <DropdownItem href="/venue/profile" key="settings">Profile Settings</DropdownItem>
+            <DropdownItem href="/venue/profile" key="settings">Profile</DropdownItem>
             <DropdownItem key="team_settings">Bookings</DropdownItem>
             <DropdownItem key="analytics" >Notifications</DropdownItem>
-            <DropdownItem key="system" >Saved</DropdownItem>
+            <DropdownItem key="system" href="/venue/settings">Settings</DropdownItem>
             <DropdownItem key="logout" color="danger">Log Out</DropdownItem>
           </DropdownMenu>
         </Dropdown>

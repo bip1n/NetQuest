@@ -34,9 +34,9 @@ export const Booking = () => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
 
-        <CardBody className="mt-4">
-          <p className="font-medium text-lg">Bookings</p>
-          <div className="mb-4 mt-4">
+        <CardBody className="">
+         
+          <div className="mb-4">
             <DatePicker
               label={"Select Date"}
               className="max-w-[284px]"

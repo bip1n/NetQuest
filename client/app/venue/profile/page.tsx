@@ -14,41 +14,95 @@ import {
   CardBody,
   ScrollShadow,
   Link, 
+  Tabs,
+  CardFooter,
+  Tab
 } from "@nextui-org/react";
 
 
-import { MessageIcon } from "@/components/Icons";
+import { MessageIcon,GalleryIcon,VenueIcon } from "@/components/Icons";
+import Slider from "@/components/Slider";
 
 export default function VenueProfile() {
-
 
   return (
     <>
       <Navigationbar />
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div>
+        <Card isFooterBlurred className="w-full h-[300px] col-span-12 sm:col-span-5">
+          <CardHeader className="absolute z-10 top-1 flex-col items-start">
+            <p className="text-tiny text-white/60 uppercase font-bold">Add to favourite</p>
+          </CardHeader>
+          <Image
+            removeWrapper
+            alt="Card example background"
+            className="z-0 w-full h-full scale-125 -translate-y-6 object-cover"
+            src="https://previews.123rf.com/images/horimatsu/horimatsu1509/horimatsu150900030/45248004-futsal-court-in-a-public-outdoor-park-with-artificial-turf.jpg"
+          />
+          <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between">
+            <div>
+            <p className="text-lg text-white/60 uppercase font-bold">KICK FUTSAL</p>
+            </div>
+            <Button className="text-tiny" color="secondary" radius="full" size="sm">
+              Book Now 
+            </Button>
+          </CardFooter>
+      </Card>
         
-
         <Card className="w-full max-w-[100%] md:max-w-[600px] mt-2">
-        <Card>
-          <VenueInfo/>
-        </Card>
-        <Card className="m-1">
-          <CardBody>
-              
-                  <span className="flex items-start mb-2 ml-2">
-                      <MessageIcon className="w-2 h-6" />
-                      <p className="font-semibold text-md ml-2">Reviews</p>
-                  </span>
+        <div className="flex w-full flex-col">
+        <Tabs aria-label="Options" color="secondary" variant="underlined"
+        >
+            <Tab  
+              key="about"
+              title={
+                <div className="flex items-center space-x-2">
+                   <VenueIcon className="w-6 h-6" />
+                  <span>About</span>
+                </div>
+              }
+            >
+              <VenueInfo/>
+            </Tab>
+          <Tab
+            key="reviews"
+            title={
+              <div className="flex items-center space-x-2">
+                <MessageIcon className="w-2 h-6" />
+                <span>Reviews</span>
+              </div>
+            }
+          >
                 <Reviews/>
-                <Link className="ml-2" href="/venue/reviews">Read More</Link> 
-            </CardBody>
-        </Card>
-        <Card className="m-1">
-          <Booking/> 
-        </Card>
-        
+          </Tab>
+          {/* <Tab
+            key="booking"
+            title={
+              <div className="flex items-center space-x-2">
+                
+                <span>Booking</span>
+              </div>
+            }
+          >
+            <Booking/>
+            </Tab> */}
+          <Tab
+            key="photos"
+            title={
+              <div className="flex items-center space-x-2">
+                <GalleryIcon/>
+                <span>Photos</span>
+              </div>
+            }
+          >
+          <Slider/>
+          </Tab>
+        </Tabs>
+    </div>    
+
         </Card>
       </div>
+      
       <FooterContent />
     </>
   );

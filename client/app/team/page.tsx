@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, Card, CardHeader, CardBody, Link } from "@nextui-org/react";
-import { Navigationbar } from "@/components/Navbar";
+import { Navigationbar } from "@/components/Navigationbar";
 import { GithubIcon } from "@/components/Icons";
 import {InstagramIcon} from "@/components/Assets/Instagram"
 

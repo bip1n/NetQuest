@@ -3,7 +3,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input
 import { Logo } from "@/components/Icons";
 import { EyeFilledIcon } from "./Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "./Assets/EyeSlashFilledIcon";
-import { SigninPage } from "./Signin";
+
 
 export default function SigninModel() {
   const [isOpen, setIsOpen] = useState(false);

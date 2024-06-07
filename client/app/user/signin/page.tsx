@@ -2,12 +2,6 @@
 import React, { useState } from "react";
 import {
   Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Checkbox,
-  Divider,
   Link,
   Input,
   Modal,
@@ -16,7 +10,7 @@ import {
   ModalContent,
   ModalFooter
 } from "@nextui-org/react";
-import { Logo } from "@/components/icons";
+import { Logo } from "@/components/Icons";
 import { EyeFilledIcon } from "@/components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/Assets/EyeSlashFilledIcon";
 import { FooterContent } from "@/components/footer";
@@ -126,6 +120,7 @@ export default function Signin() {
           </ModalContent>
         </Modal>
       </div>
+      <FooterContent/>
     </>
   );
 }

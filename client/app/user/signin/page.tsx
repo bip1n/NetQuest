@@ -13,7 +13,7 @@ import {
 import { Logo } from "@/components/Icons";
 import { EyeFilledIcon } from "@/components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/Assets/EyeSlashFilledIcon";
-import { FooterContent } from "@/components/footer";
+import { FooterContent } from "@/components/Footer";
 
 
 export default function Signin() {

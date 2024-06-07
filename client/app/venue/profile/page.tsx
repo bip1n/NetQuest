@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Navigationbar } from "@/components/Navigationbar";
-import { FooterContent } from "@/components/footer";
+import { FooterContent } from "@/components/Footer";
 import {Reviews} from "@/components/Reviews"
 import { Booking } from "@/components/Booking";
 import {VenueInfo} from "@/components/VenueInfo"
@@ -16,6 +16,7 @@ import {
   Link, 
 } from "@nextui-org/react";
 
+
 import { MessageIcon } from "@/components/Icons";
 
 export default function VenueProfile() {
@@ -25,6 +26,7 @@ export default function VenueProfile() {
     <>
       <Navigationbar />
       <div style={{ display: "flex", justifyContent: "center" }}>
+        
 
         <Card className="w-full max-w-[100%] md:max-w-[600px] mt-2">
         <Card>

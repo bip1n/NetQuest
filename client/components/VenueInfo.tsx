@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card,CardBody,CardFooter,CardHeader,Image } from '@nextui-org/react'
 import { VenueIcon,PhoneIcon,MapPin, BookmarkIcon } from './Icons';
-// import {Slider} from "@/components/Slider"
+import Slider from "@/components/Slider"
 
 export const  VenueInfo = () =>  {
     const amenitiesList = [
@@ -12,25 +12,27 @@ export const  VenueInfo = () =>  {
         // Add more amenities as needed
       ];
     
-      const venueImage = [
-        "https://5.imimg.com/data5/SELLER/Default/2021/5/EY/RW/SB/3103550/futsal-court-construction-500x500.jpg",
-        //  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIZmho9U-ikfH1iwBL3577ImyRPBk7xdmxEw&s"
-      ]
+    //   const venueImage = [
+    //     "https://5.imimg.com/data5/SELLER/Default/2021/5/EY/RW/SB/3103550/futsal-court-construction-500x500.jpg",
+    //     //  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIZmho9U-ikfH1iwBL3577ImyRPBk7xdmxEw&s"
+    //   ]
 
   return (
    <>
        <p className="font-bold text-xl p-3">Kick Futsal</p>
+       
        <CardBody>
-            {venueImage.map((image) => (
+            <Slider/>
+            {/* {venueImage.map((image) => (
                    <Image
                       width={420}
                       alt="Futsal Image"
                       src={image}
                     />
-              ))}          
-        {/* <Slider/> */}
+              ))}           */}
+       
        </CardBody>        
-          <Card className="m-1">
+          <Card className="m-1 mt-0">
             <CardBody>
             <div className="flex items-center">
                 <VenueIcon className="w-6 h-6" />

@@ -10,3 +10,4 @@ router.post('/viewpost', userCtrl.viewpost);
 
 // Export the router to be used in other parts of the application
 module.exports = router;
+ 

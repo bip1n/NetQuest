@@ -22,7 +22,7 @@ const loginLimiter = rateLimit({
 
         // Sending an HTTP response with the specified status code and message
         res.status(options.statusCode).send(options.message);
-    },
+    }, 
 
     // Setting to include standard headers in the rate limit response
     standardHeaders: true,

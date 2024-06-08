@@ -1,6 +1,6 @@
 "use client"
 import { title } from "@/components/Primitives";
-import {Navigationbar} from '@/components/Navbar' 
+import {Navigationbar} from '@/components/Navigationbar' 
 import React from "react";
 
 

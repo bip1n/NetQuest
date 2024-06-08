@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input } from '@nextui-org/input';
-import { SearchIcon } from '@/components/icons';
+import { SearchIcon } from '@/components/Icons';
 
 export const Searchbar = () => {
   return (

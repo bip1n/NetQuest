@@ -1,12 +1,12 @@
 export type SiteConfig = typeof siteConfig;
-import { ThemeSwitch } from "@/components/theme-switch";
+import { ThemeSwitch } from "@/components/ThemeSwitch";
 export const siteConfig = {
   name: "NetQuest",
   description: "Effortless Futsal Reservations: Book Quickly, Play Passionately.",
   navItems: [
     {
       label: "Home",
-      href: "/",
+      href: "/user/home",
     },
     {
       label: "Futsals",

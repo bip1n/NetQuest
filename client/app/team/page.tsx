@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, Card, CardHeader, CardBody, Link } from "@nextui-org/react";
-import { Navigationbar } from "@/components/Navbar";
+import { Navigationbar } from "@/components/Navigationbar";
 import { GithubIcon } from "@/components/Icons";
 import {InstagramIcon} from "@/components/Assets/Instagram"
 
@@ -23,6 +23,7 @@ const DeveloperCard: React.FC<DeveloperProps> = ({
   <Card className="w-full md:w-1/3 flex flex-col items-center justify-center mb-4 p-4">
     <CardBody className="overflow-visible py-2">
       <Image
+        isBlurred
         alt={`${name} background`}
         className="object-cover rounded-xl"
         src={image}

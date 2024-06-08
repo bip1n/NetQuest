@@ -18,7 +18,7 @@ import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { Logo } from "@/components/Icons";
 
 
-  const loginStatus = false;
+  const loginStatus = true;
   // const [isLogin, setIsLoginTrue] = useState(false); 
   // setIsLoginTrue (loginStatus);
 
@@ -39,7 +39,7 @@ export const Navigationbar = () => {
         />
       </NavbarContent>
 
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="center">
+      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
@@ -103,10 +103,10 @@ export const Navigationbar = () => {
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold ">Ram Bahadur</p>
             </DropdownItem>
-            <DropdownItem href="/venue/profile" key="settings">Profile Settings</DropdownItem>
+            <DropdownItem href="/venue/profile" key="settings">Profile</DropdownItem>
             <DropdownItem key="team_settings">Bookings</DropdownItem>
             <DropdownItem key="analytics" >Notifications</DropdownItem>
-            <DropdownItem key="system" >Saved</DropdownItem>
+            <DropdownItem key="system" href="/venue/settings">Settings</DropdownItem>
             <DropdownItem key="logout" color="danger">Log Out</DropdownItem>
           </DropdownMenu>
         </Dropdown>

@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import {Navigationbar} from "@/components/Navigationbar"
 import {FooterContent} from "@/components/footer"
-import {BookingTable} from "@/components/BookingTable"
+import {Booking} from "@/components/Booking"
 
 
 export default function BookingPage() {
   return (
     <>
       <Navigationbar />
-      <BookingTable/>
+      <Booking/>
       <FooterContent />
     </>
   );

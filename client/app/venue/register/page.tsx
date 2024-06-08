@@ -5,7 +5,7 @@ import { Button, Card, CardHeader, CardBody, CardFooter, Checkbox, Divider, Link
 import { Logo } from "../../../components/Icons";
 import { EyeFilledIcon } from "../../../components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../../../components/Assets/EyeSlashFilledIcon";
-import { FooterContent } from "@/components/footer";
+import { FooterContent } from "@/components/Footer";
 
 
 export default function RegisterVenue() {

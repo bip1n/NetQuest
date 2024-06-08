@@ -2,12 +2,6 @@
 import React, { useState } from "react";
 import {
   Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Checkbox,
-  Divider,
   Link,
   Input,
   Modal,
@@ -126,6 +120,7 @@ export default function Signin() {
           </ModalContent>
         </Modal>
       </div>
+      <FooterContent/>
     </>
   );
 }

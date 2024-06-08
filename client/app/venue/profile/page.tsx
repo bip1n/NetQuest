@@ -98,7 +98,7 @@ export default function VenueProfile() {
               </div>
             }
           >
-            <VenueInfo id={'1243124'} />
+            <VenueInfo id={'66649a5528a8e99bd3f5c849'} />
           </Tab>
           <Tab
             key="reviews"

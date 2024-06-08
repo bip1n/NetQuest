@@ -14,6 +14,7 @@ app.use(express.json());
 // Use the authRouter for authentication-related routes
 app.use("/api", require("./app/routers/authRouter"));
 app.use("/api", require("./app/routers/userRouter.js"));
+app.use("/api", require("./app/routers/ownerRouter.js"));
 
 app.get("/", (req, res) => {
   res.send("Hi Welcome to NET QUEST API .....");

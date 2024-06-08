@@ -23,7 +23,7 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ id }) => {
   useEffect(() => {
     const fetchVenueDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/getdetails?id=${id}`); // Use the id prop in the fetch URL
+        const response = await fetch(`http://localhost:4000/api/venuedetails?id=${id}`); // Use the id prop in the fetch URL
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -37,12 +37,13 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ id }) => {
     fetchVenueDetails();
   }, [id]); // Add id as a dependency to refetch if it changes
 
-  if (!venueDetails) {
+  while (!venueDetails) {
     return <p>Loading...</p>; // Show a loading message while the data is being fetched
   }
 
   const { phone, address, amenities, startingPrice } = venueDetails;
 
+  console.log('venueDetails:', venueDetails);
   return (
     <>
       <CardBody>

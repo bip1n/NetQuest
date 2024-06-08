@@ -205,7 +205,7 @@ export const Booking = () => {
                   <Button color="danger" variant="light" onPress={onClose}>
                     Cancel
                   </Button>
-                  <Button color="primary"  onClick={() => {
+                  <Button color="secondary" variant="shadow"  onClick={() => {
                       router.push("/venue/booking/checkout");
                     }}>
                     Book

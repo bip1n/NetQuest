@@ -26,7 +26,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/react";
-import { getLocalTimeZone, today } from "@internationalized/date";
+import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
 
 // Define a type for the slot objects
 interface Slot {
@@ -41,6 +41,7 @@ export const Booking = () => {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [checkedSlots, setCheckedSlots] = useState<number[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<CalendarDate>(today(getLocalTimeZone()));
 
   // Simulate data fetching
   useEffect(() => {
@@ -48,7 +49,7 @@ export const Booking = () => {
       const simulatedSlots: Slot[] = [
         { time: "7:00 AM", rate: 1200, status: "AVAILABLE" },
         { time: "8:00 AM", rate: 1200, status: "BOOKED" },
-        { time: "9:00 AM", rate: 1500, status: "AVAILABLE" },
+        { time: "9:00 AM", rate: 1200, status: "AVAILABLE" },
       ];
       setSlots(simulatedSlots);
       setIsLoading(false);
@@ -88,7 +89,8 @@ export const Booking = () => {
               labelPlacement="inside"
               isRequired
               maxValue={today(getLocalTimeZone()).add({ days: 7 })}
-              defaultValue={today(getLocalTimeZone())}
+              defaultValue={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
             />
           </div>
 
@@ -167,7 +169,7 @@ export const Booking = () => {
           <CardFooter>
             <p className="italic text-xs">
               <span className="text-red-500"> * </span>The{" "}
-              <span className="text-orange-500">RESERVED</span> slot might change
+              <span className="text-orange-500">RESERVED</span> slot/s might change
               later.<span className="text-red-500"> *</span>
             </p>
           </CardFooter>
@@ -178,25 +180,24 @@ export const Booking = () => {
           isOpen={isOpen}
           placement="bottom-center"
           onOpenChange={setIsOpen}
-          isDismissable={false}
         >
           <ModalContent>
             {(onClose) => (
               <>
-                <ModalHeader className="flex flex-col gap-1">
-                  Selected Shift
+                <ModalHeader className="flex flex-col gap-1 text-secondary">
+                  Selected Shift/s
                 </ModalHeader>
                 <ModalBody>
                   {selectedSlots.map((slot, index) => (
                     <p key={index}>
-                      Date: 06/08/2024
+                      Date: {selectedDate.toString()}
                       <br />
                       Time: {slot.time}
                       <br />
                       Rate: Rs. {slot.rate}
                     </p>
                   ))}
-                  <p>Total: <span className="text-green-500">Rs. {totalRate}</span></p>
+                  <p>Total: Rs. {totalRate}</p>
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>

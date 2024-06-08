@@ -26,7 +26,6 @@ import { MessageIcon,GalleryIcon,VenueIcon } from "@/components/Icons";
 import Slider from "@/components/Slider";
 
 export default function VenueProfile() {
-
   const router = useRouter();
   return (
     <>
@@ -59,7 +58,7 @@ export default function VenueProfile() {
           </CardFooter>
       </Card>
         
-        <Card className="w-full max-w-[100%] md:max-w-[600px] mt-2">
+        {/* <Card className="w-full max-w-[100%] md:max-w-[600px] mt-2">
         <div className="flex w-full flex-col">
         <Tabs aria-label="Options" color="secondary" variant="underlined"
         >
@@ -84,7 +83,36 @@ export default function VenueProfile() {
             }
           >
                 <Reviews/>
+          </Tab> */}
+
+
+      <Card className="w-full max-w-[100%] md:max-w-[600px] mt-2">
+      <div className="flex w-full flex-col">
+        <Tabs aria-label="Options" color="secondary" variant="underlined">
+          <Tab  
+            key="about"
+            title={
+              <div className="flex items-center space-x-2">
+                <VenueIcon className="w-6 h-6" />
+                <span>About</span>
+              </div>
+            }
+          >
+            <VenueInfo id={'1243124'} />
           </Tab>
+          <Tab
+            key="reviews"
+            title={
+              <div className="flex items-center space-x-2">
+                <MessageIcon className="w-2 h-6" />
+                <span>Reviews</span>
+              </div>
+            }
+          >
+            <Reviews />
+          </Tab>
+
+
           
           <Tab
             key="photos"

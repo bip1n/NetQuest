@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default : false
     },
+    Bookedstatus:{
+        type: Boolean,
+        default: false,
+    },
     joindate:{
         type: Date,
         default: Date.now

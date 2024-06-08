@@ -27,6 +27,7 @@ import {
   ModalFooter,
 } from "@nextui-org/react";
 import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
+import { useRouter } from 'next/navigation';
 
 // Define a type for the slot objects
 interface Slot {
@@ -36,6 +37,7 @@ interface Slot {
 }
 
 export const Booking = () => {
+  const router = useRouter();
   const venueOwner = false;
   const [isLoading, setIsLoading] = useState(true);
   const [slots, setSlots] = useState<Slot[]>([]);
@@ -169,7 +171,7 @@ export const Booking = () => {
           <CardFooter>
             <p className="italic text-xs">
               <span className="text-red-500"> * </span>The{" "}
-              <span className="text-orange-500">RESERVED</span> slot/s might change
+              <span className="text-orange-500">RESERVED</span> slot might change
               later.<span className="text-red-500"> *</span>
             </p>
           </CardFooter>
@@ -203,7 +205,9 @@ export const Booking = () => {
                   <Button color="danger" variant="light" onPress={onClose}>
                     Cancel
                   </Button>
-                  <Button color="primary" onPress={onClose}>
+                  <Button color="primary"  onClick={() => {
+                      router.push("/venue/booking/checkout");
+                    }}>
                     Book
                   </Button>
                 </ModalFooter>

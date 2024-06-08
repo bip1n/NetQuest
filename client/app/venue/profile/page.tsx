@@ -17,7 +17,8 @@ import {
   Link, 
   Tabs,
   CardFooter,
-  Tab
+  Tab,
+  Chip
 } from "@nextui-org/react";
 
 
@@ -45,17 +46,16 @@ export default function VenueProfile() {
             <div>
             <p className="text-lg text-default uppercase font-bold">KICK FUTSAL</p>
             </div>
-            <Button
+            <Chip
               className="text-tiny"
               color="secondary"
-              radius="full"
+              radius="sm"
               size="sm"
-              onClick={() => {
-                router.push("/venue/booking");
-              }}
+              variant="shadow"
+             
             >
-              Book Now
-            </Button>
+              [3.4 / 5]
+            </Chip>
           </CardFooter>
       </Card>
         

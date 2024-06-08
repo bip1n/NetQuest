@@ -51,7 +51,7 @@ export const  VenueInfo = () =>  {
             </div>
             </CardBody>
            
-        <CardBody><Button color="secondary" radius="md" size="md"  onClick={() => {
+        <CardBody><Button color="success" radius="md" size="md"  onClick={() => {
                 router.push("/venue/booking");
               }}>Book Now</Button>
         </CardBody>       

@@ -13,29 +13,73 @@ import {
   DatePicker,
   Spinner,
   Table,
-  Checkbox,Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,
+  Chip,
+  Checkbox,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  CardFooter,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "@nextui-org/react";
 import { getLocalTimeZone, today } from "@internationalized/date";
 
-export const Booking = () => {
+// Define a type for the slot objects
+interface Slot {
+  time: string;
+  rate: number;
+  status: string;
+}
 
-  const venueOwner = true;
-  const [isLoading, setIsLoading] = useState(false);
+export const Booking = () => {
+  const venueOwner = false;
+  const [isLoading, setIsLoading] = useState(true);
+  const [slots, setSlots] = useState<Slot[]>([]);
+  const [checkedSlots, setCheckedSlots] = useState<number[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Simulate data fetching
   useEffect(() => {
     const timer = setTimeout(() => {
+      const simulatedSlots: Slot[] = [
+        { time: "7:00 AM", rate: 1200, status: "AVAILABLE" },
+        { time: "8:00 AM", rate: 1200, status: "BOOKED" },
+        { time: "9:00 AM", rate: 1500, status: "AVAILABLE" },
+      ];
+      setSlots(simulatedSlots);
       setIsLoading(false);
-    },2000); // 2 seconds delay to simulate fetching time
+    }, 2000); // 2 seconds delay to simulate fetching time
 
     return () => clearTimeout(timer); // Cleanup the timer on unmount
   }, []);
 
-  return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+  const handleStatusChange = (slotIndex: number, newStatus: string) => {
+    const updatedSlots = [...slots];
+    updatedSlots[slotIndex].status = newStatus;
+    setSlots(updatedSlots);
+  };
 
+  const handleCheckboxChange = (index: number, checked: boolean) => {
+    if (checked) {
+      setCheckedSlots((prev) => [...prev, index]);
+      setIsOpen(true);
+    } else {
+      setCheckedSlots((prev) => prev.filter((i) => i !== index));
+      setIsOpen(false);
+    }
+  };
+
+  const selectedSlots = checkedSlots.map((index) => slots[index]);
+  const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.rate, 0);
+
+  return (
+    <>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <CardBody className="">
-         
           <div className="mb-4">
             <DatePicker
               label={"Select Date"}
@@ -58,47 +102,115 @@ export const Booking = () => {
                 <TableColumn>TIME</TableColumn>
                 <TableColumn>RATE</TableColumn>
                 <TableColumn>STATUS</TableColumn>
-                {venueOwner ?
-                    <TableColumn> EDIT</TableColumn>
-                    :
-                     <TableColumn>SELECT</TableColumn>
-                  }
-                   
+                <TableColumn>{venueOwner ? "EDIT" : "SELECT"}</TableColumn>
               </TableHeader>
 
               <TableBody>
-                <TableRow key="1">
-                  <TableCell>7:00 AM</TableCell>
-                  <TableCell>1200</TableCell>
-                  <TableCell>
-                    <Button radius="sm" size="sm" color="success">
-                      AVAILABLE
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    {venueOwner ?
-                      <Dropdown backdrop="opaque" >
-                        <DropdownTrigger>
-                          <Button radius="sm" size="sm" color="secondary">EDIT</Button>
-                        </DropdownTrigger>
-                        <DropdownMenu variant="faded" onAction={(key) => alert(key)}>
-                          <DropdownItem key="Status changed to AVAILABLE"><p className="text-green-500">AVAILABLE</p></DropdownItem>
-                          <DropdownItem key="Status changed to RESERVED"><p className="text-orange-400">RESERVED</p></DropdownItem>
-                          <DropdownItem key="Status changed to BOOKED"><p className="text-red-600">BOOKED</p></DropdownItem>
-                          <DropdownItem key="Status changed to UNAVAILABLE"><p>UNAVAILABLE</p></DropdownItem>
-
-                        </DropdownMenu>
-                    </Dropdown>
-                    :
-                     <Checkbox></Checkbox>
-                  }
-                  </TableCell>
-                </TableRow>
+                {slots.map((slot, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{slot.time}</TableCell>
+                    <TableCell>{slot.rate}</TableCell>
+                    <TableCell>
+                      <Chip
+                        radius="sm"
+                        size="sm"
+                        color={
+                          slot.status === "AVAILABLE"
+                            ? "success"
+                            : slot.status === "BOOKED"
+                            ? "danger"
+                            : "warning"
+                        }
+                      >
+                        {slot.status}
+                      </Chip>
+                    </TableCell>
+                    <TableCell>
+                      {venueOwner ? (
+                        <Dropdown backdrop="opaque">
+                          <DropdownTrigger>
+                            <Button size="sm" variant="shadow" color="secondary">
+                              EDIT
+                            </Button>
+                          </DropdownTrigger>
+                          <DropdownMenu
+                            variant="faded"
+                            onAction={(key) => handleStatusChange(index, key as string)}
+                          >
+                            <DropdownItem key="AVAILABLE">
+                              <p className="text-green-500">AVAILABLE</p>
+                            </DropdownItem>
+                            <DropdownItem key="RESERVED">
+                              <p className="text-orange-400">RESERVED</p>
+                            </DropdownItem>
+                            <DropdownItem key="BOOKED">
+                              <p className="text-red-600">BOOKED</p>
+                            </DropdownItem>
+                            <DropdownItem key="UNAVAILABLE">
+                              <p>UNAVAILABLE</p>
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
+                      ) : (
+                        <Checkbox
+                          isDisabled={slot.status !== "AVAILABLE"}
+                          isSelected={checkedSlots.includes(index)}
+                          onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+                        ></Checkbox>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           )}
+          <CardFooter>
+            <p className="italic text-xs">
+              <span className="text-red-500"> * </span>The{" "}
+              <span className="text-orange-500">RESERVED</span> slot might change
+              later.<span className="text-red-500"> *</span>
+            </p>
+          </CardFooter>
         </CardBody>
-        
-    </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        <Modal
+          isOpen={isOpen}
+          placement="bottom-center"
+          onOpenChange={setIsOpen}
+          isDismissable={false}
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  Selected Shift
+                </ModalHeader>
+                <ModalBody>
+                  {selectedSlots.map((slot, index) => (
+                    <p key={index}>
+                      Date: 06/08/2024
+                      <br />
+                      Time: {slot.time}
+                      <br />
+                      Rate: Rs. {slot.rate}
+                    </p>
+                  ))}
+                  <p>Total: <span className="text-green-500">Rs. {totalRate}</span></p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Cancel
+                  </Button>
+                  <Button color="primary" onPress={onClose}>
+                    Book
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      </div>
+    </>
   );
 };

@@ -218,7 +218,6 @@ export default function RegisterVenue() {
               </div>
             )}
           </CardBody>
-
           <CardBody className="flex gap-4">
             <div className="flex flex-1 gap-4">
               <Input fullWidth type="text" readOnly value={"Upload Video"} />
@@ -226,7 +225,6 @@ export default function RegisterVenue() {
             </div>
             {videoError && <p className="text-red-500">{videoError}</p>}
           </CardBody>
-
           <CardBody>
             {selectedVideo && (
               <video className="w-full" controls>
@@ -240,17 +238,12 @@ export default function RegisterVenue() {
               I agree to the <Link href="/termsandconditionsforvenueowners">terms and conditions.</Link>
             </Checkbox>
           </CardBody>
-
           <CardFooter className="flex justify-center">
             <Button color="primary" radius="lg" className="w-full" type="submit" disabled={loading}>
               {loading ? "Registering..." : "Register" } 
             </Button>
             {loading && <Spinner color="danger"/>}
-            
           </CardFooter>
-
-         
-
           <Divider />
         </Card>
       </form>

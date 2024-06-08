@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Navigationbar} from "@/components/Navigationbar";
-import {FooterContent} from "@/components/footer";
+import {FooterContent} from "@/components/Footer";
 import {Card, CardBody, CardFooter, CardHeader,Avatar,Button} from "@nextui-org/react";
 import { Reviews } from "@/components/Reviews";
 

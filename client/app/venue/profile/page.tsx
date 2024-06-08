@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from 'next/navigation';
 import { Navigationbar } from "@/components/Navigationbar";
 import { FooterContent } from "@/components/Footer";
 import {Reviews} from "@/components/Reviews"
@@ -25,6 +26,7 @@ import Slider from "@/components/Slider";
 
 export default function VenueProfile() {
 
+  const router = useRouter();
   return (
     <>
       <Navigationbar />
@@ -41,10 +43,18 @@ export default function VenueProfile() {
           />
           <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between">
             <div>
-            <p className="text-lg text-white/60 uppercase font-bold">KICK FUTSAL</p>
+            <p className="text-lg text-default uppercase font-bold">KICK FUTSAL</p>
             </div>
-            <Button className="text-tiny" color="secondary" radius="full" size="sm">
-              Book Now 
+            <Button
+              className="text-tiny"
+              color="secondary"
+              radius="full"
+              size="sm"
+              onClick={() => {
+                router.push("/venue/booking");
+              }}
+            >
+              Book Now
             </Button>
           </CardFooter>
       </Card>
@@ -75,17 +85,7 @@ export default function VenueProfile() {
           >
                 <Reviews/>
           </Tab>
-          {/* <Tab
-            key="booking"
-            title={
-              <div className="flex items-center space-x-2">
-                
-                <span>Booking</span>
-              </div>
-            }
-          >
-            <Booking/>
-            </Tab> */}
+          
           <Tab
             key="photos"
             title={

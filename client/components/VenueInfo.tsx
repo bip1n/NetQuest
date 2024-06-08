@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card,CardBody,CardFooter,CardHeader,Image,Button } from '@nextui-org/react'
-import { VenueIcon,PhoneIcon,MapPin, BookmarkIcon } from './Icons';
+import { VenueIcon,PhoneIcon,MapPin, BookmarkIcon,RupeeIcon } from './Icons';
 import Slider from "@/components/Slider"
 import { useRouter } from 'next/navigation';
 
@@ -44,14 +44,16 @@ export const  VenueInfo = () =>  {
                   </li>
                 ))}
               </ul>
-            </CardBody>
-            <div className="flex items-center mt-1">
-                <p className='font-bold ml-5'>$</p>
-                <p className='text-medium ml-2'>
-                  Starting From <span className='text-green-600 text-medium'> Rs.850</span>
-                </p>
+
+              <div className="flex items-center mt-1">
+                <RupeeIcon className="w-6 h-6" />
+                <p className="text-medium ml-1">Starting From <span className='text-green-600'> Rs. 850</span></p>
             </div>
-        <CardBody><Button color="secondary" radius="md" size="md">Book Now</Button>
+            </CardBody>
+           
+        <CardBody><Button color="secondary" radius="md" size="md"  onClick={() => {
+                router.push("/venue/booking");
+              }}>Book Now</Button>
         </CardBody>       
                 
           

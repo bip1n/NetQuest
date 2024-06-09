@@ -9,6 +9,7 @@ const ownerCtrl = {
         try {
 
             const {owner_id} = req.body;
+            console.log(owner_id)
             const owner = await Admin.findOne({owner_id});
             if (!owner) return res.status(400).json({error: "Owner does not exist."});
 

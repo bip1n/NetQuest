@@ -1,4 +1,4 @@
-const Admin = require("../models/ownerModel");
+const Owner = require("../models/ownerModel");
 const VenueStatus = require("../models/venueStatus");
 const venue = require("../models/venueModel");
 
@@ -9,7 +9,7 @@ const ownerCtrl = {
         try {
 
             const {owner_id} = req.body;
-            const owner = await Admin.findOne({owner_id});
+            const owner = await Owner.findOne({owner_id});
             if (!owner) return res.status(400).json({error: "Owner does not exist."});
 
             const venues = await venue.find({owner_id});
@@ -30,21 +30,32 @@ const ownerCtrl = {
 
     VenueDetails: async (req, res) => {
         try {
-            const owner_id = req.query.id;
+            // const owner_id = req.query.id;
 
-            console.log(owner_id);
+            // console.log(owner_id);
 
-            if (!owner_id) {
-                return res.status(400).json({ error: "Owner ID is required." });
+            // if (!owner_id) {
+            //     return res.status(400).json({ error: "Owner ID is required." });
+            // }
+
+            const owner_id = "66652659ce1faf2be165b1b2"; // Valid ObjectId as a string
+
+            // const owner = await Owner.findOne({owner_id});
+            // console.log("42:",owner);
+            // if (!Owner){ 
+            //     return res.status(400).json({error: "Owner does not exist."})
+            // }
+
+            const owner = await Owner.findById(owner_id);
+
+            if (!owner) {
+                return res.status(400).json({ error: "Owner does not exist." });
             }
 
-            const user = await Users.findOne({email});
-            if (!user){ 
-                return res.status(400).json({error: "User does not exist."})
-            }
-
+            console.log("55:",owner);
+            
             // Fetch the owner details
-            // const owner = await Admin.findOne({ owner_id });
+            // const owner = await Owner.findOne({ owner_id });
             // console.log(owner);
             // if (!owner) {
             //     return res.status(400).json({ error: "Owner does not exist." });

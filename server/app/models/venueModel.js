@@ -8,7 +8,6 @@ const reviewSchema = new mongoose.Schema({
     },
     content: {
         type: String,
-        required: true,
     },
     upvotes: {
         type: Number,
@@ -32,19 +31,16 @@ const venueSchema = new mongoose.Schema({
     },
     images: [{
         type: String,
-        required: true,
     }],
     videos: [{
         type: String,
-        required: true,
     }],
     amenities: [{
         type: String,
-        required: true,
     }],
     minprice: {
         type: Number,
-        required: true,
+        default: 0,
     },
     reviews: [reviewSchema]  // Array of reviews
 });

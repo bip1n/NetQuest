@@ -76,49 +76,50 @@ export default function VenueProfile() {
                 <Reviews/>
           </Tab> */}
 
-        <Card className="w-full max-w-[100%] md:max-w-[600px] mt-2">
-          <div className="flex w-full flex-col">
-            <Tabs aria-label="Options" color="secondary" variant="underlined">
-              <Tab
-                key="about"
-                title={
-                  <div className="flex items-center space-x-2">
-                    <VenueIcon className="w-6 h-6" />
-                    <span>About</span>
-                  </div>
-                }
-              >
-                <VenueInfo id={"1243124"} />
-              </Tab>
-              <Tab
-                key="reviews"
-                title={
-                  <div className="flex items-center space-x-2">
-                    <MessageIcon className="w-2 h-6" />
-                    <span>Reviews</span>
-                  </div>
-                }
-              >
-                <Reviews />
-                <Link href="/venue/reviews" className="ml-3 text-sm ">
-                  {" "}
-                  Read More...
-                </Link>
-              </Tab>
 
-              <Tab
-                key="photos"
-                title={
-                  <div className="flex items-center space-x-2">
-                    <GalleryIcon />
-                    <span>Photos</span>
-                  </div>
-                }
-              >
-                <Slider />
-              </Tab>
-            </Tabs>
-          </div>
+      <Card className="w-full max-w-[100%] md:max-w-[600px] mt-2">
+      <div className="flex w-full flex-col">
+        <Tabs aria-label="Options" color="secondary" variant="underlined">
+          <Tab  
+            key="about"
+            title={
+              <div className="flex items-center space-x-2">
+                <VenueIcon className="w-6 h-6" />
+                <span>About</span>
+              </div>
+            }
+          >
+
+            <VenueInfo id={'66649a5528a8e99bd3f5c849'} />
+
+          </Tab>
+          <Tab
+            key="reviews"
+            title={
+              <div className="flex items-center space-x-2">
+                <MessageIcon className="w-2 h-6" />
+                <span>Reviews</span>
+              </div>
+            }
+          >
+            <Reviews />
+            <Link href="/venue/reviews" className="ml-3 text-sm "> Read More...</Link>
+          </Tab>
+          
+          <Tab
+            key="photos"
+            title={
+              <div className="flex items-center space-x-2">
+                <GalleryIcon/>
+                <span>Photos</span>
+              </div>
+            }
+          >
+          <Slider/>
+          </Tab>
+        </Tabs>
+    </div>    
+
         </Card>
       </div>
 

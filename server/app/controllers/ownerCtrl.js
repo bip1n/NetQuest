@@ -57,17 +57,25 @@ const ownerCtrl = {
 
             const phone = owner.phone;
             const address = owner.mapCoord;
-            const amenities = venues.amenities;
+            // const amenities = venues.amenities;
             const startingPrice = venues.minprice; 
             const status = venueStatus.status;
            
             if (process.env.DEBUG == 'development') {
                 console.log(phone);
                 console.log(address);
-                console.log(amenities); 
+                // console.log(amenities); 
                 console.log(startingPrice);
                 console.log(status);
             }
+
+            const amenities = [
+                "WiFi",
+                "Parking",
+                "Food & Drinks",
+                "Restrooms",
+                // Add more amenities as needed
+              ];
 
             // Construct the response object
             const response = {
@@ -89,6 +97,46 @@ const ownerCtrl = {
     },
 
 
+    viewphotos: async (req, res) => {
+        try {
+
+            const owner_id = req.query.id;
+           
+            const venues = await venue.findOne({ owner_id });
+            if (!venues) {
+                return res.status(400).json({ error: "Venue does not exist." });
+            }
+
+            const images = venues.images;
+            const videos = venues.videos;
+
+            const imageList = [
+                {
+                  title: "Orange",
+                  img: "https://www.tarkettsportsindoor.com/wp-content/uploads/2019/10/futsal.jpg"
+                },
+                {
+                  title: "Tangerine",
+                  img: "https://5.imimg.com/data5/SELLER/Default/2021/5/EY/RW/SB/3103550/futsal-court-construction-500x500.jpg"
+                },
+                {
+                  title: "Raspberry",
+                  img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNA4mvp6wXwuztfTY_ouy3oPDKxzlj8ZBcfQivfoRfE6NTR3FKssMpEvB1QvtvPiHmaIY&usqp=CAU"
+                },
+                {
+                  title: "Lemon",
+                  img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4grFGjZRV1NI1eiubTlF4C1VkFV_cI9aDBA&s"
+                }
+              ];
+
+
+            return res.status(200).json(imageList);
+
+          
+        } catch (err) {
+          return res.status(500).json({ msg: err.message });
+        }
+    },
 }
 
 module.exports = ownerCtrl;

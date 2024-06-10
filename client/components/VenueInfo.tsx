@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { CardBody, Button } from '@nextui-org/react';
-import { PhoneIcon, MapPin, BookmarkIcon, RupeeIcon } from './Icons';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from "react";
+import { CardBody, Button, Spinner } from "@nextui-org/react";
+import { PhoneIcon, MapPin, BookmarkIcon, RupeeIcon } from "./Icons";
+import { useRouter } from "next/navigation";
 
 // Define the interface for the venue details
 interface VenueDetails {
@@ -20,17 +20,21 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ id }) => {
   const [venueDetails, setVenueDetails] = useState<VenueDetails | null>(null);
   const router = useRouter();
 
+  console.log("afaf");
+
   useEffect(() => {
     const fetchVenueDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/getdetails?id=${id}`); // Use the id prop in the fetch URL
+        const response = await fetch(
+          `http://localhost:4000/getdetails?id=${id}`
+        ); // Use the id prop in the fetch URL
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data: VenueDetails = await response.json(); // Type the response data
         setVenueDetails(data);
       } catch (error) {
-        console.error('Failed to fetch venue details:', error);
+        console.error("Failed to fetch venue details:", error);
       }
     };
 
@@ -38,7 +42,7 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ id }) => {
   }, [id]); // Add id as a dependency to refetch if it changes
 
   if (!venueDetails) {
-    return <p>Loading...</p>; // Show a loading message while the data is being fetched
+    return <Spinner/>; // Show a loading message while the data is being fetched
   }
 
   const { phone, address, amenities, startingPrice } = venueDetails;
@@ -48,7 +52,12 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ id }) => {
       <CardBody>
         <div className="flex items-center">
           <PhoneIcon className="w-6 h-6" />
-          <a href={`tel:${phone}`} className="font-semibold text-medium ml-2 hover:underline text-blue-700">{phone}</a>
+          <a
+            href={`tel:${phone}`}
+            className="font-semibold text-medium ml-2 hover:underline text-blue-700"
+          >
+            {phone}
+          </a>
         </div>
         <div className="flex items-center mt-1">
           <MapPin className="w-6 h-6" />
@@ -74,11 +83,19 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ id }) => {
         </ul>
         <div className="flex items-center mt-1">
           <RupeeIcon className="w-6 h-6" />
-          <p className="text-medium ml-1">Starting From <span className='text-green-600'> Rs. {startingPrice}</span></p>
+          <p className="text-medium ml-1">
+            Starting From{" "}
+            <span className="text-green-600"> Rs. {startingPrice}</span>
+          </p>
         </div>
       </CardBody>
       <CardBody>
-        <Button color="secondary" radius="md" size="md" onClick={() => router.push("/venue/booking")}>
+        <Button
+          color="secondary"
+          radius="md"
+          size="md"
+          onClick={() => router.push("/venue/booking")}
+        >
           Book Now
         </Button>
       </CardBody>

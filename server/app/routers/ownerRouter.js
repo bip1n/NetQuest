@@ -8,6 +8,7 @@ const verifyToken = require('../middleware/verifyToken.js');
 // router.post('/viewabout', ownerCtrl.viewabout);  
 router.post('/viewprofile', ownerCtrl.viewprofile);
 router.get('/venuedetails', ownerCtrl.VenueDetails);
+router.get('/viewphotos', ownerCtrl.viewphotos);
 
 
 

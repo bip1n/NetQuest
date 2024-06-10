@@ -22,10 +22,9 @@ import {
 } from "@nextui-org/react";
 
 import { MessageIcon, GalleryIcon, VenueIcon } from "@/components/Icons";
-import Slider from "@/components/Slider";
+import {Slider} from "@/components/Slider";
 
 export default function VenueProfile() {
-  console.log("ajhfj");
 
   const router = useRouter();
   return (
@@ -115,7 +114,7 @@ export default function VenueProfile() {
               </div>
             }
           >
-          <Slider/>
+          <Slider id={'66649a5528a8e99bd3f5c849'} />
           </Tab>
         </Tabs>
     </div>    

@@ -1,6 +1,7 @@
 const Users = require("../models/userModel");
 const Admin = require("../models/ownerModel");
 const VenueStatus = require("../models/venueStatus");
+const Venue = require("../models/venueModel");
 const cloudinary = require("../utils/cloudinary");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -111,8 +112,15 @@ const authCtrl = {
             const videoUrl = videoResult.secure_url;
 
             const newVenueStatus = new VenueStatus({
-                admin_id: newAdmin._id, status: "pending", admin_comment: "", images: imageUrls, videos: [videoUrl]
+                owner_id: newAdmin._id, status: "pending", admin_comment: "", images: imageUrls, videos: [videoUrl]
             });
+
+            const newVenue = new Venue({
+                owner_id: newAdmin._id, images: [], videos: [], amenities: [], minprice: 0, reviews: []
+            });
+
+            await newVenue.save(); // Save the venue details 
+            // yo mathi ko chai aile lai matra ho pachi feri admin bata acess vayesi matra milaune ho
 
             await newVenueStatus.save();
 

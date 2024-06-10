@@ -5,19 +5,19 @@ import { DoubledownIcon,DoubleupIcon, ClickedDoubledownIcon,ClickedDoubleupIcon 
 export const Reviews = () => {
   return (
     <>
-     <Card className="ml-1.5 mr-1.5 mb-1.5 mt-0">
+         <Card className="ml-1.5 mr-1.5 mb-1.5 mt-0">
             <CardHeader className="justify-between">
                 <div className="flex gap-5">
                 <Avatar isBordered radius="full" size="md" src="https://qph.cf2.quoracdn.net/main-qimg-ed060e28837ac92bae6fff6f068eee04-lq" />
                 <div className="flex flex-col gap-1 items-start justify-center">
-                    <h4 className="text-small font-semibold leading-none text-default-600">Xavier</h4>
-                    <h5 className="text-small tracking-tight text-default-400">@heroxavier</h5>
+                    <h4 className="text-small font-semibold leading-none text-default-600">Neeya</h4>
+                    <h5 className="text-small tracking-tight text-default-400">@cuteniya</h5>
                 </div>
                 </div>
             </CardHeader>
             <CardBody className="px-3 py-0 text-small">
                 <p className="text-wrap text-left ">
-                prime location.. Lovely hai lovely.. lovely ko bau...satisfying service #LovedIt
+                    good 🥳❤️
                 </p>
             </CardBody>
             <CardFooter className="gap-3">
@@ -31,6 +31,7 @@ export const Reviews = () => {
                 </div>
             </CardFooter>
         </Card>
+     
         <Card className="ml-1.5 mr-1.5 mb-1.5 mt-0">
             <CardHeader className="justify-between">
                 <div className="flex gap-5">

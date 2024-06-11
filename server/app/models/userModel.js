@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default : false
     },
-    Bookedstatus:{
+    Bookedstatus:{ // history of booking
         type: Boolean,
         default: false,
     },

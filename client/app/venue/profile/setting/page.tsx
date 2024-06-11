@@ -23,7 +23,7 @@ export default function ProfileSetting () {
     const fileList = event.target.files;
     if (fileList) {
       // Limiting the number of files to 5
-      const selectedFiles = Array.from(fileList).slice(0, 5);
+      const selectedFiles = Array.from(fileList).slice(0, 10);
       setFiles([...files, ...selectedFiles]);
     }
   };

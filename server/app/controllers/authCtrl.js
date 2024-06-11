@@ -13,8 +13,9 @@ const authCtrl = {
 
             if (!email) {return res.status(400).json({ error: 'email is required' });}
             if (!password) {return res.status(400).json({ error: 'password is required' });}
-
+            console.log("email:", email);
             const user = await Users.findOne({email});
+            console.log("user:", user);
             if (!user){ 
                 return res.status(400).json({error: "User does not exist."})
             }
@@ -25,6 +26,31 @@ const authCtrl = {
             // If login success, create access token and refresh token
             const access_token = createAccessToken({id: user._id, email: user.email});
             const refresh_token = createRefreshToken({id: user._id, email: user.email});
+
+            // send the access token and refresh token to the client with status code
+            return res.status(200).json({error: "Login Success!", access_token, refresh_token});
+            
+        } catch (err) {
+          return res.status(500).json({ msg: err.message });
+        }
+    },
+
+    login_admin: async (req, res) => {
+        try {
+            const {email, password} = req.body;
+
+            if (!email) {return res.status(400).json({ error: 'email is required' });}
+            if (!password) {return res.status(400).json({ error: 'password is required' });}
+
+            const admin = await Admin.findOne({email});
+            if (!admin) return res.status(400).json({error: "Admin does not exist."});
+
+            const isMatch = await bcrypt.compare(password, admin.password);
+            if (!isMatch) return res.status(400).json({error: "Incorrect password."});
+
+            // If login success, create access token and refresh token
+            const access_token = createAccessToken({id: admin._id, email: admin.email});
+            const refresh_token = createRefreshToken({id: admin._id, email: admin.email});
 
             // send the access token and refresh token to the client with status code
             return res.status(200).json({error: "Login Success!", access_token, refresh_token});

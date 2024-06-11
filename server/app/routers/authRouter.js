@@ -11,6 +11,7 @@ router.post('/register', upload.fields([]), authCtrl.register_user);
 
 // Define route for user login
 router.post('/login', loginLimiter, authCtrl.login);
+router.post('/loginadmin', loginLimiter, authCtrl.login_admin);
 
 // Define route for admin registration with file upload handling
 router.post('/adminregister', upload.fields([

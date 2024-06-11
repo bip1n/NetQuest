@@ -130,14 +130,6 @@ const ownerCtrl = {
         }
     },
 
-    saveprice: async (req, res) => {
-      try {
-        const amenities = req.body.amenities;
-      } catch (error) {
-        return res.status(500).json({ msg: err.message });
-      }
-    },
-
     savephone: async (req, res) => {
       try {
         const amenities = req.body.amenities;

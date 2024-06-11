@@ -1,5 +1,22 @@
 const mongoose = require("mongoose");
 
+
+const upvotesschema = new mongoose.Schema({
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+});
+
+const downvotesschema = new mongoose.Schema({
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+});
+
 const reviewSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -9,14 +26,8 @@ const reviewSchema = new mongoose.Schema({
     content: {
         type: String,
     },
-    upvotes: {
-        type: Number,
-        default: 0,
-    },
-    downvotes: {
-        type: Number,
-        default: 0,
-    },
+    upvotes: [upvotesschema],
+    downvotes: [downvotesschema],
     createdAt: {
         type: Date,
         default: Date.now,
@@ -38,10 +49,6 @@ const venueSchema = new mongoose.Schema({
     amenities: [{
         type: String,
     }],
-    minprice: {
-        type: Number,
-        default: 0,
-    },
     reviews: [reviewSchema]  // Array of reviews
 });
 

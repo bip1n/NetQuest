@@ -38,7 +38,7 @@ interface Slot {
 
 export const Booking = () => {
   const router = useRouter();
-  const venueOwner = false;
+  const venueOwner = true;
   const [isLoading, setIsLoading] = useState(true);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [checkedSlots, setCheckedSlots] = useState<number[]>([]);

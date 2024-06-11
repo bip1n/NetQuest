@@ -89,7 +89,7 @@ export default function VenueProfile() {
             }
           >
 
-            <VenueInfo id={'66649a5528a8e99bd3f5c849'} />
+            <VenueInfo id={'6667d3ed4fca00d3d1b67027'} />
 
           </Tab>
           <Tab
@@ -114,7 +114,7 @@ export default function VenueProfile() {
               </div>
             }
           >
-          <Slider id={'66649a5528a8e99bd3f5c849'} />
+          <Slider id={'6667d3ed4fca00d3d1b67027'} />
           </Tab>
         </Tabs>
     </div>    

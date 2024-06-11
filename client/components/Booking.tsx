@@ -25,9 +25,11 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  TimeInput,
 } from "@nextui-org/react";
-import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
+import { getLocalTimeZone, today, CalendarDate,Time } from "@internationalized/date";
 import { useRouter } from 'next/navigation';
+import {ClockCircleLinearIcon} from './Icons';
 
 // Define a type for the slot objects
 interface Slot {
@@ -96,6 +98,30 @@ export const Booking = () => {
             />
           </div>
 
+          {venueOwner ? (
+            <>
+            <div className="mb-4">
+               <TimeInput 
+                  label="Opens At" 
+                  labelPlacement="inside" 
+                  defaultValue={new Time(6, 0)} 
+                  startContent={(
+                    <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
+                  )}
+                />
+            </div>
+            <div className="mb-4">
+              <TimeInput 
+                  label="Closes At" 
+                  labelPlacement="inside" 
+                  defaultValue={new Time(20, 0)} 
+                  startContent={(
+                    <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
+                  )}
+                />
+            </div>
+            </>
+            ) : (null)}
           {isLoading ? (
             <div className="flex justify-center items-center h-32">
               <Spinner label="Loading..." />
@@ -123,7 +149,9 @@ export const Booking = () => {
                             ? "success"
                             : slot.status === "BOOKED"
                             ? "danger"
-                            : "warning"
+                            :  slot.status === "RESERVED"
+                            ? "warning"
+                            : "default"
                         }
                       >
                         {slot.status}

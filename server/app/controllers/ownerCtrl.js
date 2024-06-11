@@ -3,8 +3,6 @@ const Owner = require("../models/ownerModel");
 const VenueStatus = require("../models/venueStatus");
 const venue = require("../models/venueModel");
 
-
-
 const ownerCtrl = {
     viewprofile: async (req, res) => {
         try {

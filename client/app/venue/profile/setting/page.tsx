@@ -27,7 +27,6 @@ export default function ProfileSetting() {
   const [features, setFeatures] = useState<string[]>([]);
 
   useEffect(() => {
-    // Fetch initial details from the server
     const fetchDetails = async () => {
       try {
         const response = await fetch('http://localhost:4000/getdetails');

@@ -30,6 +30,10 @@ const ownerSchema = new mongoose.Schema({
         trim: true,
         unique: true,
     },
+    location: {
+        type: String,
+        required: true,
+    },
     password: {
         type: String,
         required: true,

@@ -49,6 +49,12 @@ const venueSchema = new mongoose.Schema({
     amenities: [{
         type: String,
     }],
+    openat: {
+        type: String,
+    },
+    closeat: {
+        type: String,
+    },
     reviews: [reviewSchema]  // Array of reviews
 });
 

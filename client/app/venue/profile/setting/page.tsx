@@ -15,6 +15,7 @@ import { Navigationbar } from '@/components/Navigationbar';
 import { FooterContent } from '@/components/Footer';
 import { Time } from "@internationalized/date";
 import { ClockCircleLinearIcon } from '@/components/Icons';
+// import Cookies from 'js-cookie';
 
 export default function ProfileSetting() {
   const [files, setFiles] = useState<File[]>([]);
@@ -25,20 +26,36 @@ export default function ProfileSetting() {
   const [opensAt, setOpensAt] = useState(new Time(6, 0));
   const [closesAt, setClosesAt] = useState(new Time(20, 0));
   const [features, setFeatures] = useState<string[]>([]);
+  // const [token, setToken] = useState('');
 
   useEffect(() => {
+    console.log('useEffect');
+    // Get token from cookies and store it in state
+    // const token = Cookies.get('token');
+    // if (token) {
+    //   setToken(token);
+    // }
+
+    // Fetch initial details from the server
     const fetchDetails = async () => {
       try {
-        const response = await fetch('http://localhost:4000/getdetails');
+        const response = await fetch('http://localhost:4000/api/viewprofile', {
+          // headers: {
+          //   'Authorization': `Bearer ${token}`
+          // }
+        });
         if (response.ok) {
           const data = await response.json();
-          setUsername(data.username || '');
-          setContact(data.contact || '');
-          setLocation(data.location || '');
-          setMapsCoordinate(data.mapsCoordinate || '');
-          setOpensAt(new Time(data.opensAt.hour, data.opensAt.minute));
-          setClosesAt(new Time(data.closesAt.hour, data.closesAt.minute));
-          setFeatures(data.features || []);
+          console.log(data)
+          setUsername(data.venueName || '');
+          setContact(data.phone || '');
+          setLocation(data.address || '');
+          setMapsCoordinate(data.mapCoord || '');
+          // setOpensAt(new Time(data.opensAt.hour, data.opensAt.minute));
+          // setClosesAt(new Time(data.closesAt.hour, data.closesAt.minute));
+          setOpensAt(new Time(6, 0));
+          setClosesAt(new Time(20, 0));
+          setFeatures(data.amenities || []);
         } else {
           console.error('Failed to fetch details');
         }
@@ -47,8 +64,14 @@ export default function ProfileSetting() {
       }
     };
 
-    fetchDetails();
-  }, []);
+
+    // if (token) {
+    //   fetchDetails();
+    // }
+  // }, [token]);
+
+  fetchDetails();
+  });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.target.files;
@@ -72,9 +95,10 @@ export default function ProfileSetting() {
     try {
       const response = await fetch('http://localhost:4000/senddetails', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        // headers: {
+        //   'Content-Type': 'application/json',
+        //   'Authorization': `Bearer ${token}`
+        // },
         body: JSON.stringify(details)
       });
       
@@ -96,6 +120,9 @@ export default function ProfileSetting() {
     try {
       const response = await fetch('http://localhost:4000/media', {
         method: 'POST',
+        // headers: {
+        //   'Authorization': `Bearer ${token}`
+        // },
         body: formData
       });
       

@@ -31,7 +31,6 @@ async function verifyToken(req, res, next) {
 
             // Storing the decoded user information in the request object
             req.user = decoded;
-
             // Proceeding to the next middleware or route handler
             next();
         });

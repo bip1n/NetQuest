@@ -6,9 +6,7 @@ const venue = require("../models/venueModel");
 const ownerCtrl = {
     viewprofile: async (req, res) => {
         try {
-
-          const owner_id = req.header;
-          console.log(owner_id)
+          const owner_id = req.user.id
           if (!owner_id) { return res.status(400).json({ error: "Owner ID is required." })};
           const owner = await Owner.findById(owner_id);
           if (!owner) { return res.status(400).json({ error: "Owner does not exist." });}
@@ -34,8 +32,6 @@ const ownerCtrl = {
             closesAt,
             amenities
           };
-
-          console.log(response);
 
           return res.status(200).json(response);
         } catch (err) {
@@ -106,20 +102,60 @@ const ownerCtrl = {
     },
 
 
-    saveamenities: async (req, res) => {
-        try {
-          const id = req.user.id;
-          const amenities = req.body.amenities;
-          const venues = await venue.findOne({ owner_id: id });
-          console.log(venues)
-          if (!venues) return res.status(400).json({error: "Venue does not exist."});
-          venues.amenities = amenities;
+    updateProfile: async (req, res) => {
+      try {
+          const owner_id = req.user.id;
+          if (!owner_id) {
+              return res.status(400).json({ error: "Owner ID is required." });
+          }
+  
+          const { username, contact, location, mapsCoordinate, opensAt, closesAt, features } = req.body;
+          
+  
+          // Find the owner by ID
+          const owner = await Owner.findById(owner_id);
+          if (!owner) {
+              return res.status(404).json({ error: "Owner does not exist." });
+          }
+
+          console.log(owner)
+  
+          // Update owner information
+          owner.fullname = username;
+          owner.phone = contact;
+          // owner.location = location;
+          owner.mapCoord = mapsCoordinate;
+         
+
+          console.log(owner.phone)
+          console.log(owner.fullname)
+          console.log(owner.mapCoord)
+
+         
+          await owner.save();
+
+          console.log(username,contact,mapsCoordinate)
+  
+          // Find the venue by owner_id
+          const venues = await venue.findOne({ owner_id });
+          if (!venues) {
+              return res.status(404).json({ error: "Venue does not exist." });
+          }
+
+          // Update venue information
+          if (features) venues.amenities = features;
+          if (opensAt) venues.openat = opensAt;
+          if (closesAt) venues.closeat = closesAt;
           await venues.save();
-          return res.status(200).json({error: "Success!"});
-        } catch (error) {
-          return res.status(500).json({ msg: err.message });
-        }
+  
+          return res.status(200).json({ message: "Profile updated successfully!" });
+      } catch (error) {
+          console.error("Error:", error);
+          return res.status(500).json({ error: error.message });
+      }
     },
+  
+  
 
 
     savemedia: async (req, res) => {
@@ -150,22 +186,6 @@ const ownerCtrl = {
         } catch (error) {
           return res.status(500).json({ msg: err.message });
         }
-    },
-
-    savephone: async (req, res) => {
-      try {
-        const amenities = req.body.amenities;
-      } catch (error) {
-        return res.status(500).json({ msg: err.message });
-      }
-    },
-
-    saveaddress: async (req, res) => {
-      try {
-        const amenities = req.body.amenities;
-      } catch (error) {
-        return res.status(500).json({ msg: err.message });
-      }
     },
 
     savestatus: async (req, res) => {

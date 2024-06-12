@@ -6,10 +6,10 @@ const verifyToken = require('../middleware/verifyToken.js');
 
 // Define route for user registration
 // router.post('/viewabout', ownerCtrl.viewabout);  
-router.get('/viewprofile', ownerCtrl.viewprofile);
-router.get('/venuedetails', ownerCtrl.VenueDetails);
+router.get('/viewprofile',verifyToken, ownerCtrl.viewprofile);
+router.get('/venuedetails',ownerCtrl.VenueDetails);
 router.get('/viewphotos', ownerCtrl.viewphotos);
-router.post('/saveamenities', verifyToken, ownerCtrl.saveamenities);
+router.post('/updateProfile', verifyToken, ownerCtrl.updateProfile);
 
 // router.post('/saveimages', verifyToken, ownerCtrl.saveimages);
 

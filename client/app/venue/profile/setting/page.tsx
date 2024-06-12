@@ -26,23 +26,24 @@ export default function ProfileSetting() {
   const [opensAt, setOpensAt] = useState(new Time(6, 0));
   const [closesAt, setClosesAt] = useState(new Time(20, 0));
   const [features, setFeatures] = useState<string[]>([]);
-  // const [token, setToken] = useState('');
+  const [token, setToken] = useState('');
 
   useEffect(() => {
     console.log('useEffect');
     // Get token from cookies and store it in state
     // const token = Cookies.get('token');
-    // if (token) {
-    //   setToken(token);
-    // }
+    const token = '6667d3ed4fca00d3d1b67027';
+    if (token) {
+      setToken(token);
+    }
 
     // Fetch initial details from the server
     const fetchDetails = async () => {
       try {
         const response = await fetch('http://localhost:4000/api/viewprofile', {
-          // headers: {
-          //   'Authorization': `Bearer ${token}`
-          // }
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
         });
         if (response.ok) {
           const data = await response.json();
@@ -65,13 +66,11 @@ export default function ProfileSetting() {
     };
 
 
-    // if (token) {
-    //   fetchDetails();
-    // }
-  // }, [token]);
+    if (token) {
+      fetchDetails();
+    }
+  }, [token]);
 
-  fetchDetails();
-  });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.target.files;

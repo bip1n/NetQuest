@@ -7,8 +7,8 @@ const ownerCtrl = {
     viewprofile: async (req, res) => {
         try {
 
-          // const owner_id = req.query.id;
-          owner_id = '6667d3ed4fca00d3d1b67027'
+          const owner_id = req.header;
+          console.log(owner_id)
           if (!owner_id) { return res.status(400).json({ error: "Owner ID is required." })};
           const owner = await Owner.findById(owner_id);
           if (!owner) { return res.status(400).json({ error: "Owner does not exist." });}

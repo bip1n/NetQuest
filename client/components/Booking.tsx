@@ -40,7 +40,7 @@ interface Slot {
 
 export const Booking = () => {
   const router = useRouter();
-  const venueOwner = true;
+  const venueOwner = false;
   const [isLoading, setIsLoading] = useState(true);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [checkedSlots, setCheckedSlots] = useState<number[]>([]);
@@ -98,30 +98,6 @@ export const Booking = () => {
             />
           </div>
 
-          {venueOwner ? (
-            <>
-            <div className="mb-4">
-               <TimeInput 
-                  label="Opens At" 
-                  labelPlacement="inside" 
-                  defaultValue={new Time(6, 0)} 
-                  startContent={(
-                    <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
-                  )}
-                />
-            </div>
-            <div className="mb-4">
-              <TimeInput 
-                  label="Closes At" 
-                  labelPlacement="inside" 
-                  defaultValue={new Time(20, 0)} 
-                  startContent={(
-                    <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
-                  )}
-                />
-            </div>
-            </>
-            ) : (null)}
           {isLoading ? (
             <div className="flex justify-center items-center h-32">
               <Spinner label="Loading..." />

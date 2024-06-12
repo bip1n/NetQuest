@@ -18,12 +18,12 @@ import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { Logo } from "@/components/Icons";
 
 
-  const loginStatus = true;
+  const isAdmin = true;
   // const [isLogin, setIsLoginTrue] = useState(false); 
   // setIsLoginTrue (loginStatus);
 
 
-export const Navigationbar = () => {
+export const AdminNavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleMenuToggle = () => setIsMenuOpen(!isMenuOpen);
@@ -32,57 +32,13 @@ export const Navigationbar = () => {
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky" shouldHideOnScroll>
-      <NavbarContent className="sm:hidden" justify="start">
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          onClick={handleMenuToggle}
-        />
-      </NavbarContent>
 
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/">
+        <NavbarBrand className="justify-start">
             <Logo />
-            <p className="font-bold text-inherit">NetQuest</p>
-          </NextLink>
+            <p className="font-bold text-inherit">ADMIN DASHBOARD</p>
         </NavbarBrand>
-
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
-                )}
-                color="foreground"
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
-        </ul>
-      </NavbarContent>
-
-      <NavbarMenu className={isMenuOpen ? "max-h-[10vh]" : "max-h-0"}>
-        {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>   
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
-                )}
-                color="foreground"
-                href={item.href}
-              >
-                {item.label}
-                 </NextLink>
-                </NavbarItem>
-        ))}
-      </NavbarMenu>
-
-      {loginStatus ?
+    
+      {isAdmin ?
         <NavbarContent as="div" justify="end">
         <ThemeSwitch />
         

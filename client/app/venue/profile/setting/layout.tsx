@@ -4,9 +4,13 @@ export default function VenueProfileLayout({
     children: React.ReactNode;
   }) {
     return (
+      <>
+      
       <section >
           {children}
       </section>
+      </>
+      
     );
   }
   

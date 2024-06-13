@@ -171,8 +171,32 @@ const ownerCtrl = {
               videos.push(file.path);
             }
           });
-          venues.images = images;
-          venues.videos = videos;
+
+          if (images.length === 0 && videos.length === 0) {
+            return res.status(400).json({ error: "At least one image or video is required." });
+          }
+          
+          let imageUrls = [];
+          let videoUrls = [];
+          
+          // Upload images if they are available
+          if (images.length > 0) {
+            imageUrls = await Promise.all(images.map(async (file) => {
+              const result = await cloudinary.uploader.upload(file.path, { folder: 'venue_images_pub' });
+              return result.secure_url;
+            }));
+            venues.images = imageUrls;
+          }
+          
+          // Upload videos if they are available
+          if (videos.length > 0) {
+            videoUrls = await Promise.all(videos.map(async (file) => {
+              const result = await cloudinary.uploader.upload(file.path, { folder: 'venue_videos_pub', resource_type: 'video' });
+              return result.secure_url;
+            }));
+            venues.videos = videoUrls;
+          }
+  
           await venues.save();
           return res.status(200).json({ message: "Media saved successfully!" });
         } catch (error) {

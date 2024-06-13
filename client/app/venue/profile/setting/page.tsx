@@ -110,17 +110,21 @@ export default function ProfileSetting() {
 
   const handleUpload = async () => {
     const formData = new FormData();
-    files.forEach((file) => formData.append("media", file));
-
+  
+    files.forEach((file, index) => {
+      formData.append(`media`, file);
+    });
+  
+    console.log(formData);
     try {
-      const response = await fetch("http://localhost:4000/media", {
+      const response = await fetch("http://localhost:4000/api/savemedia", {
         method: "POST",
         headers: {
           'Authorization': `Bearer ${token}`
         },
         body: formData,
       });
-
+  
       if (response.ok) {
         alert("Media uploaded successfully");
       } else {
@@ -131,6 +135,7 @@ export default function ProfileSetting() {
       alert("An error occurred while uploading media");
     }
   };
+  
 
   return (
     <>

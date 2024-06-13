@@ -156,39 +156,28 @@ const ownerCtrl = {
     savemedia: async (req, res) => {
         try {
           const id = req.user.id;
-          const image = req.body.image;
-          imagesaved, videosaved = false, false
-          if (image){
-            const venues = await venue.findOne({ owner_id: id });
-            if (!venues) return res.status(400).json({error: "Venue does not exist."});
-            venues.images.push(image);
-            await venues.save();
-            imagessaved = true
-          }
-          const video = req.body.video;
-          if (video){
-            const venues = await venue.findOne({ owner_id: id });
-            if (!venues) return res.status(400).json({error: "Venue does not exist."});
-            venues.videos.push(video);
-            await venues.save();
-            videosaved = true
-          }
-          if (imagesaved || videosaved){
-            return res.status(200).json({error: "Success!"});
-          }else{
-            return res.status(400).json({error: "No media to save!"});
-          }
+          const media = req.files['media'];
+          if (!media) {return res.status(400).json({ error: "media are required." });}
+          const owner = await Owner.findById(id);
+          if (!owner) {return res.status(400).json({ error: "Owner does not exist." });}
+          const venues = await venue.findOne({ owner_id: id });
+          if (!venues) {return res.status(400).json({ error: "Venue does not exist." });}
+          const images = [];
+          const videos = [];
+          media.forEach((file) => {
+            if (file.mimetype.includes("image")) {
+              images.push(file.path);
+            } else if (file.mimetype.includes("video")) {
+              videos.push(file.path);
+            }
+          });
+          venues.images = images;
+          venues.videos = videos;
+          await venues.save();
+          return res.status(200).json({ message: "Media saved successfully!" });
         } catch (error) {
-          return res.status(500).json({ msg: err.message });
+          return res.status(500).json({ msg: error.message });
         }
-    },
-
-    savestatus: async (req, res) => {
-      try {
-        const amenities = req.body.amenities;
-      } catch (error) {
-        return res.status(500).json({ msg: err.message });
-      }
     },
 
 }

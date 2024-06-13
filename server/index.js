@@ -2,14 +2,21 @@ require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const bodyParser = require('body-parser');
 
 const app = express();
+
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
+
 
 // Enable CORS for all origins
 app.use(cors());
 
 // Middleware to parse JSON requests
 app.use(express.json());
+
+
 
 // Use the authRouter for authentication-related routes
 app.use("/api", require("./app/routers/authRouter"));

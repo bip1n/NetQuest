@@ -123,14 +123,8 @@ const ownerCtrl = {
           // Update owner information
           owner.fullname = username;
           owner.phone = contact;
-          // owner.location = location;
+          owner.location = location;
           owner.mapCoord = mapsCoordinate;
-         
-
-          console.log(owner.phone)
-          console.log(owner.fullname)
-          console.log(owner.mapCoord)
-
          
           await owner.save();
 
@@ -146,6 +140,7 @@ const ownerCtrl = {
           if (features) venues.amenities = features;
           if (opensAt) venues.openat = opensAt;
           if (closesAt) venues.closeat = closesAt;
+      
           await venues.save();
   
           return res.status(200).json({ message: "Profile updated successfully!" });

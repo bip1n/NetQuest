@@ -50,12 +50,17 @@ const venueSchema = new mongoose.Schema({
         type: String,
     }],
     openat: {
-        type: Date,
+        type: {
+            hour: Number,
+            minute: Number
+        },
     },
     closeat: {
-        // date type
-        type: Date,
-    },
+        type: {
+            hour: Number,
+            minute: Number
+        },
+        },
     reviews: [reviewSchema]  // Array of reviews
 });
 

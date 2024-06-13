@@ -33,7 +33,7 @@ export default function ProfileSetting() {
   useEffect(() => {
     // Get token from cookies and store it in state
     // const token = Cookies.get('token');
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjdkM2VkNGZjYTAwZDNkMWI2NzAyNyIsImVtYWlsIjoic2l2YWhAbWFpbGluYXRvci5jb20iLCJpYXQiOjE3MTgyMTMzOTAsImV4cCI6MTcxODIxNjk5MH0.XANHAWRi5VCXefMNSaPLLIBHnEenm-TSP2RsD_wJx3M';
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjdkM2VkNGZjYTAwZDNkMWI2NzAyNyIsImVtYWlsIjoic2l2YWhAbWFpbGluYXRvci5jb20iLCJpYXQiOjE3MTgyODYxNTgsImV4cCI6MTcxODI4OTc1OH0.9JaEce5Lj0S2aCmlBQIat_TUL3dpm4Bzji7Z5D1tc-4';
     if (token) {
       setToken(token);
     }
@@ -51,10 +51,8 @@ export default function ProfileSetting() {
           setContact(data.phone || "");
           setLocation(data.address || "");
           setMapsCoordinate(data.mapCoord || "");
-          // setOpensAt(new Time(data.opensAt.hour, data.opensAt.minute));
-          // setClosesAt(new Time(data.closesAt.hour, data.closesAt.minute));
-          setOpensAt(new Time(6, 0));
-          setClosesAt(new Time(20, 0));
+          setOpensAt(new Time(data.opensAt.hour, data.opensAt.minute));
+          setClosesAt(new Time(data.closesAt.hour, data.closesAt.minute));
           setFeatures(data.amenities || []);
           setDataFetch(true);
         } else {

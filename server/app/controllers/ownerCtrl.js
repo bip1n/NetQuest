@@ -2,6 +2,8 @@ require('dotenv').config();
 const Owner = require("../models/ownerModel");
 const VenueStatus = require("../models/venueStatus");
 const venue = require("../models/venueModel");
+const cloudinary = require("../utils/cloudinary");
+
 
 const ownerCtrl = {
     viewprofile: async (req, res) => {
@@ -157,6 +159,7 @@ const ownerCtrl = {
         try {
           const id = req.user.id;
           const media = req.files['media'];
+        
           if (!media) {return res.status(400).json({ error: "media are required." });}
           const owner = await Owner.findById(id);
           if (!owner) {return res.status(400).json({ error: "Owner does not exist." });}
@@ -166,15 +169,17 @@ const ownerCtrl = {
           const videos = [];
           media.forEach((file) => {
             if (file.mimetype.includes("image")) {
-              images.push(file.path);
+              images.push(file);
             } else if (file.mimetype.includes("video")) {
-              videos.push(file.path);
+              videos.push(file);
             }
           });
 
+       
           if (images.length === 0 && videos.length === 0) {
             return res.status(400).json({ error: "At least one image or video is required." });
           }
+
           
           let imageUrls = [];
           let videoUrls = [];

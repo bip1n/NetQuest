@@ -6,8 +6,8 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-app.use(bodyParser.json({ limit: '100mb' }));
-app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
+app.use(bodyParser.json({ limit: '1000mb' }));
+app.use(bodyParser.urlencoded({ limit: '1000mb', extended: true }));
 
 
 // Enable CORS for all origins

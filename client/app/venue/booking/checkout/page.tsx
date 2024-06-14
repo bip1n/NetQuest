@@ -47,7 +47,7 @@ export default function CheckoutPage() {
             <Input
                 type="number"
                 label="Total"
-                value="1250"
+                value="1200"
                 labelPlacement="outside"
                 readOnly
                 startContent={

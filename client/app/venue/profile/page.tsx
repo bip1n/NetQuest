@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Navigationbar } from "@/components/Navigationbar";
@@ -20,25 +19,23 @@ import {
   Tab,
   Chip,
 } from "@nextui-org/react";
-
 import { MessageIcon, GalleryIcon, VenueIcon } from "@/components/Icons";
 import {Slider} from "@/components/Slider";
 
 export default function VenueProfile() {
-
   const router = useRouter();
   return (
     <>
       <Navigationbar />
       <div>
-        <Card className="py-4">
+        <Card className="py-4   ">
           <CardHeader className="pb-0 pt-2 px-4 flex-col items-start  justify-between">
             <h4 className="font-semibold uppercase text-medium">
               Kick Futsal{" "}
               <span className="text-xs ml-2 text-blue-500"> [4.6/5]</span>
             </h4>
           </CardHeader>
-          <CardBody className="overflow-visible py-2">
+          <CardBody className="overflow-visible py-2 max-w-lg">
             <Image
               isZoomed
               alt="Venue Image"
@@ -47,35 +44,6 @@ export default function VenueProfile() {
             />
           </CardBody>
         </Card>
-
-        {/* <Card className="w-full max-w-[100%] md:max-w-[600px] mt-2">
-        <div className="flex w-full flex-col">
-        <Tabs aria-label="Options" color="secondary" variant="underlined"
-        >
-            <Tab  
-              key="about"
-              title={
-                <div className="flex items-center space-x-2">
-                   <VenueIcon className="w-6 h-6" />
-                  <span>About</span>
-                </div>
-              }
-            >
-              <VenueInfo/>
-            </Tab>
-          <Tab
-            key="reviews"
-            title={
-              <div className="flex items-center space-x-2">
-                <MessageIcon className="w-2 h-6" />
-                <span>Reviews</span>
-              </div>
-            }
-          >
-                <Reviews/>
-          </Tab> */}
-
-
       <Card className="w-full max-w-[100%] md:max-w-[600px] mt-2">
       <div className="flex w-full flex-col">
         <Tabs aria-label="Options" color="secondary" variant="underlined">
@@ -88,9 +56,7 @@ export default function VenueProfile() {
               </div>
             }
           >
-
-            <VenueInfo id={'6667d3ed4fca00d3d1b67027'} />
-
+          <VenueInfo id={'6667d3ed4fca00d3d1b67027'} />
           </Tab>
           <Tab
             key="reviews"
@@ -103,8 +69,7 @@ export default function VenueProfile() {
           >
             <Reviews />
             <Link href="/venue/reviews" className="ml-3 text-sm "> Read More...</Link>
-          </Tab>
-          
+          </Tab>   
           <Tab
             key="photos"
             title={
@@ -118,10 +83,8 @@ export default function VenueProfile() {
           </Tab>
         </Tabs>
     </div>    
-
         </Card>
       </div>
-
       <FooterContent />
     </>
   );

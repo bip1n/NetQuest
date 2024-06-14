@@ -18,7 +18,7 @@ import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { Logo } from "@/components/Icons";
 
 
-  const loginStatus = true;
+  const loginStatus = false;
   // const [isLogin, setIsLoginTrue] = useState(false); 
   // setIsLoginTrue (loginStatus);
 

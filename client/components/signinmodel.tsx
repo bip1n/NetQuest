@@ -27,9 +27,9 @@ export default function SigninModel() {
                 <p className="font-bold text-inherit mt-1">NetQuest</p>
               </ModalHeader>
               <ModalHeader className="flex flex-col gap-1">Sign In</ModalHeader>
-              <ModalBody>
+              {/* <ModalBody>
                 <span className="text-red-500">ERROR HERE!</span>
-              </ModalBody>
+              </ModalBody> */}
               <ModalBody>
                 <Input type="email" label="Email" />
               </ModalBody>

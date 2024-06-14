@@ -142,8 +142,6 @@ export default function ProfileSetting() {
    
       {dataFetch ? 
        <div>
-      
-       
       <Navigationbar />
       <Card>
         <CardHeader>
@@ -185,28 +183,7 @@ export default function ProfileSetting() {
             onChange={(e) => setMapsCoordinate(e.target.value)}
           />
         </CardBody>
-        <CardBody>
-          <div className="flex gap-4">
-            <TimeInput
-              label="Opens At"
-              labelPlacement="inside"
-              value={opensAt}
-              onChange={setOpensAt}
-              startContent={
-                <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
-              }
-            />
-            <TimeInput
-              label="Closes At"
-              labelPlacement="inside"
-              value={closesAt}
-              onChange={setClosesAt}
-              startContent={
-                <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
-              }
-            />
-          </div>
-        </CardBody>
+       
         <CardBody>
           <CheckboxGroup
             label="Features"

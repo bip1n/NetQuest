@@ -57,7 +57,7 @@ export const AdminNavigationBar = () => {
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" className="h-14 gap-2">
               <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold ">Ram Bahadur</p>
+              <p className="font-semibold ">ADMIN</p>
             </DropdownItem>
             <DropdownItem href="/venue/profile" key="settings">Profile</DropdownItem>
             <DropdownItem key="team_settings">Bookings</DropdownItem>

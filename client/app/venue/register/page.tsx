@@ -85,12 +85,9 @@ export default function RegisterVenue() {
     }
 
     setLoading(true);
-    console.log("Submitting form, please wait...");
 
     try {
-      console.log(formData)
-      
-      console.log(JSON.stringify(formData))
+
       const response = await fetch("http://localhost:4000/api/adminregister", {
         method: "POST",
         body: formData,

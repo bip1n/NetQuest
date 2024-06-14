@@ -28,23 +28,22 @@ export default function ProfileSetting() {
   const [closesAt, setClosesAt] = useState(new Time(20, 0));
   const [features, setFeatures] = useState<string[]>([]);
   const [dataFetch, setDataFetch] = useState(false);
-  // const [token, setToken] = useState('');
+  const [token, setToken] = useState('');
 
   useEffect(() => {
-    console.log("useEffect");
     // Get token from cookies and store it in state
     // const token = Cookies.get('token');
-    // if (token) {
-    //   setToken(token);
-    // }
-
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjdkM2VkNGZjYTAwZDNkMWI2NzAyNyIsImVtYWlsIjoic2l2YWhAbWFpbGluYXRvci5jb20iLCJpYXQiOjE3MTgyODYxNTgsImV4cCI6MTcxODI4OTc1OH0.9JaEce5Lj0S2aCmlBQIat_TUL3dpm4Bzji7Z5D1tc-4';
+    if (token) {
+      setToken(token);
+    }
     // Fetch initial details from the server
     const fetchDetails = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/viewprofile", {
-          // headers: {
-          //   'Authorization': `Bearer ${token}`
-          // }
+        const response = await fetch('http://localhost:4000/api/viewprofile', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
         });
         if (response.ok) {
           const data = await response.json();
@@ -52,10 +51,8 @@ export default function ProfileSetting() {
           setContact(data.phone || "");
           setLocation(data.address || "");
           setMapsCoordinate(data.mapCoord || "");
-          // setOpensAt(new Time(data.opensAt.hour, data.opensAt.minute));
-          // setClosesAt(new Time(data.closesAt.hour, data.closesAt.minute));
-          setOpensAt(new Time(6, 0));
-          setClosesAt(new Time(20, 0));
+          setOpensAt(new Time(data.opensAt.hour, data.opensAt.minute));
+          setClosesAt(new Time(data.closesAt.hour, data.closesAt.minute));
           setFeatures(data.amenities || []);
           setDataFetch(true);
         } else {
@@ -66,11 +63,10 @@ export default function ProfileSetting() {
       }
     };
 
-    // if (token) {
-    //   fetchDetails();
-    // }
-    fetchDetails();
-  }, []); // Empty dependency array to run only once
+    if (token) {
+      fetchDetails();
+    }
+  }, [token]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.target.files;
@@ -92,12 +88,12 @@ export default function ProfileSetting() {
     };
 
     try {
-      const response = await fetch("http://localhost:4000/senddetails", {
+      const response = await fetch("http://localhost:4000/api/updateProfile", {
         method: "POST",
-        // headers: {
-        //   'Content-Type': 'application/json',
-        //   'Authorization': `Bearer ${token}`
-        // },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(details),
       });
 
@@ -114,17 +110,21 @@ export default function ProfileSetting() {
 
   const handleUpload = async () => {
     const formData = new FormData();
-    files.forEach((file) => formData.append("media", file));
-
+  
+    files.forEach((file, index) => {
+      formData.append(`media`, file);
+    });
+  
+    console.log(formData);
     try {
-      const response = await fetch("http://localhost:4000/media", {
+      const response = await fetch("http://localhost:4000/api/savemedia", {
         method: "POST",
-        // headers: {
-        //   'Authorization': `Bearer ${token}`
-        // },
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
         body: formData,
       });
-
+  
       if (response.ok) {
         alert("Media uploaded successfully");
       } else {
@@ -135,6 +135,7 @@ export default function ProfileSetting() {
       alert("An error occurred while uploading media");
     }
   };
+  
 
   return (
     <>
@@ -220,6 +221,15 @@ export default function ProfileSetting() {
             <Checkbox value="locker">Locker</Checkbox>
             <Checkbox value="resturant">Resturant</Checkbox>
             <Checkbox value="shower">Shower</Checkbox>
+            <Checkbox value="toilet">Toilet</Checkbox>
+            <Checkbox value="changingRoom">Changing Room</Checkbox>
+            <Checkbox value="firstAid">First Aid</Checkbox>
+            <Checkbox value="security">Security</Checkbox>
+            <Checkbox value="floodLight">Flood Light</Checkbox>
+            <Checkbox value="canteen">Canteen</Checkbox>
+            <Checkbox value="food">Food</Checkbox>
+            <Checkbox value="swimming">Swimming</Checkbox>
+            <Checkbox value="Green carpet">Green carpet</Checkbox>
           </CheckboxGroup>
         </CardBody>
         <CardFooter className="flex justify-center">

@@ -5,8 +5,10 @@ export default function VenueProfileLayout({
   }) {
     return (
       <section >
-          {children}
-      </section>
+      <div>
+        {children}
+      </div>
+    </section>
     );
   }
   

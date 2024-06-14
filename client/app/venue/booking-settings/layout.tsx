@@ -1,10 +1,10 @@
-export default function AboutLayout({
+export default function BookingLayout({
     children,
   }: {
     children: React.ReactNode;
   }) {
     return (
-      <section>
+      <section >
           {children}
       </section>
     );

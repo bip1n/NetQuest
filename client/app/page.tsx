@@ -12,7 +12,6 @@ const HomePage = (props: Props) => {
     <>
       <Navigationbar />
       <Searchbar/>
-      
       <FooterContent/>
     </>
   

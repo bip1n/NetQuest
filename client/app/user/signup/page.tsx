@@ -15,6 +15,8 @@ import { Logo } from "@/components/Icons";
 import { EyeFilledIcon } from "@/components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/Assets/EyeSlashFilledIcon";
 import { FooterContent } from "@/components/Footer";
+import { useRouter } from "next/navigation";
+
 
 export default function SignupPage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,6 +28,7 @@ export default function SignupPage() {
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -73,6 +76,7 @@ export default function SignupPage() {
         console.log("Registration successful:", responseData);
         setError("Registration successful:");
         // redirect to login
+        router.push("/login");
       }
     } catch (error) {
       console.error("Error submitting form:", error);

@@ -11,6 +11,7 @@ import {
   ModalFooter
 } from "@nextui-org/react";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import { Logo } from "@/components/Icons";
 import { EyeFilledIcon } from "@/components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/Assets/EyeSlashFilledIcon";
@@ -23,6 +24,8 @@ export default function Signin() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
+
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
@@ -67,6 +70,9 @@ export default function Signin() {
 
         // Handle successful sign-in (e.g., redirect to another page)
         handleClose();
+
+        // redirect to home page
+        router.push("/");
       }
     } catch (error) {
       console.error("Error during sign-in:", error);

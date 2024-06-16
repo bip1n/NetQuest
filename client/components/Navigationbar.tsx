@@ -11,7 +11,7 @@ import {
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import SigninModel from "./Signinmodel";
+import SigninModel from "./SigninModel";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Button } from "@nextui-org/react";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
@@ -22,28 +22,37 @@ export const Navigationbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loginStatus, setLoginStatus] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
-      fetch("http://localhost:4000/api/NavDetails", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.ok) {
-            setUserDetails(data.user);
+    const fetchUserDetails = async () => {
+      const token = Cookies.get('__securedAccess');
+      if (token) {
+        try {
+          const response = await fetch("http://localhost:4000/api/NavDetails", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) {
+            const errorResponse = await response.json();
+            setError(errorResponse.error);
+          } else {
+            const responseData = await response.json();
+            setUserDetails(responseData.user);
             setLoginStatus(true);
           }
-        })
-        .catch(error => {
+        } catch (error) {
+          setError("An error occurred while fetching user details.");
           console.error("Error fetching user details:", error);
-        });
-    }
+        }
+      }
+    };
+
+    fetchUserDetails();
   }, []);
 
   const handleMenuToggle = () => setIsMenuOpen(!isMenuOpen);
@@ -73,7 +82,6 @@ export const Navigationbar = () => {
                   linkStyles({ color: "foreground" }),
                   "data-[active=true]:text-primary data-[active=true]:font-medium"
                 )}
-                color="foreground"
                 href={item.href}
               >
                 {item.label}
@@ -91,7 +99,6 @@ export const Navigationbar = () => {
                 linkStyles({ color: "foreground" }),
                 "data-[active=true]:text-primary data-[active=true]:font-medium"
               )}
-              color="foreground"
               href={item.href}
             >
               {item.label}
@@ -100,9 +107,9 @@ export const Navigationbar = () => {
         ))}
       </NavbarMenu>
 
-      {loginStatus && userDetails ? (
-        <NavbarContent as="div" justify="end">
-          <ThemeSwitch />
+      <NavbarContent as="div" justify="end">
+        <ThemeSwitch />
+        {loginStatus && userDetails ? (
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
               <Avatar
@@ -110,7 +117,7 @@ export const Navigationbar = () => {
                 as="button"
                 className="transition-transform"
                 color="secondary"
-                name={userDetails.name}
+                name={userDetails.username}
                 size="sm"
                 src={userDetails.avatar}
               />
@@ -118,7 +125,7 @@ export const Navigationbar = () => {
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold ">{userDetails.name}</p>
+                <p className="font-semibold ">{userDetails.username}</p>
               </DropdownItem>
               <DropdownItem href="/venue/profile" key="settings">Profile</DropdownItem>
               <DropdownItem key="team_settings">Bookings</DropdownItem>
@@ -127,13 +134,10 @@ export const Navigationbar = () => {
               <DropdownItem key="logout" color="danger">Log Out</DropdownItem>
             </DropdownMenu>
           </Dropdown>
-        </NavbarContent>
-      ) : (
-        <NavbarContent as="div" justify="end">
-          <ThemeSwitch />
+        ) : (
           <SigninModel />
-        </NavbarContent>
-      )}
+        )}
+      </NavbarContent>
     </NextUINavbar>
   );
 };

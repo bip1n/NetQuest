@@ -20,8 +20,6 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ id }) => {
   const [venueDetails, setVenueDetails] = useState<VenueDetails | null>(null);
   const router = useRouter();
 
-  console.log("afaf");
-
   useEffect(() => {
     const fetchVenueDetails = async () => {
       try {

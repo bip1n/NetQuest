@@ -11,6 +11,7 @@ import {
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
+import { siteConfig } from "@/config/site";
 import SigninModel from "./SigninModel";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Button } from "@nextui-org/react";
 import { ThemeSwitch } from "@/components/ThemeSwitch";

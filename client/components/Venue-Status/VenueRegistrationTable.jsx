@@ -31,7 +31,7 @@ export const VenueRegistrationTable = () =>  {
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
-            <p className="text-bold text-sm capitalize text-default-400">{user.team}</p>
+            <p className="text-bold text-sm capitalize text-default-400">{user.location}</p>
           </div>
         );
       case "status":

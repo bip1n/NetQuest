@@ -1,42 +1,78 @@
+"use client"
 import React from 'react'
-import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Image, Skeleton,CardFooter,Button } from "@nextui-org/react";
 import { Searchbar } from "@/components/Searchbar";
 import {Navigationbar} from '@/components/Navigationbar';
 import { FooterContent } from '@/components/Footer';
-
+import { useRouter } from "next/navigation";
 interface Props {}
 
 const HomePage = (props: Props) => {
+  const router = useRouter();
+
   return (
     <>
     <Navigationbar/>
-      <div className="shadow-xl">
-      <Searchbar/>
-      
-    <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex-shrink-0 py-4 ml-5"> <h4> Top Rated</h4></div>
-    <div  className="flex overflow-x-auto h-96 space-x-4">
-
-   
-    <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex-shrink-0 py-4 m-2">
-      <CardBody className="overflow-visible py-2">
+    <Searchbar/>
+    <Card className='mt-4'>
+      <CardHeader> <p className='text-xl text-secondary font-semibold ml-4'> Top Rated</p></CardHeader>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2">
+      <Card> 
+      <CardBody>
         <Image
-          alt="Card background"
-          className="object-cover rounded-xl"
+         height={"100%"}
+         width={"100%"}
           src="https://previews.123rf.com/images/horimatsu/horimatsu1509/horimatsu150900030/45248004-futsal-court-in-a-public-outdoor-park-with-artificial-turf.jpg"
-          width={370}
         />
       </CardBody>
-      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-        <h4 className="font-bold text-large">Kick Futsal</h4>
-        <p className="text-tiny uppercase ">Lalitpur</p>
-        <small className="text-default-500">Starting from </small>
-      </CardHeader>
+      <CardFooter className="pb-0 pt-2 px-4 flex flex-col items-start">
+        <h4 className="font-semibold text-large uppercase">Kick Futsal <span><small className="text-primary-500 mb-2 text-tiny">[4.7/5]</small></span></h4>
+        
+        <div className="w-full flex items-center justify-between mb-2">
+          <div>
+            <p className="text-default-600 text-small">Balkumari, Lalitpur</p>
+            <p className="text-default-600 text-small">Starting from <span className='text-success'> Rs.1050</span></p>
+          </div>
+        
+          <Button
+            color="primary"
+            radius="full"
+            size="sm"
+            variant="solid"
+            onClick={() => router.push("/venue/profile")}
+          >
+            Book Now
+          </Button>
+        </div>
+      </CardFooter>
+
+    </Card>
+
+    <Card >
+      <CardBody >
+        <Skeleton className="flex rounded-lg w-full h-full"/> 
+      </CardBody>
+      <CardFooter className="pb-0 pt-2 px-4 flex-col items-start">
+          <Skeleton className="h-5 mb-2 w-full rounded-lg"/>
+          <Skeleton className="h-4 mb-2 w-full rounded-lg"/>
+          <Skeleton className="h-4 mb-2 w-full rounded-lg"/>
+      </CardFooter>
+    </Card>
+
+    <Card >
+      <CardBody >
+          <Skeleton className="flex rounded-lg w-full h-full"/> 
+      </CardBody>
+      <CardFooter className="pb-0 pt-2 px-4 flex-col items-start">
+          <Skeleton className="h-5 mb-2 w-full rounded-lg"/>
+          <Skeleton className="h-4 mb-2 w-full rounded-lg"/>
+          <Skeleton className="h-4 mb-2 w-full rounded-lg"/>
+      </CardFooter>
     </Card>
     </div>
-  </div>
-  <FooterContent/>
+    </Card>
+    <FooterContent/>
     </>
-  
   )
 }
 

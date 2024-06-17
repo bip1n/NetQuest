@@ -81,10 +81,8 @@ export const BookingTable = () => {
       setIsOpen(false);
     }
   };
-
   const selectedSlots = checkedSlots.map((index) => slots[index]);
   const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.rate, 0);
-
   return (
     <>
       <div style={{ display: "flex", justifyContent: "center" }}>

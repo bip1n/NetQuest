@@ -14,11 +14,7 @@ router.post('/updateProfile', verifyToken, ownerCtrl.updateProfile);
 router.post('/savemedia', verifyToken, upload.fields([
     { name: 'media', maxCount: 6 },
 ]),  ownerCtrl.savemedia);
-
 // router.post('/saveimages', verifyToken, ownerCtrl.saveimages);
-
-
-
 // Export the router to be used in other parts of the application
 module.exports = router;
  

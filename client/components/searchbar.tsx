@@ -11,11 +11,11 @@ export const Searchbar = () => {
           inputWrapper: "bg-default-100",
           input: "text-sm",
         }}
-        className="w-4/5 md:w-3/5"
+        className="w-4/5 md:w-3/5  text-primary-400"
         labelPlacement="outside"
         placeholder="Search futsal..."
         startContent={
-          <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+          <SearchIcon className="text-base text-default pointer-events-none flex-shrink-0" />
         }
         type="search"
       />

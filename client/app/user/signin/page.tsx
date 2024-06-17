@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import {
   Button,
@@ -10,11 +10,12 @@ import {
   ModalContent,
   ModalFooter
 } from "@nextui-org/react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import { Logo } from "@/components/Icons";
 import { EyeFilledIcon } from "@/components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/Assets/EyeSlashFilledIcon";
 import { FooterContent } from "@/components/Footer";
-
 
 export default function Signin() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +24,8 @@ export default function Signin() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
+
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
@@ -30,6 +33,7 @@ export default function Signin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Sign-in form submitted:", { email, password });
 
     setLoading(true);
     setError("");
@@ -49,8 +53,26 @@ export default function Signin() {
       } else {
         const responseData = await response.json();
         console.log("Sign-in successful:", responseData);
-        // Redirect to another page or handle successful sign-in
+
+        // Set cookies with high security
+        Cookies.set('__securedAccess', responseData.access_token, { 
+          expires: 7, // token expiry in days
+          secure: true,
+          sameSite: 'strict',
+          path: '/',
+        });
+        Cookies.set('__securedRefresh', responseData.refresh_token, { 
+          expires: 30, // refresh token expiry in days
+          secure: true,
+          sameSite: 'strict',
+          path: '/',
+        });
+
+        // Handle successful sign-in (e.g., redirect to another page)
         handleClose();
+
+        // redirect to home page
+        router.push("/");
       }
     } catch (error) {
       console.error("Error during sign-in:", error);
@@ -66,61 +88,59 @@ export default function Signin() {
         <Button color="secondary" onClick={handleOpen}>SignIn</Button>
         <Modal placement="center" backdrop={"blur"} isOpen={isOpen} onOpenChange={setIsOpen}>
           <ModalContent>
-            {(onClose) => (
-              <form onSubmit={handleSubmit}>
-                <ModalHeader className="flex flex-row gap-1">
-                  <span><Logo /></span>
-                  <p className="font-bold text-inherit mt-1">NetQuest</p>
-                </ModalHeader>
-                <ModalHeader className="flex flex-col gap-1">Sign In</ModalHeader>
-                <ModalBody>
-                  {error && <span className="text-red-500">{error}</span>}
-                </ModalBody>
-                <ModalBody>
-                  <Input
-                    type="email"
-                    label="Email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </ModalBody>
-                <ModalBody>
-                  <Input
-                    type={isVisible ? "text" : "password"}
-                    label="Password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    endContent={
-                      <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                        {isVisible ? (
-                          <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                        ) : (
-                          <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                        )}
-                      </button>
-                    }
-                  />
-                  <Link href="#" size="sm">Forgot Password?</Link>
-                </ModalBody>
-                <ModalBody>
-                  <Link href="/user/signup" size="sm">Don't have an account? Signup.</Link>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" type="submit" disabled={loading}>
-                    {loading ? "Signing in..." : "Sign In"}
-                  </Button>
-                </ModalFooter>
-              </form>
-            )}
+            <form onSubmit={handleSubmit}>
+              <ModalHeader className="flex flex-row gap-1">
+                <span><Logo /></span>
+                <p className="font-bold text-inherit mt-1">NetQuest</p>
+              </ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Sign In</ModalHeader>
+              <ModalBody>
+                {error && <span className="text-red-500">{error}</span>}
+              </ModalBody>
+              <ModalBody>
+                <Input
+                  type="email"
+                  label="Email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </ModalBody>
+              <ModalBody>
+                <Input
+                  type={isVisible ? "text" : "password"}
+                  label="Password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  endContent={
+                    <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                      {isVisible ? (
+                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                      ) : (
+                        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                      )}
+                    </button>
+                  }
+                />
+                <Link href="#" size="sm">Forgot Password?</Link>
+              </ModalBody>
+              <ModalBody>
+                <Link href="/user/signup" size="sm">Don't have an account? Signup.</Link>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button color="primary" type="submit" disabled={loading}>
+                  {loading ? "Signing in..." : "Sign In"}
+                </Button>
+              </ModalFooter>
+            </form>
           </ModalContent>
         </Modal>
       </div>
-      <FooterContent/>
+      <FooterContent />
     </>
   );
 }

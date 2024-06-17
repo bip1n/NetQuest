@@ -79,25 +79,17 @@ const ownerCtrl = {
             if (!venues) { return res.status(400).json({ error: "Venue does not exist." });}
             const images = venues.images;
             const videos = venues.videos;
-            const imageList = [
-                {
-                  title: "Orange",
-                  img: "https://www.tarkettsportsindoor.com/wp-content/uploads/2019/10/futsal.jpg"
-                },
-                {
-                  title: "Tangerine",
-                  img: "https://5.imimg.com/data5/SELLER/Default/2021/5/EY/RW/SB/3103550/futsal-court-construction-500x500.jpg"
-                },
-                {
-                  title: "Raspberry",
-                  img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNA4mvp6wXwuztfTY_ouy3oPDKxzlj8ZBcfQivfoRfE6NTR3FKssMpEvB1QvtvPiHmaIY&usqp=CAU"
-                },
-                {
-                  title: "Lemon",
-                  img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4grFGjZRV1NI1eiubTlF4C1VkFV_cI9aDBA&s"
-                }
-              ];
-            return res.status(200).json(imageList);
+            const imageList = [];
+            const videoList = [];
+            images.forEach((image) => {
+              imageList.push({ type: 'image', url: image });
+            });
+            videos.forEach((video) => {
+              videoList.push({ type: 'video', url: video });
+            });
+            imageList.push(...videoList);
+            const mediaList = imageList;
+            return res.status(200).json(mediaList);
         } catch (err) {
           return res.status(500).json({ msg: err.message });
         }

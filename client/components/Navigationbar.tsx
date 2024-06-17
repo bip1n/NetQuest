@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -11,10 +11,11 @@ import {
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import SigninModel from "./Signinmodel";
+import SigninModel from "./SigninModel";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Button } from "@nextui-org/react";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { Logo } from "@/components/Icons";
+import Cookies from "js-cookie";
 
 
   const loginStatus = true;
@@ -24,10 +25,42 @@ import { Logo } from "@/components/Icons";
 
 export const Navigationbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [loginStatus, setLoginStatus] = useState(false);
+  const [userDetails, setUserDetails] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const token = Cookies.get('__securedAccess');
+      if (token) {
+        try {
+          const response = await fetch("http://localhost:4000/api/NavDetails", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) {
+            const errorResponse = await response.json();
+            setError(errorResponse.error);
+          } else {
+            const responseData = await response.json();
+            setUserDetails(responseData.user);
+            setLoginStatus(true);
+          }
+        } catch (error) {
+          // setError("An error occurred while fetching user details.");
+          console.error("Error fetching user details:", error);
+        }
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
 
   const handleMenuToggle = () => setIsMenuOpen(!isMenuOpen);
-
-  
 
   return (
     <NextUINavbar  maxWidth="xl" position="sticky" >
@@ -54,7 +87,6 @@ export const Navigationbar = () => {
                   linkStyles({ color: "foreground" }),
                   "data-[active=true]:text-primary data-[active=true]:font-medium"
                 )}
-                color="foreground"
                 href={item.href}
               >
                 {item.label}
@@ -64,41 +96,53 @@ export const Navigationbar = () => {
         </ul> */}
       </NavbarContent>
 
-      {loginStatus ?
-        <NavbarContent as="div" justify="end">
+      <NavbarMenu className={isMenuOpen ? "max-h-[10vh]" : "max-h-0"}>
+        {siteConfig.navItems.map((item) => (
+          <NavbarItem key={item.href}>
+            <NextLink
+              className={clsx(
+                linkStyles({ color: "foreground" }),
+                "data-[active=true]:text-primary data-[active=true]:font-medium"
+              )}
+              href={item.href}
+            >
+              {item.label}
+            </NextLink>
+          </NavbarItem>
+        ))}
+      </NavbarMenu>
+
+      <NavbarContent as="div" justify="end">
         <ThemeSwitch />
-        
-        <Dropdown placement="bottom-end">
-          <DropdownTrigger>
-            <Avatar
-              isBordered
-              as="button"
-              className="transition-transform"
-              color="secondary"
-              name="Jason Hughes"
-              size="sm"
-              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-            />
-          </DropdownTrigger>
-          <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold ">Ram Bahadur</p>
-            </DropdownItem>
-            <DropdownItem href="/venue/profile" key="settings">Profile</DropdownItem>
-            <DropdownItem key="team_settings">Bookings</DropdownItem>
-            <DropdownItem key="analytics" >Notifications</DropdownItem>
-            <DropdownItem key="system" href="/venue/profile/setting">Settings</DropdownItem>
-            <DropdownItem key="logout" color="danger">Log Out</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+        {loginStatus && userDetails ? (
+          <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+              <Avatar
+                isBordered
+                as="button"
+                className="transition-transform"
+                color="secondary"
+                name={userDetails.username}
+                size="sm"
+                src={userDetails.avatar}
+              />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownItem key="profile" className="h-14 gap-2">
+                <p className="font-semibold">Signed in as</p>
+                <p className="font-semibold ">{userDetails.username}</p>
+              </DropdownItem>
+              <DropdownItem href="/venue/profile" key="settings">Profile</DropdownItem>
+              <DropdownItem key="team_settings">Bookings</DropdownItem>
+              <DropdownItem key="analytics">Notifications</DropdownItem>
+              <DropdownItem key="system" href="/venue/profile/setting">Settings</DropdownItem>
+              <DropdownItem key="logout" color="danger">Log Out</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        ) : (
+          <SigninModel />
+        )}
       </NavbarContent>
-       : 
-       <NavbarContent as="div" justify="end">
-          <ThemeSwitch />
-          <SigninModel /> 
-        </NavbarContent>}
-      
     </NextUINavbar>
   );
 };

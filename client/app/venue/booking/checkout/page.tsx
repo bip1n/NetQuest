@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {Navigationbar} from "@/components/Navigationbar"
+import {UserNavigationbar} from "@/components/UserNavigationbar"
 import {FooterContent} from "@/components/Footer"
 import {Booking} from "@/components/Booking"
 import { RupeeIcon } from '@/components/Icons';
@@ -33,7 +33,7 @@ export default function CheckoutPage() {
   
   return (
     <>
-    <Navigationbar/>
+    <UserNavigationbar/>
      <Card>
         <CardHeader>
             <p className="text-secondary text-lg font-medium">Booking Confirmation</p>

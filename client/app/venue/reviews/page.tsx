@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Navigationbar} from "@/components/Navigationbar";
+import { UserNavigationbar} from "@/components/UserNavigationbar";
 import {FooterContent} from "@/components/Footer";
 import {Card, CardBody, CardFooter, CardHeader,Avatar,Button} from "@nextui-org/react";
 import { Reviews } from "@/components/Reviews";
@@ -10,7 +10,7 @@ export default function ReviewsPage() {
     const [isFollowed, setIsFollowed] = React.useState(false);
   return (
    <>
-        <Navigationbar/>
+        <UserNavigationbar/>
         <div style={{ display: "flex", justifyContent: "center" }}>
             <Card  className="w-full max-w-[100%] md:max-w-[800px] mt-4">
                 <CardBody>

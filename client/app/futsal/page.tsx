@@ -2,7 +2,7 @@
 import React from 'react'
 import { Card, CardHeader, CardBody, Image, Skeleton,CardFooter,Button } from "@nextui-org/react";
 import { Searchbar } from "@/components/Searchbar";
-import {Navigationbar} from '@/components/Navigationbar';
+import {UserNavigationbar} from '@/components/UserNavigationbar';
 import { FooterContent } from '@/components/Footer';
 import { useRouter } from "next/navigation";
 interface Props {}
@@ -12,7 +12,7 @@ const HomePage = (props: Props) => {
 
   return (
     <>
-    <Navigationbar/>
+    <UserNavigationbar/>
     <Searchbar/>
     <Card className='mt-4'>
       <CardHeader> <p className='text-xl text-secondary font-semibold ml-4'> Top Rated</p></CardHeader>

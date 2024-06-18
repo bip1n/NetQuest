@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Navigationbar } from "@/components/Navigationbar";
+import { UserNavigationbar } from "@/components/UserNavigationbar";
 import { FooterContent } from "@/components/Footer";
 import { Reviews } from "@/components/Reviews";
 import { Booking } from "@/components/Booking";
@@ -26,7 +26,7 @@ export default function VenueProfile() {
   const router = useRouter();
   return (
     <>
-      <Navigationbar />
+      <UserNavigationbar />
       <div>
         <Card className="py-4   ">
           <CardHeader className="pb-0 pt-2 px-4 flex-col items-start  justify-between">

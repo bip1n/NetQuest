@@ -12,7 +12,7 @@ import {
   TimeInput,
   Spinner
 } from "@nextui-org/react";
-import { Navigationbar } from "@/components/Navigationbar";
+import { UserNavigationbar } from "@/components/UserNavigationbar";
 import { FooterContent } from "@/components/Footer";
 import { Time } from "@internationalized/date";
 import { ClockCircleLinearIcon } from "@/components/Icons";
@@ -142,7 +142,7 @@ export default function ProfileSetting() {
    
       {dataFetch ? 
        <div>
-      <Navigationbar />
+      <UserNavigationbar />
       <Card>
         <CardHeader>
           <p className="text-secondary font-semibold">Venue Details</p>

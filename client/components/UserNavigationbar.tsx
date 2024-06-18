@@ -29,7 +29,7 @@ const loginStatus = true;
 // const [isLogin, setIsLoginTrue] = useState(false);
 // setIsLoginTrue (loginStatus);
 
-export const Navigationbar = () => {
+export const UserNavigationbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loginStatus, setLoginStatus] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
@@ -138,13 +138,11 @@ export const Navigationbar = () => {
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold ">{userDetails.username}</p>
               </DropdownItem>
-              <DropdownItem href="/venue/profile" key="settings">
-                Profile
-              </DropdownItem>
-              <DropdownItem key="team_settings">Bookings</DropdownItem>
+              <DropdownItem href="/user/profile" key="settings">Profile</DropdownItem>
+              <DropdownItem key="team_settings" href="/user/booking">Booking</DropdownItem>
               <DropdownItem key="analytics">Notifications</DropdownItem>
               <DropdownItem key="system" href="/venue/profile/setting">
-                Settings
+                Change Password
               </DropdownItem>
               <DropdownItem key="logout" color="danger">
                 Log Out

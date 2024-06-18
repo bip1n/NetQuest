@@ -58,6 +58,7 @@ export default function Signin() {
       } else {
         const responseData = await response.json();
         console.log("Sign-in successful:", responseData);
+        router.refresh();
 
         // Set cookies with high security
         Cookies.set('__securedAccess', responseData.access_token, { 
@@ -156,7 +157,7 @@ export default function Signin() {
 
           <Divider />
           <CardFooter>
-            <Link href="/">Don't have an account? Sign Up.</Link>
+            <Link href="/user/signup">Don't have an account? Sign Up.</Link>
           </CardFooter>
         </Card>
       </form>

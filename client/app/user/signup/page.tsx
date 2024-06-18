@@ -76,7 +76,7 @@ export default function SignupPage() {
         console.log("Registration successful:", responseData);
         setError("Registration successful:");
         // redirect to login
-        router.push("/login");
+        router.push("/");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -211,7 +211,7 @@ export default function SignupPage() {
 
           <Divider />
           <CardFooter>
-            <Link href="/">Already have an account? Sign In.</Link>
+            <Link href="/user/signin">Already have an account? Sign In.</Link>
           </CardFooter>
         </Card>
       </form>

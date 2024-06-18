@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, Card, CardHeader, CardBody, Link } from "@nextui-org/react";
-import { Navigationbar } from "@/components/Navigationbar";
+import { UserNavigationbar } from "@/components/UserNavigationbar";
 import { GithubIcon } from "@/components/Icons";
 import {InstagramIcon} from "@/components/Assets/Instagram"
 
@@ -53,7 +53,7 @@ const DeveloperCard: React.FC<DeveloperProps> = ({
 export default function AboutPage() {
   return (
     <>
-      <Navigationbar/>
+      <UserNavigationbar/>
       <Card className="w-full h-full flex flex-col items-center justify-center overflow-auto pt-4">
         <h5 className="text-xl font-bold">THE DEV TEAM</h5>
         <div className="flex flex-col md:flex-row items-center justify-center w-full mt-4 md:space-x-4">

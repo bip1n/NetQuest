@@ -40,6 +40,11 @@ const venueSchema = new mongoose.Schema({
         ref: "Owner",
         required: true,
     },
+    venueID:{
+        type: String,
+        required: true,
+        unique: true,
+    },
     images: [{
         type: String,
     }],

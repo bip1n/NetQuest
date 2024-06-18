@@ -11,9 +11,10 @@ const bothCtrl = {
             const owner = await Owner.findById(id);
             if (owner) {
                 const response = {
-                    username: owner.username,
+                    username: owner.fullname,
                     avatar: owner.profilepic,
                 };
+                console.log("response:", response);
                 return res.status(200).json({ user: response });
             }
 

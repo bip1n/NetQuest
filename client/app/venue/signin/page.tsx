@@ -1,113 +1,67 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
-import { Button, Card, CardHeader, CardBody, CardFooter, Checkbox, Divider, Link, Input, Spinner } from "@nextui-org/react";
+import { Button, Card, CardHeader, CardBody, CardFooter, Divider, Link, Input } from "@nextui-org/react";
+import Cookies from "js-cookie"; // Import js-cookie library
 import { Logo } from "../../../components/Icons";
 import { EyeFilledIcon } from "../../../components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../../../components/Assets/EyeSlashFilledIcon";
 import { FooterContent } from "@/components/Footer";
 
-
 export default function RegisterVenue() {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [imageError, setImageError] = useState<string>("");
-  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
-  const [videoError, setVideoError] = useState<string>("");
-
-  const [fullname, setfullname] = useState("");
-  const [phone, setphone] = useState("");
-  const [venueName, setVenueName] = useState("");
-  const [panNumber, setPanNumber] = useState("");
-  const [mapCoord, setmapCoord] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [venueID, setVenueID] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const files = Array.from(e.target.files);
-      if (files.length < 3 || files.length > 6) {
-        setImageError("Please select between 3 and 6 images.");
-      } else {
-        setImageError("");
-        setSelectedImages(files);
-      }
-    }
-  };
-
-  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      if (e.target.files.length > 1) {
-        setVideoError("Please select only one video.");
-      } else {
-        setVideoError("");
-        setSelectedVideo(e.target.files[0]);
-      }
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Client-side redirect to login
-
-    // The rest of the form handling logic (currently commented out)
-    if (!termsAgreed) {
-      setError("You must agree to the terms and conditions.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("fullname", fullname);
-    formData.append("phone", phone);
-    formData.append("venueName", venueName);
-    formData.append("panNumber", panNumber);
-    formData.append("mapCoord", mapCoord);
-    formData.append("email", email);
-    formData.append("password", password);
-    selectedImages.forEach((image, index) => {
-      formData.append(`images`, image);
-    });
-    if (selectedVideo) {
-      formData.append("video", selectedVideo);
-    }
-
+    
     setLoading(true);
+    setError(""); // Clear any existing errors
 
     try {
-
-      const response = await fetch("http://localhost:4000/api/adminregister", {
+      const response = await fetch("http://localhost:4000/api/loginadmin", {
         method: "POST",
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, venueID })
       });
 
       if (!response.ok) {
         const errorResponse = await response.json();
-        setError(errorResponse.error);
+        setError(errorResponse.error || "Failed to login. Please try again.");
       } else {
-        // Handle successful registration
+        // Handle successful login
         const responseData = await response.json();
-        console.log("Registration successful:", responseData);
-        setError("Registration successful:");
+        console.log("Login successful:", responseData);
 
-        // redirect to login
-        router.push('/login');
+        // Set cookies with high security
+        Cookies.set('__securedAccess', responseData.access_token, { 
+          expires: 7, // token expiry in days
+          secure: true,
+          sameSite: 'strict',
+          path: '/',
+        });
+        Cookies.set('__securedRefresh', responseData.refresh_token, { 
+          expires: 30, // refresh token expiry in days
+          secure: true,
+          sameSite: 'strict',
+          path: '/',
+        });
+
+        // Redirect to the dashboard or home page after successful login
+        router.push('/'); // Replace with your desired route
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      setError("Failed to register the venue. Please try again.");
+      setError("Failed to login. Please try again.");
     } finally {
       setLoading(false);
       console.log("Form submission complete.");
@@ -127,21 +81,24 @@ export default function RegisterVenue() {
           <CardHeader className="flex justify-between items-center">
             <p className="font-bold text-inherit mt-1">Login into your Venue</p>
           </CardHeader>
-        
-
-         
 
           <CardBody>
-            <Input fullWidth type="email" label="Email"  value={email} required onChange={(e) => setEmail(e.target.value)} />
+            <Input
+              fullWidth
+              type="email"
+              label="Email"
+              value={email}
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </CardBody>
 
-      
-          
           <CardBody>
-            <Input 
+            <Input
               type={isVisible ? "text" : "password"}
               label="Password"
               value={password}
+              required
               onChange={(e) => setPassword(e.target.value)}
               endContent={
                 <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
@@ -152,17 +109,38 @@ export default function RegisterVenue() {
                   )}
                 </button>
               }
-            >
-            </Input>
+            />
           </CardBody>
+
           <CardBody>
-            <Input fullWidth type="text" label="Venue ID"  required onChange={(e) => setmapCoord(e.target.value)} />
+            <Input
+              fullWidth
+              type="text"
+              label="Venue ID"
+              value={venueID}
+              required
+              onChange={(e) => setVenueID(e.target.value)}
+            />
           </CardBody>
+
+          {error && (
+            <CardBody>
+              <p className="text-red-500">{error}</p>
+            </CardBody>
+          )}
+
           <CardFooter className="flex justify-center">
-            <Button color="primary" radius="lg" className="w-full" type="submit" disabled={loading}>
-             Login 
+            <Button
+              color="primary"
+              radius="lg"
+              className="w-full"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
             </Button>
           </CardFooter>
+
           <Divider />
         </Card>
       </form>

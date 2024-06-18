@@ -56,7 +56,7 @@ export default function VenueProfile() {
               </div>
             }
           >
-          <VenueInfo id={'6667d3ed4fca00d3d1b67027'} />
+          <VenueInfo id={'66711cd0e601f15bfd05a8bc'} />
           </Tab>
           <Tab
             key="reviews"
@@ -79,7 +79,7 @@ export default function VenueProfile() {
               </div>
             }
           >
-          <Slider id={'6667d3ed4fca00d3d1b67027'} />
+          <Slider id={'66711cd0e601f15bfd05a8bc'} />
           </Tab>
         </Tabs>
     </div>    

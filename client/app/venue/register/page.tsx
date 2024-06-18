@@ -103,7 +103,7 @@ export default function RegisterVenue() {
         setError("Registration successful:");
 
         // redirect to login
-        router.push('/login');
+        router.push('/');
       }
     } catch (error) {
       console.error("Error submitting form:", error);

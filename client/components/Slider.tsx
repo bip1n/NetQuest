@@ -8,6 +8,10 @@ interface SliderProps {
 export const Slider: React.FC<SliderProps> = ({ id }) => {
   const [items, setItems] = useState([]);
 
+  if (!id) {
+    return <div>No venueId provided</div>;
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {

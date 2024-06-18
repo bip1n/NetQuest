@@ -20,9 +20,14 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ id }) => {
   const [venueDetails, setVenueDetails] = useState<VenueDetails | null>(null);
   const router = useRouter();
 
+  if (!id) {
+    return <div>No venueId provided</div>;
+  }
+
   useEffect(() => {
     const fetchVenueDetails = async () => {
       try {
+        console.log('id:', id); 
         const response = await fetch(`http://localhost:4000/api/venuedetails?id=${id}`); // Use the id prop in the fetch URL
         if (!response.ok) {
           throw new Error("Network response was not ok");

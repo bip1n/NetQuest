@@ -60,6 +60,19 @@ const bothCtrl = {
         }
 
     },
+
+
+    getVenueById: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const owner = await Owner.findById(id).select('-password -panNumber -fullname -mailverified, -email');
+            return res.status(200).json({ owner });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+
+
 };
 
 module.exports = bothCtrl;

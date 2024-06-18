@@ -16,7 +16,7 @@ import { Navigationbar } from "@/components/Navigationbar";
 import { FooterContent } from "@/components/Footer";
 import { Time } from "@internationalized/date";
 import { ClockCircleLinearIcon } from "@/components/Icons";
-// import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 
 export default function ProfileSetting() {
   const [files, setFiles] = useState<File[]>([]);
@@ -32,8 +32,7 @@ export default function ProfileSetting() {
 
   useEffect(() => {
     // Get token from cookies and store it in state
-    // const token = Cookies.get('token');
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjdkM2VkNGZjYTAwZDNkMWI2NzAyNyIsImVtYWlsIjoic2l2YWhAbWFpbGluYXRvci5jb20iLCJpYXQiOjE3MTgyODYxNTgsImV4cCI6MTcxODI4OTc1OH0.9JaEce5Lj0S2aCmlBQIat_TUL3dpm4Bzji7Z5D1tc-4';
+    const token = Cookies.get('__securedAccess');
     if (token) {
       setToken(token);
     }

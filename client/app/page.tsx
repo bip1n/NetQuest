@@ -1,10 +1,10 @@
-"use client";
-import React, { useEffect, useState } from 'react';
-import { useRouter } from "next/navigation";
-import { UserNavigationbar } from "@/components/UserNavigationbar";
-import { Searchbar } from "@/components/Searchbar";
-import { FooterContent } from '@/components/Footer';
-import {
+  "use client";
+  import React, { useEffect, useState } from 'react';
+  import { useRouter } from "next/navigation";
+  import { UserNavigationbar } from "@/components/UserNavigationbar";
+  import { Searchbar } from "@/components/Searchbar";
+  import { FooterContent } from '@/components/Footer';
+  import {
   Card,
   CardHeader,
   CardBody,
@@ -12,46 +12,46 @@ import {
   Image,
   Button,
   Skeleton,
-} from '@nextui-org/react';
+  } from '@nextui-org/react';
 
-interface Venue {
-  id: number;
-  name: string;
+  interface Venue {
+  _id: number;
+  venueName: string;
   location: string;
   rating: number;
   price: number;
-  imageUrl: string;
-}
+  profilepic: string;
+  }
 
-const HomePage = () => {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [venues, setVenues] = useState<Venue[]>([]);
-  const [error, setError] = useState<string | null>(null);
+    const HomePage = () => {
+    const router = useRouter();
+    const [loading, setLoading] = useState(true);
+    const [venues, setVenues] = useState<Venue[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchVenues = async () => {
-      try {
-        const response = await fetch("http://localhost:4000/api/getVenue", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          const errorResponse = await response.json();
-          setError(errorResponse.error || 'Failed to fetch data');
-          setLoading(true);
-        } else {
-          const responseData = await response.json();
-          setVenues(responseData.venues);
-          setLoading(false);
-        }
+    try {
+      const response = await fetch("http://localhost:4000/api/getVenue", {
+      method: "GET",
+      headers: {
+      "Content-Type": "application/json",
+      },
+    });
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        setError(errorResponse.error || 'Failed to fetch data');
+        setLoading(false); // <-- Update loading state
+      } else {
+        const responseData = await response.json();
+        console.log(responseData);
+        setVenues(responseData.owners);
+        setLoading(false);
+      }
       } catch (error) {
         console.error("Error fetching venue data:", error);
         setError("An error occurred while fetching venue data.");
-        setLoading(true);
+        setLoading(false); // <-- Update loading state
       }
     };
 
@@ -71,33 +71,30 @@ const HomePage = () => {
           {loading ? (
             Array.from({ length: 4 }).map((_, index) => (
               <Card key={index}>
-                <Card >
-                  <CardBody >
-                    <Skeleton className="flex rounded-lg w-full h-full"/> 
-                  </CardBody>
-                  <CardFooter className="pb-0 pt-2 px-4 flex-col items-start">
-                      <Skeleton className="h-5 mb-2 w-full rounded-lg"/>
-                      <Skeleton className="h-4 mb-2 w-full rounded-lg"/>
-                      <Skeleton className="h-4 mb-2 w-full rounded-lg"/>
-                  </CardFooter>
-                </Card>
+                <CardBody>
+                  <Skeleton className="flex rounded-lg w-full h-full" />
+                </CardBody>
+                <CardFooter className="pb-0 pt-2 px-4 flex-col items-start">
+                  <Skeleton className="h-5 mb-2 w-full rounded-lg" />
+                  <Skeleton className="h-4 mb-2 w-full rounded-lg" />
+                  <Skeleton className="h-4 mb-2 w-full rounded-lg" />
+                </CardFooter>
               </Card>
             ))
           ) : (
-            // Show fetched venues
             venues.map((venue) => (
-              <Card key={venue.id}>
+              <Card key={venue._id}>
                 <CardBody>
                   <Image
                     isBlurred
                     height={"100%"}
                     width={"100%"}
-                    src={venue.imageUrl}
+                    src={venue.profilepic}
                   />
                 </CardBody>
                 <CardFooter className="pb-0 pt-2 px-4 flex flex-col items-start">
                   <h4 className="font-semibold text-large uppercase">
-                    {venue.name} <span><small className="text-primary-500 mb-2 text-tiny">[{venue.rating}/5]</small></span>
+                    {venue.venueName} <span><small className="text-primary-500 mb-2 text-tiny">[{venue.rating}/5]</small></span>
                   </h4>
 
                   <div className="w-full flex items-center justify-between mb-2">
@@ -111,7 +108,7 @@ const HomePage = () => {
                       radius="full"
                       size="sm"
                       variant="solid"
-                      onClick={() => router.push(`/venue/profile/${venue.id}`)}
+                      onClick={() => router.push(`/venue/profile/${venue._id}`)}
                     >
                       Book Now
                     </Button>

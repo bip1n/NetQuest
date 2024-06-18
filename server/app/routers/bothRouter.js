@@ -5,5 +5,7 @@ const verifyToken = require('../middleware/verifyToken.js');
 
 
 router.get('/NavDetails',verifyToken, bothCtrl.NavDetails);
+router.get('/getVenue', bothCtrl.getVenue);
 
 module.exports = router;
+ 

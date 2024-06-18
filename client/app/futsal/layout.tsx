@@ -1,4 +1,4 @@
-export default function AboutLayout({
+export default function FutsalLayout({
   children,
 }: {
   children: React.ReactNode;

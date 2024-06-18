@@ -20,6 +20,7 @@ const HomePage = (props: Props) => {
       <Card> 
       <CardBody>
         <Image
+         isBlurred
          height={"100%"}
          width={"100%"}
           src="https://previews.123rf.com/images/horimatsu/horimatsu1509/horimatsu150900030/45248004-futsal-court-in-a-public-outdoor-park-with-artificial-turf.jpg"

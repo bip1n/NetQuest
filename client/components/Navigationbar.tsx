@@ -12,17 +12,22 @@ import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 import { siteConfig } from "@/config/site";
-import SigninModel from "./SigninModel";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Button } from "@nextui-org/react";
+import SigninModel from "./UserSignin";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Avatar,
+  Button,
+} from "@nextui-org/react";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { Logo } from "@/components/Icons";
 import Cookies from "js-cookie";
 
-
-  const loginStatus = true;
-  // const [isLogin, setIsLoginTrue] = useState(false); 
-  // setIsLoginTrue (loginStatus);
-
+const loginStatus = true;
+// const [isLogin, setIsLoginTrue] = useState(false);
+// setIsLoginTrue (loginStatus);
 
 export const Navigationbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,14 +37,14 @@ export const Navigationbar = () => {
 
   useEffect(() => {
     const fetchUserDetails = async () => {
-      const token = Cookies.get('__securedAccess');
+      const token = Cookies.get("__securedAccess");
       if (token) {
         try {
           const response = await fetch("http://localhost:4000/api/NavDetails", {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           });
 
@@ -64,7 +69,7 @@ export const Navigationbar = () => {
   const handleMenuToggle = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <NextUINavbar  maxWidth="xl" position="sticky" >
+    <NextUINavbar maxWidth="xl" position="sticky">
       {/* <NavbarContent className="sm:hidden" justify="start">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -133,11 +138,17 @@ export const Navigationbar = () => {
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold ">{userDetails.username}</p>
               </DropdownItem>
-              <DropdownItem href="/venue/profile" key="settings">Profile</DropdownItem>
+              <DropdownItem href="/venue/profile" key="settings">
+                Profile
+              </DropdownItem>
               <DropdownItem key="team_settings">Bookings</DropdownItem>
               <DropdownItem key="analytics">Notifications</DropdownItem>
-              <DropdownItem key="system" href="/venue/profile/setting">Settings</DropdownItem>
-              <DropdownItem key="logout" color="danger">Log Out</DropdownItem>
+              <DropdownItem key="system" href="/venue/profile/setting">
+                Settings
+              </DropdownItem>
+              <DropdownItem key="logout" color="danger">
+                Log Out
+              </DropdownItem>
             </DropdownMenu>
           </Dropdown>
         ) : (

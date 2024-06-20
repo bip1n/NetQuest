@@ -5,73 +5,47 @@ import { UserNavigationbar } from "@/components/UserNavigationbar";
 import { FooterContent } from "@/components/Footer";
 import { Reviews } from "@/components/Reviews";
 import { Booking } from "@/components/Booking";
-import { VenueInfo } from "@/components/VenueInfo";
+import VenueInfo from "@/components/VenueInfo"; // Correct the import if it's a default export
 import {
   Button,
   Card,
   CardHeader,
   Image,
   CardBody,
-  ScrollShadow,
-  Link,
   Tabs,
-  CardFooter,
   Tab,
-  Chip,
+  Link,
 } from "@nextui-org/react";
 import { MessageIcon, GalleryIcon, VenueIcon } from "@/components/Icons";
 import { Slider } from "@/components/Slider";
 
 export default function VenueProfile() {
   const router = useRouter();
-  // console.log("asfhasf",router)
-  // const { id } = router.query;
-
-  const getModifiedUrl = () => {
-    if (typeof window !== "undefined") {
-      const currentPath = window.location.pathname; // Get the path part of the URL
-      const segments = currentPath.split('/'); // Split the path into segments
-      const extractedId = segments[segments.length - 1]; // The last segment is the ID
-
-      return `${extractedId}`; // Construct the new URL
-    }
-    return '';
-  };
-
-  const id = getModifiedUrl();
-
   const [venue, setVenue] = useState(null);
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
 
+  // Extract the venue ID from the URL
+  const getVenueIdFromUrl = () => {
+    if (typeof window !== "undefined") {
+      const currentPath = window.location.pathname; // Get the path part of the URL
+      const segments = currentPath.split('/'); // Split the path into segments
+      return segments[segments.length - 1]; // The last segment is the ID
+    }
+    return '';
+  };
+
+  const venueId = getVenueIdFromUrl();
+
   useEffect(() => {
-    if (!id) {
-      // If id is undefined, do not proceed with the fetch.
+    if (!venueId) {
       return;
     }
 
     const fetchVenue = async () => {
-      // try {
-      //   setLoading(true); // Start loading
-      //   const response = await fetch(`/api/venues/${id}`);
-
-      //   if (!response.ok) {
-      //     const errorResponse = await response.json();
-      //     setError(errorResponse.error || 'Failed to fetch data');
-      //   } else {
-      //     const responseData = await response.json();
-      //     setVenue(responseData);
-      //   }
-      // } catch (error) {
-      //   console.error("Error fetching venue data:", error);
-      //   setError("An error occurred while fetching venue data.");
-      // } finally {
-      //   setLoading(false); // End loading
-      // }
-
-
       try {
-        const response = await fetch(`http://localhost:4000/api/venues/${id}`, {
+        setLoading(true); // Start loading
+        const response = await fetch(`http://localhost:4000/api/venues/${venueId}`, {
           method: "GET",
         });
 
@@ -80,21 +54,18 @@ export default function VenueProfile() {
           setError(errorResponse.error || 'Failed to fetch data');
         } else {
           const responseData = await response.json();
-          console.log("responseData", responseData.owner);  
           setVenue(responseData.owner);
         }
       } catch (error) {
-        // setError("An error occurred while fetching user details.");
-        console.error("Error fetching user details:", error);
+        console.error("Error fetching venue data:", error);
+        setError("An error occurred while fetching venue datass.");
       } finally {
-        setLoading(false);
+        setLoading(false); // End loading
       }
-
-
     };
 
     fetchVenue();
-  }, [id]);
+  }, [venueId]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -137,9 +108,8 @@ export default function VenueProfile() {
                     </div>
                   }
                 >
-                  {/* Pass the venue data to VenueInfo */}
-                  id: {id}
-                  <VenueInfo venueId={id} />
+                  {/* Pass the venue ID to VenueInfo */}
+                  <VenueInfo venueId={venueId} />
                 </Tab>
                 <Tab
                   key="reviews"
@@ -150,9 +120,8 @@ export default function VenueProfile() {
                     </div>
                   }
                 >
-                  {/* Pass the venue ID to Reviews */}
-                  <Reviews/>
-                  <Link href={`/venue/reviews/${id}`} className="ml-3 text-sm">
+                  {/* <Reviews venueId={venueId} /> */}
+                  <Link href={`/venue/reviews/${venueId}`} className="ml-3 text-sm">
                     Read More...
                   </Link>
                 </Tab>
@@ -165,14 +134,15 @@ export default function VenueProfile() {
                     </div>
                   }
                 >
-                  {/* Pass the venue ID to Slider */}
-                  <Slider venueId={id} />
+                  <Slider venueId={venueId} />
                 </Tab>
               </Tabs>
             </div>
           </Card>
         </div>
-      ) : (<div>Loading...</div>)}
+      ) : (
+        <div>Loading...</div>
+      )}
       <FooterContent />
     </>
   );

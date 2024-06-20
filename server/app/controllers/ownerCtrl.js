@@ -44,6 +44,8 @@ const ownerCtrl = {
     VenueDetails: async (req, res) => {
         try {
             const owner_id = req.query.id;
+            const {id} = req.query;
+            if (id == 'undefined') { return res.status(400).json({ error: "Owner ID is required." })};
             if (!owner_id) { return res.status(400).json({ error: "Owner ID is required." })};
             const owner = await Owner.findById(owner_id);
             if (!owner) { return res.status(400).json({ error: "Owner does not exist." });}

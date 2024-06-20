@@ -11,39 +11,43 @@ interface VenueDetails {
   startingPrice: number;
 }
 
-// Define the props interface for VenueInfo
-interface VenueInfoProps {
-  id: string;
-}
-
-export const VenueInfo: React.FC<VenueInfoProps> = ({ id }) => {
+  export default function VenueInfo (props: { venueId: any; }) {
+  const { venueId } = props;
   const [venueDetails, setVenueDetails] = useState<VenueDetails | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
-  if (!id) {
-    return <div>No venueId provided</div>;
-  }
 
   useEffect(() => {
     const fetchVenueDetails = async () => {
       try {
-        console.log('id:', id); 
-        const response = await fetch(`http://localhost:4000/api/venuedetails?id=${id}`); // Use the id prop in the fetch URL
+        const response = await fetch(`http://localhost:4000/api/venuedetails?venueId=${venueId}`);
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          setError("error");
         }
-        const data: VenueDetails = await response.json(); // Type the response data
+        const data: VenueDetails = await response.json();
         setVenueDetails(data);
+        setLoading(false); // Data fetched successfully, set loading to false
       } catch (error) {
+        setError(error.error);
+        setLoading(false); // On error, set loading to false
         console.error("Failed to fetch venue details:", error);
       }
     };
 
     fetchVenueDetails();
-  }, [id]); // Add id as a dependency to refetch if it changes
+  }, [venueId]); // Fetch data whenever the venueId changes
+
+  if (loading) {
+    return <Spinner />; // Show a loading spinner while fetching data
+  }
+
+  if (error) {
+    return <div>{error}</div>; // Show error message if data fetching fails
+  }
 
   if (!venueDetails) {
-    return <Spinner/>; // Show a loading message while the data is being fetched
+    return <div>No venue details available</div>; // Show a message if no venue details are available
   }
 
   const { phone, address, amenities, startingPrice } = venueDetails;
@@ -87,7 +91,7 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ id }) => {
           <RupeeIcon className="w-6 h-6" />
           <p className="text-medium ml-1">
             Starting From{" "}
-            <span className="text-green-600"> Rs. {startingPrice}</span>
+            <span className="text-green-600">Rs. {startingPrice}</span>
           </p>
         </div>
       </CardBody>
@@ -104,3 +108,5 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ id }) => {
     </>
   );
 };
+
+// export default VenueInfo;

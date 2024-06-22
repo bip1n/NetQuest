@@ -1,4 +1,6 @@
-import React from 'react'
+"use client"
+
+import React,{ useState, useEffect } from 'react'
 import {UserNavigationbar} from "@/components/UserNavigationbar"
 import {FooterContent} from "@/components/Footer"
 import { 
@@ -14,8 +16,42 @@ import {
     Link,
 
  } from '@nextui-org/react';
+import Cookies from "js-cookie";
 export default function UserProfile() {
-  
+    const [userDetails, setUserDetails] = useState(null);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchUserDetails = async () => {
+          const token = Cookies.get("__securedAccess");
+          if (token) {
+            try {
+              const response = await fetch("http://localhost:4000/api/userprofile", {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+    
+              if (!response.ok) {
+                const errorResponse = await response.json();
+                setError(errorResponse.error);
+              } else {
+                const responseData = await response.json();
+                setUserDetails(responseData.user);
+              }
+            } catch (error) {
+              // setError("An error occurred while fetching user details.");
+              console.error("Error fetching user details:", error);
+            }
+          }
+        };
+    
+        fetchUserDetails();
+      }, []);
+
+
     return (
       <>
         <UserNavigationbar />
@@ -34,7 +70,7 @@ export default function UserProfile() {
                         className="rounded-full"
                     />
                     <div className="mt-4 w-full flex justify-center">
-                        <p className='text-lg text-secondary font-semibold'>Test User  |  9876543210</p>
+                            <p className='text-lg text-secondary font-semibold'>{userDetails.username}  |  9876543210</p>
                     </div>
                     </div>
                 </CardBody>

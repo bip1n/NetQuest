@@ -13,6 +13,7 @@ import NextLink from "next/link";
 import clsx from "clsx";
 import { siteConfig } from "@/config/site";
 import SigninModel from "./UserSignin";
+import { NotificationModal } from "./NotificationModal";
 import {
   Dropdown,
   DropdownTrigger,
@@ -121,6 +122,8 @@ export const UserNavigationbar = () => {
       <NavbarContent as="div" justify="end">
         <ThemeSwitch />
         {loginStatus && userDetails ? (
+          <>
+          < NotificationModal/>
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
               <Avatar
@@ -149,6 +152,8 @@ export const UserNavigationbar = () => {
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
+          </>
+         
         ) : (
           <SigninModel />
         )}

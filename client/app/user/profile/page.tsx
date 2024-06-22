@@ -73,7 +73,7 @@ export default function UserProfile() {
                             <p className='text-lg text-secondary font-semibold'>{userDetails.username}  |  9876543210</p>
                     </div>
                     </div>
-                </CardBody>
+                </CardBody> 
                 <Divider/>
                 <Divider/>
                 <CardHeader className='flex justify-center'>

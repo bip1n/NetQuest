@@ -39,6 +39,7 @@ export default function UserProfile() {
                 setError(errorResponse.error);
               } else {
                 const responseData = await response.json();
+                console.log('responseData:', responseData);
                 setUserDetails(responseData.user);
               }
             } catch (error) {
@@ -54,8 +55,11 @@ export default function UserProfile() {
 
     return (
       <>
-        <UserNavigationbar />
+          <UserNavigationbar />
+    
+          {userDetails ? (
         <div>
+        {/* {loading && <div>Loading...</div>: */}
             <Card className='md:mx-24 flex flex-col items-center'>
                 <CardHeader>
                     <p className='text-xl text-secondary font-semibold ml-4'>Profile</p>
@@ -63,14 +67,14 @@ export default function UserProfile() {
                 <CardBody className="flex flex-col items-center">
                     <div className=" justify-center">
                     <Image
-                        src="https://res.cloudinary.com/dwc7juq50/image/upload/v1717429705/About/subodh_nfchh8.jpg"
+                        src= {userDetails.profilepic}
                         width={200}
                         height={200}
                         alt="profile"
                         className="rounded-full"
                     />
                     <div className="mt-4 w-full flex justify-center">
-                            <p className='text-lg text-secondary font-semibold'>{userDetails.username}  |  9876543210</p>
+                            <p className='text-lg text-secondary font-semibold'>{userDetails.username}  |  {userDetails.phone}</p>
                     </div>
                     </div>
                 </CardBody>
@@ -87,7 +91,7 @@ export default function UserProfile() {
                         label="Username"
                         variant="bordered"
                         labelPlacement='outside'
-                        defaultValue="Test User"
+                        defaultValue={userDetails.username}
                         className="max-w-lg"
                         />
                     </div>
@@ -97,7 +101,7 @@ export default function UserProfile() {
                         label="Contact Number"
                         variant="bordered"
                         labelPlacement='outside'
-                        defaultValue="9876543210"
+                        defaultValue={userDetails.phone}
                         className="max-w-lg"
                         />
                     </div>
@@ -108,7 +112,7 @@ export default function UserProfile() {
                         type="email"
                         label="Email"
                         variant="bordered"
-                        defaultValue="junior@nextui.org"
+                        defaultValue={userDetails.email}
                         className="max-w-lg"
                         />
                     </div>
@@ -128,7 +132,11 @@ export default function UserProfile() {
                     </div>
                 </CardBody>
             </Card>
+             {/* } */}
         </div>
+        ) : (
+          <div>Loading...</div>
+        )}
         <FooterContent />
       </>
     );

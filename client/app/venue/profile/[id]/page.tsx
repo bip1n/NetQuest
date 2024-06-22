@@ -138,7 +138,9 @@ export default function VenueProfile() {
                     </div>
                   }
                 >
-                  <Slider venueId={venueId} />
+
+                <Slider venueId={venueId} />
+                  {/* <Slider venueId={venueId} /> */}
                 </Tab>
               </Tabs>
             </div>

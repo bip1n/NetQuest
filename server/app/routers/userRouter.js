@@ -10,6 +10,8 @@ router.get('/userprofile', verifyToken, userCtrl.userprofile);
 
 
 
+
+
 // Export the router to be used in other parts of the application
 module.exports = router;
  

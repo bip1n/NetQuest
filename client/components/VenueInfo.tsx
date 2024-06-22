@@ -29,7 +29,7 @@ export default function VenueInfo (props: { venueId: any; }) {
         setVenueDetails(data);
         setLoading(false); // Data fetched successfully, set loading to false
       } catch (error) {
-        setError(error.error);
+        setError("dead");
         setLoading(false); // On error, set loading to false
         console.error("Failed to fetch venue details:", error);
       }
@@ -52,7 +52,6 @@ export default function VenueInfo (props: { venueId: any; }) {
 
   const { phone, address, amenities, startingPrice } = venueDetails;
 
-  console.log('venueDetails:', venueDetails);
   return (
     <>
       <CardBody>

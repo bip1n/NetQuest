@@ -1,3 +1,4 @@
+const User = require("../models/userModel");
 
 
 const userCtrl = {
@@ -15,9 +16,13 @@ const userCtrl = {
     userprofile: async (req, res) => {
         try {
             const user_id = req.user.id
+            console.log(user_id);
             if (!user_id) { return res.status(400).json({ error: "User ID is required." })};
+            console.log("this1");
             const user = await User.findById(user_id).select('-password -mailverified -Bookedstatus -mailverified, -joindate');
+            console.log("this2");
             if (!user) { return res.status(404).json({ error: "User not found." })};
+            console.log(user);
             return res.status(200).json({ user });
 
         } catch (err) {

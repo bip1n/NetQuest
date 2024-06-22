@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody } from "@nextui-org/react";
 
-interface SliderProps {
-  id: string;
-}
 
-export const Slider: React.FC<SliderProps> = ({ id }) => {
+
+  export default function Slider (props: { venueId: any; }) {
   const [items, setItems] = useState([]);
-
-  if (!id) {
+  const { venueId } = props;
+  if (!venueId) {
     return <div>No venueId provided</div>;
   }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/viewphotos?id=${id}`);
+        const response = await fetch(`http://localhost:4000/api/viewphotos?venueId=${venueId}`);
         const data = await response.json();
         setItems(data);
       } catch (error) {
@@ -24,7 +22,7 @@ export const Slider: React.FC<SliderProps> = ({ id }) => {
     };
 
     fetchData();
-  }, [id]); // Dependency array includes id to refetch data if id changes
+  }, [venueId]); // Dependency array includes venueId to refetch data if venueId changes
 
   return (
     <div className="gap-2 grid grid-cols-1 sm:grid-cols-1">

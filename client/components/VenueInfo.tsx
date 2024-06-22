@@ -11,7 +11,7 @@ interface VenueDetails {
   startingPrice: number;
 }
 
-  export default function VenueInfo (props: { venueId: any; }) {
+export default function VenueInfo (props: { venueId: any; }) {
   const { venueId } = props;
   const [venueDetails, setVenueDetails] = useState<VenueDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -21,7 +21,7 @@ interface VenueDetails {
   useEffect(() => {
     const fetchVenueDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/venuedetails?venueId=${venueId}`);
+        const response = await fetch(`http://localhost:4000/api/venuedetails?owner_id=${venueId}`);
         if (!response.ok) {
           setError("error");
         }
@@ -29,7 +29,7 @@ interface VenueDetails {
         setVenueDetails(data);
         setLoading(false); // Data fetched successfully, set loading to false
       } catch (error) {
-        setError(error.error);
+        setError("dead");
         setLoading(false); // On error, set loading to false
         console.error("Failed to fetch venue details:", error);
       }
@@ -52,7 +52,6 @@ interface VenueDetails {
 
   const { phone, address, amenities, startingPrice } = venueDetails;
 
-  console.log('venueDetails:', venueDetails);
   return (
     <>
       <CardBody>

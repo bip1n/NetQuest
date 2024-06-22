@@ -20,6 +20,7 @@ import { MessageIcon, GalleryIcon, VenueIcon } from "@/components/Icons";
 import { Slider } from "@/components/Slider";
 
 export default function VenueProfile() {
+
   const router = useRouter();
   const [venue, setVenue] = useState(null);
   const [loading, setLoading] = useState(true); // Loading state
@@ -38,6 +39,9 @@ export default function VenueProfile() {
   const venueId = getVenueIdFromUrl();
 
   useEffect(() => {
+
+    //refresh page
+
     if (!venueId) {
       return;
     }
@@ -134,7 +138,9 @@ export default function VenueProfile() {
                     </div>
                   }
                 >
-                  <Slider venueId={venueId} />
+
+                <Slider venueId={venueId} />
+                  {/* <Slider venueId={venueId} /> */}
                 </Tab>
               </Tabs>
             </div>

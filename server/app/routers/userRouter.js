@@ -5,7 +5,11 @@ const verifyToken = require('../middleware/verifyToken');
 
 
 // Define route for user registration
-router.post('/viewpost', userCtrl.viewpost);  
+router.post('/bookvenue', userCtrl.bookvenue);
+router.get('/userprofile', verifyToken, userCtrl.userprofile);
+
+
+
 
 
 // Export the router to be used in other parts of the application

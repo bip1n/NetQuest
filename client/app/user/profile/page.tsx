@@ -34,7 +34,7 @@ export default function UserProfile() {
                         className="rounded-full"
                     />
                     <div className="mt-4 w-full flex justify-center">
-                            <p className='text-lg text-secondary font-semibold'>Test User  |  9876543210</p>
+                        <p className='text-lg text-secondary font-semibold'>Test User  |  9876543210</p>
                     </div>
                     </div>
                 </CardBody>

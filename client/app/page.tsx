@@ -108,7 +108,7 @@
                       radius="full"
                       size="sm"
                       variant="solid"
-                      onClick={() => router.push(`http://localhost:3000/venue/profile/${venue._id}`)}
+                      onClick={() => router.push(`venue/profile/${venue._id}`)}
                     >
                       Book Now
                     </Button>

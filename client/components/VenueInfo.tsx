@@ -11,7 +11,7 @@ interface VenueDetails {
   startingPrice: number;
 }
 
-  export default function VenueInfo (props: { venueId: any; }) {
+export default function VenueInfo (props: { venueId: any; }) {
   const { venueId } = props;
   const [venueDetails, setVenueDetails] = useState<VenueDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -55,6 +55,7 @@ interface VenueDetails {
   console.log('venueDetails:', venueDetails);
   return (
     <>
+    <div>{venueId}</div>
       <CardBody>
         <div className="flex items-center">
           <PhoneIcon className="w-6 h-6" />

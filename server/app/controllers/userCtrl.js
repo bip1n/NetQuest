@@ -1,7 +1,9 @@
 
 
 const userCtrl = {
-    viewpost: async (req, res) => {
+
+
+    bookvenue: async (req, res) => {
         try {
             
           
@@ -9,6 +11,21 @@ const userCtrl = {
           return res.status(500).json({ msg: err.message });
         }
     },
+
+    userprofile: async (req, res) => {
+        try {
+            const user_id = req.user.id
+            if (!user_id) { return res.status(400).json({ error: "User ID is required." })};
+            const user = await User.findById(user_id).select('-password -mailverified -Bookedstatus -mailverified, -joindate');
+            if (!user) { return res.status(404).json({ error: "User not found." })};
+            return res.status(200).json({ user });
+
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+          }
+      },
+
+
 
 
     addreview: async (req, res) => {

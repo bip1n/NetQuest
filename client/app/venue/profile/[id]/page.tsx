@@ -112,7 +112,6 @@ export default function VenueProfile() {
                     </div>
                   }
                 >
-                  <div>{venueId}</div>
                   {/* Pass the venue ID to VenueInfo */}
                   <VenueInfo venueId={venueId} />
                 </Tab>

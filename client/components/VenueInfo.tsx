@@ -21,7 +21,7 @@ export default function VenueInfo (props: { venueId: any; }) {
   useEffect(() => {
     const fetchVenueDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/venuedetails?venueId=${venueId}`);
+        const response = await fetch(`http://localhost:4000/api/venuedetails?owner_id=${venueId}`);
         if (!response.ok) {
           setError("error");
         }
@@ -55,7 +55,6 @@ export default function VenueInfo (props: { venueId: any; }) {
   console.log('venueDetails:', venueDetails);
   return (
     <>
-    <div>{venueId}</div>
       <CardBody>
         <div className="flex items-center">
           <PhoneIcon className="w-6 h-6" />

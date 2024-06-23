@@ -1,13 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { UserNavigationbar } from "@/components/UserNavigationbar";
 import { FooterContent } from "@/components/Footer";
-import { Reviews } from "@/components/Reviews";
-import { Booking } from "@/components/Booking";
 import VenueInfo from "@/components/VenueInfo"; // Correct the import if it's a default export
 import {
-  Button,
   Card,
   CardHeader,
   Image,
@@ -17,59 +14,51 @@ import {
   Link,
 } from "@nextui-org/react";
 import { MessageIcon, GalleryIcon, VenueIcon } from "@/components/Icons";
-import { Slider } from "@/components/Slider";
+import Slider from "@/components/Slider";
 
-export default function VenueProfile() {
+interface Venue {
+  venueName: string;
+  rating: number;
+  profilepic: string;
+  owner: any; // Replace with appropriate type if available
+}
 
-  const router = useRouter();
-  const [venue, setVenue] = useState(null);
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+const VenueProfile = () => {
+  const { id } = useParams(); // Get the dynamic route parameter
 
-  // Extract the venue ID from the URL
-  const getVenueIdFromUrl = () => {
-    if (typeof window !== "undefined") {
-      const currentPath = window.location.pathname; // Get the path part of the URL
-      const segments = currentPath.split('/'); // Split the path into segments
-      return segments[segments.length - 1]; // The last segment is the ID
-    }
-    return '';
-  };
-
-  const venueId = getVenueIdFromUrl();
+  const [venue, setVenue] = useState<Venue | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-
-    //refresh page
-
-    if (!venueId) {
-      return;
-    }
-
     const fetchVenue = async () => {
+      if (!id) {
+        return;
+      }
+
       try {
         setLoading(true); // Start loading
-        const response = await fetch(`http://localhost:4000/api/venues/${venueId}`, {
+        const response = await fetch(`http://localhost:4000/api/venues/${id}`, {
           method: "GET",
         });
 
         if (!response.ok) {
           const errorResponse = await response.json();
-          setError(errorResponse.error || 'Failed to fetch data');
-        } else {
-          const responseData = await response.json();
-          setVenue(responseData.owner);
+          throw new Error(errorResponse.error || "Failed to fetch data");
         }
+
+        const responseData = await response.json();
+        setVenue(responseData.owner);
       } catch (error) {
         console.error("Error fetching venue data:", error);
-        setError("An error occurred while fetching venue datass.");
+        setError("An error occurred while fetching venue data.");
       } finally {
         setLoading(false); // End loading
       }
     };
 
     fetchVenue();
-  }, [venueId]);
+  }, [id]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -99,7 +88,7 @@ export default function VenueProfile() {
               />
             </CardBody>
           </Card>
-        
+
           <Card className="w-full max-w-[100%] md:max-w-[600px] mt-2">
             <div className="flex w-full flex-col">
               <Tabs aria-label="Options" color="secondary" variant="underlined">
@@ -113,7 +102,7 @@ export default function VenueProfile() {
                   }
                 >
                   {/* Pass the venue ID to VenueInfo */}
-                  <VenueInfo venueId={venueId} />
+                  <VenueInfo venueId={id as string} />
                 </Tab>
                 <Tab
                   key="reviews"
@@ -124,8 +113,7 @@ export default function VenueProfile() {
                     </div>
                   }
                 >
-                  {/* <Reviews venueId={venueId} /> */}
-                  <Link href={`/venue/reviews/${venueId}`} className="ml-3 text-sm">
+                  <Link href={`/venue/reviews/${id}`} className="ml-3 text-sm">
                     Read More...
                   </Link>
                 </Tab>
@@ -138,18 +126,18 @@ export default function VenueProfile() {
                     </div>
                   }
                 >
-
-                <Slider venueId={venueId} />
-                  {/* <Slider venueId={venueId} /> */}
+                  <Slider venueId={id as string} />
                 </Tab>
               </Tabs>
             </div>
           </Card>
         </div>
       ) : (
-        <div>Loading...</div>
+        <div>No venue data found</div>
       )}
       <FooterContent />
     </>
   );
-}
+};
+
+export default VenueProfile;

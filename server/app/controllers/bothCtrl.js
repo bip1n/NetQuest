@@ -36,9 +36,6 @@ const bothCtrl = {
             return res.status(500).json({ msg: err.message });
         }
     },
-
- 
-
     // needed for the venue details page
     // venue id
     // venue imageurl
@@ -46,12 +43,11 @@ const bothCtrl = {
     // venue location
 
             //   const venue = await Owner.find().sort({$natural:1}).limit(5);
-
     getVenue: async (req, res) => {
         try {
 
             const owners = await Owner.find().select('-password -panNumber -fullname -mailverified, -email').limit(4);
-            console.log("owners:", owners);
+            // console.log("owners:", owners);
             return res.status(200).json({owners});
                         
           
@@ -60,8 +56,6 @@ const bothCtrl = {
         }
 
     },
-
-
     getVenueById: async (req, res) => {
         try {
             const id = req.params.id;
@@ -71,8 +65,6 @@ const bothCtrl = {
             return res.status(500).json({ msg: err.message });
         }
     },
-
-
 };
 
 module.exports = bothCtrl;

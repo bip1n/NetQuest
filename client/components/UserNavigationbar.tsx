@@ -26,15 +26,18 @@ import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { Logo } from "@/components/Icons";
 import Cookies from "js-cookie";
 
-const loginStatus = true;
-// const [isLogin, setIsLoginTrue] = useState(false);
-// setIsLoginTrue (loginStatus);
+// Define the UserDetails interface
+interface UserDetails {
+  username: string;
+  avatar: string;
+  // Add other properties as needed
+}
 
 export const UserNavigationbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loginStatus, setLoginStatus] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
-  const [error, setError] = useState(null);
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -58,7 +61,6 @@ export const UserNavigationbar = () => {
             setLoginStatus(true);
           }
         } catch (error) {
-          // setError("An error occurred while fetching user details.");
           console.error("Error fetching user details:", error);
         }
       }
@@ -71,13 +73,6 @@ export const UserNavigationbar = () => {
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
-      {/* <NavbarContent className="sm:hidden" justify="start">
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          onClick={handleMenuToggle}
-        />
-      </NavbarContent> */}
-
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -85,22 +80,6 @@ export const UserNavigationbar = () => {
             <p className="font-bold text-inherit">NetQuest</p>
           </NextLink>
         </NavbarBrand>
-
-        {/* <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
-                )}
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
-        </ul> */}
       </NavbarContent>
 
       <NavbarMenu className={isMenuOpen ? "max-h-[10vh]" : "max-h-0"}>
@@ -123,37 +102,36 @@ export const UserNavigationbar = () => {
         <ThemeSwitch />
         {loginStatus && userDetails ? (
           <>
-          < NotificationModal/>
-          <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <Avatar
-                isBordered
-                as="button"
-                className="transition-transform"
-                color="secondary"
-                name={userDetails.username}
-                size="sm"
-                src={userDetails.avatar}
-              />
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold ">{userDetails.username}</p>
-              </DropdownItem>
-              <DropdownItem href="/user/profile" key="settings">Profile</DropdownItem>
-              <DropdownItem key="team_settings" href="/user/booking">Booking</DropdownItem>
-              <DropdownItem key="analytics">Notifications</DropdownItem>
-              <DropdownItem key="system" href="/venue/profile/setting">
-                Change Password
-              </DropdownItem>
-              <DropdownItem key="logout" color="danger">
-                Log Out
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+            <NotificationModal />
+            <Dropdown placement="bottom-end">
+              <DropdownTrigger>
+                <Avatar
+                  isBordered
+                  as="button"
+                  className="transition-transform"
+                  color="secondary"
+                  name={userDetails.username}
+                  size="sm"
+                  src={userDetails.avatar}
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Profile Actions" variant="flat">
+                <DropdownItem key="profile" className="h-14 gap-2">
+                  <p className="font-semibold">Signed in as</p>
+                  <p className="font-semibold">{userDetails.username}</p>
+                </DropdownItem>
+                <DropdownItem href="/user/profile" key="settings">Profile</DropdownItem>
+                <DropdownItem key="team_settings" href="/user/booking">Booking</DropdownItem>
+                <DropdownItem key="analytics">Notifications</DropdownItem>
+                <DropdownItem key="system" href="/venue/profile/setting">
+                  Change Password
+                </DropdownItem>
+                <DropdownItem key="logout" color="danger">
+                  Log Out
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </>
-         
         ) : (
           <SigninModel />
         )}

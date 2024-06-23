@@ -19,6 +19,7 @@
     "react-responsive-carousel": "^3.2.23"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "concurrently": "^7.6.0",
     "nodemon": "^2.0.15"
   }

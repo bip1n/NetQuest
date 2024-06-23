@@ -3,7 +3,7 @@ import { Card, CardBody } from "@nextui-org/react";
 
 
 
-  export default function Slider (props: { venueId: any; }) {
+export default function Slider (props: { venueId: any; }) {
   const [items, setItems] = useState([]);
   const { venueId } = props;
   if (!venueId) {

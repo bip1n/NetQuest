@@ -204,6 +204,8 @@ const ownerCtrl = {
         }
     },
 
+    
+
 }
 
 module.exports = ownerCtrl;

@@ -7,9 +7,7 @@ const verifyToken = require('../middleware/verifyToken');
 // Define route for user registration
 router.post('/bookvenue', userCtrl.bookvenue);
 router.get('/userprofile', verifyToken, userCtrl.userprofile);
-
-
-
+router.get('/getBooking', verifyToken, userCtrl.getBooking);
 
 
 // Export the router to be used in other parts of the application

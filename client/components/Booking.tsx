@@ -38,7 +38,10 @@ interface Slot {
   status: string;
 }
 
-export const Booking = () => {
+
+export default function Booking (props: { venueId: any; }) {
+  const { venueId } = props;
+  console.log("venueId", venueId)
   const router = useRouter();
   const venueOwner = false;
   const [isLoading, setIsLoading] = useState(true);

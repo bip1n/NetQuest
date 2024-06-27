@@ -210,7 +210,7 @@ export const Booking = () => {
                     Cancel
                   </Button>
                   <Button color="secondary" variant="shadow"  onClick={() => {
-                      router.push("/venue/booking/checkout");
+                      router.push("/venue/${venue._id}/booking/checkout");
                     }}>
                     Book
                   </Button>

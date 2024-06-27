@@ -37,7 +37,7 @@ export const AdminNavigationBar = () => {
     <NextUINavbar maxWidth="xl" position="sticky" shouldHideOnScroll>
       <NavbarBrand className="justify-start">
         <Logo />
-        <p className="font-bold text-inherit">ADMIN DASHBOARD</p>
+        <p className="font-bold text-inherit">NETQUEST - ADMIN</p>
       </NavbarBrand>
 
       {isAdmin ? (

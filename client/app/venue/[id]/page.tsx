@@ -35,7 +35,6 @@ const VenueProfile = () => {
       if (!id) {
         return;
       }
-
       try {
         setLoading(true); // Start loading
         const response = await fetch(`http://localhost:4000/api/venues/${id}`, {

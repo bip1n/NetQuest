@@ -9,10 +9,6 @@ import {
   ModalHeader,
   ModalContent,
   ModalFooter,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
 } from "@nextui-org/react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -20,7 +16,11 @@ import { Logo } from "@/components/Icons";
 import { EyeFilledIcon } from "@/components/Assets/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/Assets/EyeSlashFilledIcon";
 
-export default function Signin() {
+interface SigninProps {
+  onLogin: () => void;
+}
+
+export default function Signin({ onLogin }: SigninProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState("");
@@ -28,7 +28,6 @@ export default function Signin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
@@ -73,8 +72,7 @@ export default function Signin() {
 
         // Handle successful sign-in (e.g., redirect to another page)
         handleClose();
-
-        // redirect to home page
+        onLogin(); // Notify parent component about the login
         router.push("/");
       }
     } catch (error) {
@@ -100,7 +98,7 @@ export default function Signin() {
                 <p className="font-bold text-inherit mt-1">SignIn</p>
                 <Link isExternal showAnchorIcon href="/venue/signin">
                     Sign is as a Venue Owner
-                  </Link>
+                </Link>
               </ModalHeader>
               
               <ModalBody>

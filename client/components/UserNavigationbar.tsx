@@ -4,7 +4,6 @@ import {
   Navbar as NextUINavbar,
   NavbarContent,
   NavbarMenu,
-  NavbarMenuToggle,
   NavbarBrand,
   NavbarItem,
 } from "@nextui-org/navbar";
@@ -12,7 +11,7 @@ import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 import { siteConfig } from "@/config/site";
-import SigninModel from "./UserSignin";
+import Signin from "./UserSignin"; // Use the Signin component here
 import { NotificationModal } from "./NotificationModal";
 import {
   Dropdown,
@@ -20,7 +19,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Avatar,
-  Button,
+  Skeleton,
 } from "@nextui-org/react";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { Logo } from "@/components/Icons";
@@ -38,6 +37,8 @@ export const UserNavigationbar = () => {
   const [loginStatus, setLoginStatus] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [authChanged, setAuthChanged] = useState(false); // State to track authentication changes
+  const [loading, setLoading] = useState(true); // Loading state for user data fetching
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -64,13 +65,28 @@ export const UserNavigationbar = () => {
           console.error("Error fetching user details:", error);
         }
       }
+      setLoading(false);
     };
 
     fetchUserDetails();
-  }, []);
+  }, [authChanged]); // Add authChanged to the dependency array
 
   const handleMenuToggle = () => setIsMenuOpen(!isMenuOpen);
 
+  // Function to handle login state change
+  const handleLoginStateChange = () => {
+    setAuthChanged(!authChanged); // Toggle the authChanged state
+  };
+
+  // Function to handle logout
+  const handleLogout = () => {
+    Cookies.remove('__securedAccess');
+    Cookies.remove('__securedRefresh');
+    setLoginStatus(false);
+    setUserDetails(null);
+    setAuthChanged(!authChanged); // Trigger re-render
+    window.location.reload(); // Reload the page after logout
+  };
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -100,7 +116,9 @@ export const UserNavigationbar = () => {
 
       <NavbarContent as="div" justify="end">
         <ThemeSwitch />
-        {loginStatus && userDetails ? (
+        {loading ? (
+          <Skeleton className="flex rounded-full w-12 h-12" />
+        ) : loginStatus && userDetails ? (
           <>
             <NotificationModal />
             <Dropdown placement="bottom-end">
@@ -126,14 +144,14 @@ export const UserNavigationbar = () => {
                 <DropdownItem key="system" href="/venue/profile/setting">
                   Change Password
                 </DropdownItem>
-                <DropdownItem key="logout" color="danger">
+                <DropdownItem key="logout" color="danger" onClick={handleLogout}>
                   Log Out
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </>
         ) : (
-          <SigninModel />
+          <Signin onLogin={handleLoginStateChange} />
         )}
       </NavbarContent>
     </NextUINavbar>

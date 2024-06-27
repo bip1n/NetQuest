@@ -99,7 +99,7 @@ export default function VenueInfo (props: { venueId: any; }) {
           color="secondary"
           radius="md"
           size="md"
-          onClick={() => router.push("/venue/booking")}
+          onClick={() => router.push(`/venue/${venueId}/booking`)}
         >
           Book Now
         </Button>

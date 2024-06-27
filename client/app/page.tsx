@@ -118,7 +118,7 @@ const HomePage = () => {
                       size="sm"
                       variant="solid"
                       onClick={() =>
-                        router.push(`/venue/profile/${venue._id}`)
+                        router.push(`/venue/${venue._id}`)
                       }
                     >
                       Book Now

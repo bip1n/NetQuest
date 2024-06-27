@@ -185,12 +185,12 @@ export default function UserBooking() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <Link color="foreground" href="/">
+                {/* <Link color="foreground" href="/"> */}
                   <span>
                     <Logo />
+                    <p className="font-bold text-inherit mt-1">NetQuest</p>
                   </span>
-                  <p className="font-bold text-inherit mt-1">NetQuest</p>
-                </Link>
+                {/* </Link> */}
               </ModalHeader>
               <ModalBody>
                 <Card>

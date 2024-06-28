@@ -33,3 +33,5 @@
 20240618	11:11:02	2b89288b-5667-44e1-808a-38c5b69e717a	Too Many Requests: Too many login attempts from this IP, please try again after a 60-second pause	POST	/loginadmin	http://localhost:3000
 20240618	11:11:03	e26b08a8-af84-47a9-a620-2ef56032e68e	Too Many Requests: Too many login attempts from this IP, please try again after a 60-second pause	POST	/loginadmin	http://localhost:3000
 20240618	11:11:03	c82cf0ea-34c5-44b6-8bba-3bdadd8cbd84	Too Many Requests: Too many login attempts from this IP, please try again after a 60-second pause	POST	/loginadmin	http://localhost:3000
+20240628	15:59:00	4503610f-6a21-44e4-b332-eea4cf18c780	Too Many Requests: Too many login attempts from this IP, please try again after a 60-second pause	POST	/loginadmin	undefined
+20240628	15:59:01	f71e374d-7753-4c08-af39-a30dff14724e	Too Many Requests: Too many login attempts from this IP, please try again after a 60-second pause	POST	/loginadmin	undefined

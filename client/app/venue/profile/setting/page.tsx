@@ -45,13 +45,14 @@ export default function ProfileSetting() {
           }
         });
         if (response.ok) {
+          console.log("this1");
           const data = await response.json();
           setUsername(data.venueName || "");
           setContact(data.phone || "");
           setLocation(data.address || "");
           setMapsCoordinate(data.mapCoord || "");
-          setOpensAt(new Time(data.opensAt.hour, data.opensAt.minute));
-          setClosesAt(new Time(data.closesAt.hour, data.closesAt.minute));
+          if (data.opensAt) setOpensAt(new Time(data.opensAt.hour, data.opensAt.minute));
+          if (data.closesAt) setClosesAt(new Time(data.closesAt.hour, data.closesAt.minute));
           setFeatures(data.amenities || []);
           setDataFetch(true);
         } else {

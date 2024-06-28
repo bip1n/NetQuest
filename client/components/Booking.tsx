@@ -25,11 +25,10 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  TimeInput,
 } from "@nextui-org/react";
-import { getLocalTimeZone, today, CalendarDate,Time } from "@internationalized/date";
+import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
 import { useRouter } from 'next/navigation';
-import {ClockCircleLinearIcon} from './Icons';
+import Cookies from "js-cookie";
 
 // Define a type for the slot objects
 interface Slot {
@@ -38,10 +37,8 @@ interface Slot {
   status: string;
 }
 
-
-export default function Booking (props: { venueId: any; }) {
+export default function Booking(props: { venueId: any; }) {
   const { venueId } = props;
-  console.log("venueId", venueId)
   const router = useRouter();
   const venueOwner = false;
   const [isLoading, setIsLoading] = useState(true);
@@ -49,21 +46,35 @@ export default function Booking (props: { venueId: any; }) {
   const [checkedSlots, setCheckedSlots] = useState<number[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<CalendarDate>(today(getLocalTimeZone()));
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Simulate data fetching
+  // Fetch booking slots from server
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const simulatedSlots: Slot[] = [
-        { time: "7:00 AM", rate: 1200, status: "AVAILABLE" },
-        { time: "8:00 AM", rate: 1200, status: "BOOKED" },
-        { time: "9:00 AM", rate: 1200, status: "AVAILABLE" },
-      ];
-      setSlots(simulatedSlots);
-      setIsLoading(false);
-    }, 2000); // 2 seconds delay to simulate fetching time
+    const fetchBookingSlots = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/venue/${venueId}/slots`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("__securedAccess")}`,
+          },
+        });
 
-    return () => clearTimeout(timer); // Cleanup the timer on unmount
-  }, []);
+        if (!response.ok) {
+          throw new Error("Failed to fetch booking slots");
+        }
+
+        const data = await response.json();
+        setSlots(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching booking slots:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchBookingSlots();
+  }, [venueId]);
 
   const handleStatusChange = (slotIndex: number, newStatus: string) => {
     const updatedSlots = [...slots];
@@ -87,7 +98,7 @@ export default function Booking (props: { venueId: any; }) {
   return (
     <>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <CardBody className="">
+        <CardBody>
           <div className="mb-4">
             <DatePicker
               label={"Select Date"}
@@ -128,7 +139,7 @@ export default function Booking (props: { venueId: any; }) {
                             ? "success"
                             : slot.status === "BOOKED"
                             ? "danger"
-                            :  slot.status === "RESERVED"
+                            : slot.status === "RESERVED"
                             ? "warning"
                             : "default"
                         }
@@ -212,9 +223,9 @@ export default function Booking (props: { venueId: any; }) {
                   <Button color="danger" variant="light" onPress={onClose}>
                     Cancel
                   </Button>
-                  <Button color="secondary" variant="shadow"  onClick={() => {
-                      router.push("/venue/booking/checkout");
-                    }}>
+                  <Button color="secondary" variant="shadow" onClick={() => {
+                    router.push("/venue/booking/checkout");
+                  }}>
                     Book
                   </Button>
                 </ModalFooter>

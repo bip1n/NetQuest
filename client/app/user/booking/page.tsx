@@ -31,8 +31,46 @@ export default function UserBooking() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [pastBookings, setPastBookings] = useState([]);
   const [futureOrPresentBookings, setFutureOrPresentBookings] = useState([]);
+  const [selectedBooking, setSelectedBooking] = useState(null); // State for selected booking
   const [error, setError] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null); // State for user's name
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      const token = Cookies.get("__securedAccess");
+
+      if (!token) {
+        router.push('/'); // Redirect to home page if the token is not found
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:4000/api/getUserName", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorResponse = await response.json();
+          setError(errorResponse.error);
+        } else {
+          const responseData = await response.json();
+          setUserName(responseData.username);
+        }
+      } catch (error) {
+        console.error("Error fetching user name:", error);
+        setError("Failed to load user information. Please try again later.");
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      fetchUserName();
+    }
+  }, [router]);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -74,6 +112,12 @@ export default function UserBooking() {
   if (error) {
     return <div>Error: {error}</div>;
   }
+  
+
+  const handleOpenModal = (booking) => {
+    setSelectedBooking(booking);
+    onOpen();
+  };
 
   return (
     <>
@@ -117,7 +161,7 @@ export default function UserBooking() {
                     </Chip>
                   </TableCell>
                   <TableCell>
-                    <Button variant="bordered" size="sm" onPress={onOpen}>
+                    <Button variant="bordered" size="sm" onPress={() => handleOpenModal(booking)}>
                       Ticket
                     </Button>
                   </TableCell>
@@ -163,7 +207,7 @@ export default function UserBooking() {
                     </Chip>
                   </TableCell>
                   <TableCell>
-                    <Button variant="bordered" size="sm" onPress={onOpen}>
+                    <Button variant="bordered" size="sm" onPress={() => handleOpenModal(booking)}>
                       Ticket
                     </Button>
                   </TableCell>
@@ -185,61 +229,64 @@ export default function UserBooking() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                {/* <Link color="foreground" href="/"> */}
-                  <span>
-                    <Logo />
-                    <p className="font-bold text-inherit mt-1">NetQuest</p>
-                  </span>
-                {/* </Link> */}
+                <span>
+                  <Logo />
+                  <p className="font-bold text-inherit mt-1">NetQuest</p>
+                </span>
               </ModalHeader>
               <ModalBody>
-                <Card>
-                  <CardBody>
-                    <div className="flex justify-between m-2">
-                      <p className="text-xs font-normal">Booking ID: 123456</p>
-                      <p className="text-xs font-bold">Date: 12-24-2024</p>
-                    </div>
-                    <Divider />
-                    <div className="flex justify-between mt-4">
-                      <p className="font-normal text-sm italic">Venue</p>
-                      <p className="text-semibold font-medium">Kick Futsal</p>
-                    </div>
-                    <div className="flex justify-between mt-2">
-                      <p className="font-normal text-sm italic">Location</p>
-                      <p className="text-semibold font-medium">
-                        Balkumari, Lalitpur
-                      </p>
-                    </div>
-                    <div className="flex justify-between mt-2">
-                      <p className="font-normal text-sm italic">Date</p>
-                      <p className="text-semibold font-medium">12-29-2024</p>
-                    </div>
-                    <div className="flex justify-between mt-2">
-                      <p className="font-normal text-sm italic">Time</p>
-                      <p className="text-semibold font-medium">2 PM</p>
-                    </div>
-                    <div className="flex justify-between mt-2">
-                      <p className="font-normal text-sm italic">Rate</p>
-                      <p className="text-semibold font-medium">Rs. 1200</p>
-                    </div>
-                    <div className="flex justify-between mt-2">
-                      <p className="font-normal text-sm italic">Status</p>
-                      <p className="text-semibold text-success">Booked</p>
-                    </div>
-                  </CardBody>
-                </Card>
-                <Card>
-                  <CardBody>
-                    <div className="flex justify-between">
-                      <p className="font-normal text-sm italic">Name</p>
-                      <p className="text-semibold font-medium">Ram Bahadur</p>
-                    </div>
-                    <div className="flex justify-between mt-2">
-                      <p className="font-normal text-sm italic">Contact</p>
-                      <p className="text-semibold font-medium">9876543210</p>
-                    </div>
-                  </CardBody>
-                </Card>
+                {selectedBooking && (
+                  <>
+                    <Card>
+                      <CardBody>
+                        <div className="flex justify-between m-2">
+                          <p className="text-xs font-normal">Booking ID: {selectedBooking._id}</p>
+                          <p className="text-xs font-bold">Date: {new Date(selectedBooking.bookedAt).toLocaleDateString()}</p>
+                        </div>
+                        <Divider />
+                        <div className="flex justify-between mt-4">
+                          <p className="font-normal text-sm italic">Venue</p>
+                          <p className="text-semibold font-medium">{selectedBooking.venueName}</p>
+                        </div>
+                        <div className="flex justify-between mt-2">
+                          <p className="font-normal text-sm italic">Location</p>
+                          <p className="text-semibold font-medium">{selectedBooking.location}</p>
+                        </div>
+                        <div className="flex justify-between mt-2">
+                          <p className="font-normal text-sm italic">Date</p>
+                          <p className="text-semibold font-medium">{new Date(selectedBooking.date).toLocaleDateString()}</p>
+                        </div>
+                        <div className="flex justify-between mt-2">
+                          <p className="font-normal text-sm italic">Time</p>
+                          <p className="text-semibold font-medium">{selectedBooking.time}</p>
+                        </div>
+                        <div className="flex justify-between mt-2">
+                          <p className="font-normal text-sm italic">Rate</p>
+                          <p className="text-semibold font-medium">{selectedBooking.price}</p>
+                        </div>
+                        <div className="flex justify-between mt-2">
+                          <p className="font-normal text-sm italic">Status</p>
+                          <p className="text-semibold text-success">{selectedBooking.status}</p>
+                        </div>
+                      </CardBody>
+                    </Card>
+                    <Card>
+                      <CardBody>
+                      <div className="flex justify-between">
+                       
+                       <p className="font-normal text-sm italic">Name</p>
+                       <p className="text-semibold font-medium">{userName.username}</p>
+                     </div>
+                        
+                        <div className="flex justify-between">
+                       
+                          <p className="font-normal text-sm italic">Contact</p>
+                          <p className="text-semibold font-medium">{selectedBooking.altcontact}</p>
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </>
+                )}
               </ModalBody>
               <div>
                 <p className="ml-8 text-tiny text-warning italic">

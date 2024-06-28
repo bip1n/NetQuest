@@ -133,8 +133,6 @@ const userCtrl = {
             return res.status(400).json({ error: "User ID is required." });
         }
 
-        console.log("Fetching bookings for user_id:", user_id);
-
         const bookings = await Booking.find({ user_id: user_id });
 
         if (bookings.length === 0) {
@@ -150,14 +148,14 @@ const userCtrl = {
             try {
                 const owner = await Owner.findById(booking.owner_id);
                 return {
-                    ...booking._doc,  
+                    ...booking._doc,  // Spread the booking document fields
                     venueName: owner.venueName,
                     location: owner.mapCoord,
                 };
             } catch (err) {
                 console.error(`Error fetching owner data for booking ID: ${booking._id}`, err);
                 return {
-                    ...booking._doc,  
+                    ...booking._doc,  // Spread the booking document fields
                     venueName: 'Unknown',
                     location: 'Unknown',
                 };
@@ -173,20 +171,20 @@ const userCtrl = {
             const formattedTime = bookingDate.format('HH:mm');
 
             const formattedBooking = {
-                ...booking,  
+                ...booking,  // Spread the original booking fields
                 formattedDate,
                 formattedTime
             };
 
-            if (bookingDate.isBefore(now)) {
+            if (bookingDate.isBefore(now)) { 
                 pastBookings.push(formattedBooking);
             } else {
                 futureOrPresentBookings.push(formattedBooking);
             }
         });
 
-        console.log("pastBookings", pastBookings);
-        console.log("futureOrPresentBookings", futureOrPresentBookings);
+        console.log("Past bookings:", pastBookings);
+        console.log("Future or present bookings:", futureOrPresentBookings);
 
         return res.status(200).json({
             pastBookings,
@@ -194,11 +192,41 @@ const userCtrl = {
         });
 
     } catch (error) {
-        console.error("Error fetching bookings:", error);
         return res.status(500).json({ msg: error.message });
     }
 },
 
+
+getUserName: async (req, res) => {
+        try {
+            const user_id = req.user.id;
+
+            if (!user_id) {
+                return res.status(400).json({ error: "User ID is required." });
+            }
+
+            const user
+            = await User.findById(user_id).select('username');
+
+            if (!user) {
+                return res.status(404).json({ error: "User not found." });
+            }
+
+            return res.status(200).json({ username: user });
+
+        } catch (error) {
+            return res.status(500).json({ msg: error.message });
+        }
+
+    },
+
+    isUserLoggedIn: async (req, res) => {
+        try {
+            return res.status(200).json({ msg: "User is logged in." });
+        } catch (error) {
+            return res.status(500).json({ msg: error.message });
+        }
+    },
  
 }
 

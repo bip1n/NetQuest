@@ -73,10 +73,6 @@ export default function VenueInfo(props: { venueId: any }) {
     return <Spinner />; // Show a loading spinner while fetching data
   }
 
-  if (error) {
-    return <div>{error}</div>; // Show error message if data fetching fails
-  }
-
   if (!venueDetails) {
     return <div>No venue details available</div>; // Show a message if no venue details are available
   }

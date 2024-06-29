@@ -7,7 +7,7 @@ const verifyToken = require('../middleware/verifyToken.js');
 router.get('/NavDetails',verifyToken, bothCtrl.NavDetails);
 router.get('/getVenue', bothCtrl.getVenue);
 router.get('/venues/:id', bothCtrl.getVenueById);
-
+router.get('/venue/:id/slots', bothCtrl.getVenueSlots);
 
 
 

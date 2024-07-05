@@ -20,6 +20,10 @@ const bookingSchema = new mongoose.Schema({
             message: props => `${props.value} is not a valid time format!`
         }
     },
+    bookedAt: {
+        type: Date,
+        default: Date.now,
+    },
     price: {
         type: Number,
         required: true,

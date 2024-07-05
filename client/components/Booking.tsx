@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardBody,
@@ -25,45 +25,80 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  TimeInput,
 } from "@nextui-org/react";
-import { getLocalTimeZone, today, CalendarDate,Time } from "@internationalized/date";
+import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
 import { useRouter } from 'next/navigation';
-import {ClockCircleLinearIcon} from './Icons';
+import Cookies from "js-cookie";
 
 // Define a type for the slot objects
 interface Slot {
   time: string;
-  rate: number;
+  price: number; // Rate is now required and defaults to 800
   status: string;
 }
 
-
-export default function Booking (props: { venueId: any; }) {
+export default function Booking(props: { venueId: any; }) {
   const { venueId } = props;
-  console.log("venueId", venueId)
   const router = useRouter();
-  const venueOwner = false;
-  const [isLoading, setIsLoading] = useState(true);
+  const venueOwner = false; // This should be dynamic based on your user management logic
+  const [isLoading, setIsLoading] = useState(false);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [checkedSlots, setCheckedSlots] = useState<number[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<CalendarDate>(today(getLocalTimeZone()));
 
-  // Simulate data fetching
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const simulatedSlots: Slot[] = [
-        { time: "7:00 AM", rate: 1200, status: "AVAILABLE" },
-        { time: "8:00 AM", rate: 1200, status: "BOOKED" },
-        { time: "9:00 AM", rate: 1200, status: "AVAILABLE" },
-      ];
-      setSlots(simulatedSlots);
-      setIsLoading(false);
-    }, 2000); // 2 seconds delay to simulate fetching time
+  // Utility function to generate time slots from opensAt to closesAt with default rate
+  const generateTimeSlots = (opensAt: number, closesAt: number) => {
+    const defaultRate = 800;
+    const timeSlots = [];
+    for (let hour = opensAt; hour < closesAt; hour++) {
+      timeSlots.push({ time: `${hour}:00`, price: defaultRate, status: "available" });
+    }
+    return timeSlots;
+  };
 
-    return () => clearTimeout(timer); // Cleanup the timer on unmount
-  }, []);
+  const fetchSlotsForDate = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`http://localhost:4000/api/venue/${venueId}/slots?date=${selectedDate.toString()}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("__securedAccess")}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch booking slots");
+      }
+
+      const data = await response.json();
+      const { opensAt, closesAt, bookedSlots } = data;
+
+      // Generate the time slots for the day with default rate
+      const generatedSlots = generateTimeSlots(opensAt, closesAt);
+
+      // Map over generated slots and update their status and rate based on booked slots
+      const updatedSlots = generatedSlots.map(slot => {
+        const bookedSlot = bookedSlots.find(b => b.time === slot.time);
+        if (bookedSlot) {
+          return {
+            ...slot,
+            status: bookedSlot.status,
+            price: bookedSlot.price || slot.price, // Use the booked rate or default to the slot's rate
+            user_id: bookedSlot.user_id
+          };
+        }
+        return slot;
+      });
+
+      setSlots(updatedSlots);
+    } catch (error) {
+      console.error("Error fetching booking slots:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleStatusChange = (slotIndex: number, newStatus: string) => {
     const updatedSlots = [...slots];
@@ -81,14 +116,44 @@ export default function Booking (props: { venueId: any; }) {
     }
   };
 
+  const handleBooking = async () => {
+    const selectedSlots = checkedSlots.map((index) => slots[index]);
+    const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
+
+    const bookingData = {
+      date: selectedDate.toString(),
+      slots: selectedSlots,
+      totalRate: totalRate,
+    };
+
+    try {
+      const response = await fetch(`http://localhost:4000/api/venue/${venueId}/book`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("__securedAccess")}`,
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to book slots");
+      }
+
+      router.push("/venue/booking/checkout");
+    } catch (error) {
+      console.error("Error booking slots:", error);
+    }
+  };
+
   const selectedSlots = checkedSlots.map((index) => slots[index]);
-  const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.rate, 0);
+  const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <CardBody className="">
-          <div className="mb-4">
+      <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+        <CardBody>
+          <div className="flex mb-4 items-center gap-4">
             <DatePicker
               label={"Select Date"}
               className="max-w-[284px]"
@@ -99,6 +164,7 @@ export default function Booking (props: { venueId: any; }) {
               defaultValue={selectedDate}
               onChange={(date) => setSelectedDate(date)}
             />
+            <Button color="primary" onPress={fetchSlotsForDate}>Search</Button>
           </div>
 
           {isLoading ? (
@@ -106,74 +172,78 @@ export default function Booking (props: { venueId: any; }) {
               <Spinner label="Loading..." />
             </div>
           ) : (
-            <Table removeWrapper aria-label="Example static collection table">
-              <TableHeader>
-                <TableColumn>TIME</TableColumn>
-                <TableColumn>RATE</TableColumn>
-                <TableColumn>STATUS</TableColumn>
-                <TableColumn>{venueOwner ? "EDIT" : "SELECT"}</TableColumn>
-              </TableHeader>
+            slots.length > 0 ? (
+              <Table removeWrapper aria-label="Example static collection table">
+                <TableHeader>
+                  <TableColumn>TIME</TableColumn>
+                  <TableColumn>RATE</TableColumn>
+                  <TableColumn>STATUS</TableColumn>
+                  <TableColumn>{venueOwner ? "EDIT" : "SELECT"}</TableColumn>
+                </TableHeader>
 
-              <TableBody>
-                {slots.map((slot, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{slot.time}</TableCell>
-                    <TableCell>{slot.rate}</TableCell>
-                    <TableCell>
-                      <Chip
-                        radius="sm"
-                        size="sm"
-                        color={
-                          slot.status === "AVAILABLE"
-                            ? "success"
-                            : slot.status === "BOOKED"
-                            ? "danger"
-                            :  slot.status === "RESERVED"
-                            ? "warning"
-                            : "default"
-                        }
-                      >
-                        {slot.status}
-                      </Chip>
-                    </TableCell>
-                    <TableCell>
-                      {venueOwner ? (
-                        <Dropdown backdrop="opaque">
-                          <DropdownTrigger>
-                            <Button size="sm" variant="shadow" color="secondary">
-                              EDIT
-                            </Button>
-                          </DropdownTrigger>
-                          <DropdownMenu
-                            variant="faded"
-                            onAction={(key) => handleStatusChange(index, key as string)}
-                          >
-                            <DropdownItem key="AVAILABLE">
-                              <p className="text-green-500">AVAILABLE</p>
-                            </DropdownItem>
-                            <DropdownItem key="RESERVED">
-                              <p className="text-orange-400">RESERVED</p>
-                            </DropdownItem>
-                            <DropdownItem key="BOOKED">
-                              <p className="text-red-600">BOOKED</p>
-                            </DropdownItem>
-                            <DropdownItem key="UNAVAILABLE">
-                              <p>UNAVAILABLE</p>
-                            </DropdownItem>
-                          </DropdownMenu>
-                        </Dropdown>
-                      ) : (
-                        <Checkbox
-                          isDisabled={slot.status !== "AVAILABLE"}
-                          isSelected={checkedSlots.includes(index)}
-                          onChange={(e) => handleCheckboxChange(index, e.target.checked)}
-                        ></Checkbox>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                <TableBody>
+                  {slots.map((slot, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{slot.time}</TableCell>
+                      <TableCell>Rs. {slot.price}</TableCell>
+                      <TableCell>
+                        <Chip
+                          radius="sm"
+                          size="sm"
+                          color={
+                            slot.status === "available"
+                              ? "success"
+                              : slot.status === "booked"
+                              ? "danger"
+                              : slot.status === "reserved"
+                              ? "warning"
+                              : "default"
+                          }
+                        >
+                          {slot.status}
+                        </Chip>
+                      </TableCell>
+                      <TableCell>
+                        {venueOwner ? (
+                          <Dropdown backdrop="opaque">
+                            <DropdownTrigger>
+                              <Button size="sm" variant="shadow" color="secondary">
+                                EDIT
+                              </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                              variant="faded"
+                              onAction={(key) => handleStatusChange(index, key as string)}
+                            >
+                              <DropdownItem key="available">
+                                <p className="text-green-500">AVAILABLE</p>
+                              </DropdownItem>
+                              <DropdownItem key="reserved">
+                                <p className="text-orange-400">RESERVED</p>
+                              </DropdownItem>
+                              <DropdownItem key="booked">
+                                <p className="text-red-600">BOOKED</p>
+                              </DropdownItem>
+                              <DropdownItem key="unavailable">
+                                <p>UNAVAILABLE</p>
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </Dropdown>
+                        ) : (
+                          <Checkbox
+                            isDisabled={slot.status !== "available"}
+                            isSelected={checkedSlots.includes(index)}
+                            onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+                          ></Checkbox>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <p className="text-center">No slots available for the selected date.</p>
+            )
           )}
           <CardFooter>
             <p className="italic text-xs">
@@ -194,7 +264,7 @@ export default function Booking (props: { venueId: any; }) {
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1 text-secondary">
-                  Selected Shift/s
+                  Selected Slot/s
                 </ModalHeader>
                 <ModalBody>
                   {selectedSlots.map((slot, index) => (
@@ -203,7 +273,7 @@ export default function Booking (props: { venueId: any; }) {
                       <br />
                       Time: {slot.time}
                       <br />
-                      Rate: Rs. {slot.rate}
+                      Rate: Rs. {slot.price}
                     </p>
                   ))}
                   <p>Total: Rs. {totalRate}</p>
@@ -212,9 +282,7 @@ export default function Booking (props: { venueId: any; }) {
                   <Button color="danger" variant="light" onPress={onClose}>
                     Cancel
                   </Button>
-                  <Button color="secondary" variant="shadow"  onClick={() => {
-                      router.push(`/venue/${venueId}/booking/checkout`);
-                    }}>
+                  <Button color="secondary" variant="shadow" onClick={handleBooking}>
                     Book
                   </Button>
                 </ModalFooter>
@@ -225,4 +293,4 @@ export default function Booking (props: { venueId: any; }) {
       </div>
     </>
   );
-};
+}

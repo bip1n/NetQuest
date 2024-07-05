@@ -152,7 +152,7 @@ const authCtrl = {
             const venueID = await generateUniqueVenueID();
     
             const newVenue = new Venue({
-                owner_id: newAdmin._id, venueID, images: [], videos: [], amenities: [], reviews: []
+                owner_id: newAdmin._id, venueID, images: [], videos: [], amenities: [], reviews: [], 
             });
     
             await newVenue.save(); // Save the venue details

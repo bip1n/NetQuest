@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Image } from "@nextui-org/react";
 
 import { IconSvgProps } from "@/types";
 
@@ -23,6 +24,9 @@ export const Logo: React.FC<IconSvgProps> = ({
     />
   </svg>
 );
+
+
+
 
 export const DiscordIcon: React.FC<IconSvgProps> = ({
   size = 24,
@@ -134,6 +138,9 @@ export const SunFilledIcon = ({
   </svg>
 );
 
+
+
+
 export const HeartFilledIcon = ({
   size = 24,
   width,
@@ -244,6 +251,12 @@ export const ClickedDoubleupIcon = (props: IconSvgProps)=>(
   
 export const DoubledownIcon = (props: IconSvgProps)=>(
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5">
+  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 5.25 7.5 7.5 7.5-7.5m-15 6 7.5 7.5 7.5-7.5" />
+</svg>
+)
+
+export const ClickedDoubledownIcon = (props: IconSvgProps)=>(
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="red" className="size-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 5.25 7.5 7.5 7.5-7.5m-15 6 7.5 7.5 7.5-7.5" />
 </svg>
 )
@@ -416,6 +429,15 @@ export const DeleteIcon: React.FC<IconSvgProps> = (props) => (
     />
   </svg>
 );
+
+export const NetQuest: React.FC = () => {
+  return (
+      <div>
+            <Image src="https://res.cloudinary.com/dwc7juq50/image/upload/v1719647627/About/netquest_lrfvf2.png" alt="NetQuest"  width={180} height={1} />
+      </div>
+  );
+}
+
 
 
 export const EyeIcon : React.FC<IconSvgProps> = (props) => (

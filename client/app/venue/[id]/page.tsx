@@ -12,9 +12,11 @@ import {
   Tabs,
   Tab,
   Link,
+  
 } from "@nextui-org/react";
-import { MessageIcon, GalleryIcon, VenueIcon } from "@/components/Icons";
+import { MessageIcon, GalleryIcon, VenueIcon, ClickedDoubledownIcon } from "@/components/Icons";
 import Slider from "@/components/Slider";
+
 
 interface Venue {
   venueName: string;
@@ -23,8 +25,20 @@ interface Venue {
   owner: any; // Replace with appropriate type if available
 }
 
+const images = [
+  'https://www.npmjs.com/npm-avatar/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdmF0YXJVUkwiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci8yYTk2OTU5MTlkMTlmYmYyNTg3MTA0MjViYjQxODY0ND9zaXplPTEwMCZkZWZhdWx0PXJldHJvIn0.uM5PemWdQqVkVc10mz0AJekv9N_IKrOw1bMlqqul-qM',
+  'https://via.placeholder.com/300',
+  'https://via.placeholder.com/300',
+  'https://via.placeholder.com/300',
+  'https://via.placeholder.com/300',
+  'https://via.placeholder.com/300',
+];
+
+
+
 const VenueProfile = () => {
   const { id } = useParams(); // Get the dynamic route parameter
+  const [selectedImage, setSelectedImage] = useState(images[0]);
 
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
@@ -60,7 +74,7 @@ const VenueProfile = () => {
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>...</div>;
   }
 
   if (error) {
@@ -69,71 +83,28 @@ const VenueProfile = () => {
 
   return (
     <>
-      <UserNavigationbar />
-      {venue ? (
-        <div>
-          <Card className="py-4">
+    <UserNavigationbar />
+    
+     
+     <div className="w-100 md:mx-10 mx-0">
+         {venue ? (
+          <>
+          <Card className="py-4 mt-2">
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start justify-between">
               <h4 className="font-semibold uppercase text-medium">
                 {venue.venueName}{" "}
-                <span className="text-xs ml-2 text-blue-500"> [{venue.rating}/5]</span>
+                <Link href='/venue/${venueId}/review'><span className="text-xs ml-2 text-blue-500"> [{venue.rating}/5]</span> </Link>
               </h4>
             </CardHeader>
-            <CardBody className="overflow-visible py-2 max-w-lg">
-              <Image
-                isZoomed
-                alt="Venue Image"
-                src={venue.profilepic} // Ensure your venue data includes an image URL
-              />
-            </CardBody>
+            <Slider/>
+            <VenueInfo venueId={id as string} />
           </Card>
-
-          <Card className="w-full max-w-[100%] md:max-w-[600px] mt-2">
-            <div className="flex w-full flex-col">
-              <Tabs aria-label="Options" color="secondary" variant="underlined">
-                <Tab
-                  key="about"
-                  title={
-                    <div className="flex items-center space-x-2">
-                      <VenueIcon className="w-6 h-6" />
-                      <span>About</span>
-                    </div>
-                  }
-                >
-                  {/* Pass the venue ID to VenueInfo */}
-                  <VenueInfo venueId={id as string} />
-                </Tab>
-                <Tab
-                  key="reviews"
-                  title={
-                    <div className="flex items-center space-x-2">
-                      <MessageIcon className="w-2 h-6" />
-                      <span>Reviews</span>
-                    </div>
-                  }
-                >
-                  <Link href={`/venue/reviews/${id}`} className="ml-3 text-sm">
-                    Read More...
-                  </Link>
-                </Tab>
-                <Tab
-                  key="photos"
-                  title={
-                    <div className="flex items-center space-x-2">
-                      <GalleryIcon />
-                      <span>Photos</span>
-                    </div>
-                  }
-                >
-                  <Slider venueId={id as string} />
-                </Tab>
-              </Tabs>
-            </div>
-          </Card>
-        </div>
+        </>
       ) : (
         <div>No venue data found</div>
       )}
+      </div>
+      
       <FooterContent />
     </>
   );

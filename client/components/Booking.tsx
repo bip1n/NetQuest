@@ -213,7 +213,7 @@ export default function Booking (props: { venueId: any; }) {
                     Cancel
                   </Button>
                   <Button color="secondary" variant="shadow"  onClick={() => {
-                      router.push("/venue/${venue._id}/booking/checkout");
+                      router.push(`/venue/${venueId}/booking/checkout`);
                     }}>
                     Book
                   </Button>

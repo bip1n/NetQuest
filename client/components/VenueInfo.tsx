@@ -99,6 +99,7 @@ export default function VenueInfo (props: { venueId: any; }) {
           color="secondary"
           radius="md"
           size="md"
+          className="w-1/6"
           onClick={() => router.push(`/venue/${venueId}/booking`)}
         >
           Book Now
@@ -107,5 +108,3 @@ export default function VenueInfo (props: { venueId: any; }) {
     </>
   );
 };
-
-// export default VenueInfo;

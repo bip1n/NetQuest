@@ -5,7 +5,7 @@ import { DoubledownIcon,DoubleupIcon, ClickedDoubledownIcon,ClickedDoubleupIcon 
 export const Reviews = () => {
   return (
     <>
-         <Card className="ml-1.5 mr-1.5 mb-1.5 mt-0">
+         {/* <Card className="ml-1.5 mr-1.5 mb-1.5 mt-0">
             <CardHeader className="justify-between">
                 <div className="flex gap-5">
                 <Avatar isBordered radius="full" size="md" src="https://qph.cf2.quoracdn.net/main-qimg-ed060e28837ac92bae6fff6f068eee04-lq" />
@@ -31,7 +31,7 @@ export const Reviews = () => {
                 </div>
             </CardFooter>
         </Card>
-     
+      */}
         <Card className="ml-1.5 mr-1.5 mb-1.5 mt-0">
             <CardHeader className="justify-between">
                 <div className="flex gap-5">
@@ -47,7 +47,7 @@ export const Reviews = () => {
                 Ekdam jhur futsal. mat ma ni dulo pareko chha..bekkar ko futsal...owner ni thado thado kura garchha #WorstExperience
                 </p>
             </CardBody>
-            <CardFooter className="gap-3">
+            {/* <CardFooter className="gap-3">
                 <div className="flex gap-1">
                 
                 <DoubleupIcon/>
@@ -58,7 +58,7 @@ export const Reviews = () => {
                 <ClickedDoubledownIcon/>
                 <p className="font-semibold text-default-400 text-small">8</p>
                 </div>
-            </CardFooter>
+            </CardFooter> */}
         </Card>
        
         <Card className="ml-1.5 mr-1.5 mb-1.5 mt-0">

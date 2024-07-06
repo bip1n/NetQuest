@@ -35,7 +35,6 @@ const BookingPage = () => {
           if (!response.ok) {
             router.push(`/venue/${id}`)
           } else {
-            console.log("User is logged in")
             setIsLoggedIn(true);
           }
         } catch (error) {

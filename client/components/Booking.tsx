@@ -80,7 +80,7 @@ export default function Booking(props: { venueId: any; }) {
 
       // Map over generated slots and update their status and rate based on booked slots
       const updatedSlots = generatedSlots.map(slot => {
-        const bookedSlot = bookedSlots.find(b => b.time === slot.time);
+        const bookedSlot = bookedSlots.find((b: { time: string; }) => b.time === slot.time);
         if (bookedSlot) {
           return {
             ...slot,
@@ -115,6 +115,16 @@ export default function Booking(props: { venueId: any; }) {
       setIsOpen(false);
     }
   };
+
+
+   // Helper function to convert 24-hour time to 12-hour format
+    const convertTo12HourFormat = (time24: string) => {
+      const [hours, minutes] = time24.split(':').map(Number);
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const hours12 = hours % 12 || 12;
+      return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
+    };
+
 
   const handleBooking = async () => {
     const selectedSlots = checkedSlots.map((index) => slots[index]);
@@ -174,82 +184,53 @@ export default function Booking(props: { venueId: any; }) {
           ) : (
             slots.length > 0 ? (
               <Table removeWrapper aria-label="Example static collection table">
-                <TableHeader>
-                  <TableColumn>TIME</TableColumn>
-                  <TableColumn>RATE</TableColumn>
-                  <TableColumn>STATUS</TableColumn>
-                  <TableColumn>{venueOwner ? "EDIT" : "SELECT"}</TableColumn>
-                </TableHeader>
+                  <TableHeader>
+                    <TableColumn>TIME</TableColumn>
+                    <TableColumn>RATE</TableColumn>
+                    <TableColumn>STATUS</TableColumn>
+                    <TableColumn>SELECT</TableColumn>
+                  </TableHeader>
 
-                <TableBody>
-                  {slots.map((slot, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{slot.time}</TableCell>
-                      <TableCell>Rs. {slot.price}</TableCell>
-                      <TableCell>
-                        <Chip
-                          radius="sm"
-                          size="sm"
-                          color={
-                            slot.status === "available"
-                              ? "success"
-                              : slot.status === "booked"
-                              ? "danger"
-                              : slot.status === "reserved"
-                              ? "warning"
-                              : "default"
-                          }
-                        >
-                          {slot.status}
-                        </Chip>
-                      </TableCell>
-                      <TableCell>
-                        {venueOwner ? (
-                          <Dropdown backdrop="opaque">
-                            <DropdownTrigger>
-                              <Button size="sm" variant="shadow" color="secondary">
-                                EDIT
-                              </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu
-                              variant="faded"
-                              onAction={(key) => handleStatusChange(index, key as string)}
-                            >
-                              <DropdownItem key="available">
-                                <p className="text-green-500">AVAILABLE</p>
-                              </DropdownItem>
-                              <DropdownItem key="reserved">
-                                <p className="text-orange-400">RESERVED</p>
-                              </DropdownItem>
-                              <DropdownItem key="booked">
-                                <p className="text-red-600">BOOKED</p>
-                              </DropdownItem>
-                              <DropdownItem key="unavailable">
-                                <p>UNAVAILABLE</p>
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </Dropdown>
-                        ) : (
+                  <TableBody>
+                    {slots.map((slot, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{convertTo12HourFormat(slot.time)}</TableCell>
+                        <TableCell>Rs. {slot.price}</TableCell>
+                        <TableCell>
+                          <Chip
+                            radius="sm"
+                            size="sm"
+                            color={
+                              slot.status === "available"
+                                ? "success"
+                                : slot.status === "booked"
+                                ? "danger"
+                                : slot.status === "reserved"
+                                ? "warning"
+                                : "default"
+                            }
+                          >
+                            {slot.status}
+                          </Chip>
+                        </TableCell>
+                        <TableCell>
                           <Checkbox
                             isDisabled={slot.status !== "available"}
                             isSelected={checkedSlots.includes(index)}
                             onChange={(e) => handleCheckboxChange(index, e.target.checked)}
                           ></Checkbox>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
             ) : (
-              <p className="text-center">No slots available for the selected date.</p>
+              <p className="text-center text-danger-500">No slots available for the selected date.</p>
             )
           )}
           <CardFooter>
             <p className="italic text-xs">
-              <span className="text-red-500"> * </span>The{" "}
-              <span className="text-orange-500">RESERVED</span> slot might change
-              later.<span className="text-red-500"> *</span>
+              <span className="text-red-500"> * </span>The{" "}<span className="text-orange-500">RESERVED</span> slot might change later.<span className="text-red-500"> *</span>
             </p>
           </CardFooter>
         </CardBody>

@@ -15,7 +15,8 @@ import {
   
 } from "@nextui-org/react";
 import { MessageIcon, GalleryIcon, VenueIcon, ClickedDoubledownIcon } from "@/components/Icons";
-import Slider from "@/components/Slider";
+import VenueImage from "@/components/VenueImage";
+import { Reviews } from "@/components/Reviews";
 
 
 interface Venue {
@@ -86,19 +87,41 @@ const VenueProfile = () => {
     <UserNavigationbar />
     
      
-     <div className="w-100 md:mx-10 mx-0">
+     <div className="w-100 md:mx-10 mx-0 mt-2">
          {venue ? (
           <>
-          <Card className="py-4 mt-2">
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start justify-between">
-              <h4 className="font-semibold uppercase text-medium">
-                {venue.venueName}{" "}
-                <Link href='/venue/${venueId}/review'><span className="text-xs ml-2 text-blue-500"> [{venue.rating}/5]</span> </Link>
-              </h4>
-            </CardHeader>
-            <Slider/>
-            <VenueInfo venueId={id as string} />
-          </Card>
+          <Card>
+              <CardHeader className="pb-0 pt-2 px-4 flex-col items-start justify-between">
+                    <h4 className="font-semibold uppercase text-medium">
+                      {venue.venueName}{" "}
+                      <Link href='/venue/${venueId}/review'><span className="text-xs ml-2 text-blue-500"> [{venue.rating}/5]</span> </Link>
+                    </h4>
+              </CardHeader>
+              <Image
+                isBlurred
+                width={340}
+                src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
+                alt="NextUI Album Cover"
+                className="m-5"
+              />
+            <CardBody>
+              <Tabs variant="underlined" aria-label="Tabs variants">
+                
+                <Tab key="photos" title="About">
+                    <VenueInfo venueId={id as string} />
+
+                </Tab>
+                <Tab key="music" title="Reviews">
+                    <Reviews/>
+                  </Tab>
+                <Tab key="videos" title="Photo">
+                  <VenueImage venueId={id as string} />
+                </Tab>
+              </Tabs>
+
+              </CardBody>
+          
+          </Card>        
         </>
       ) : (
         <div>No venue data found</div>

@@ -10,6 +10,7 @@ interface VenueDetails {
   address: string;
   amenities: string[];
   startingPrice: number;
+  venueName: string;
 }
 
 export default function VenueInfo(props: { venueId: any }) {
@@ -77,11 +78,20 @@ export default function VenueInfo(props: { venueId: any }) {
     return <div>No venue details available</div>; // Show a message if no venue details are available
   }
 
-  const { phone, address, amenities, startingPrice } = venueDetails;
+  const { phone, address, amenities, startingPrice,venueName } = venueDetails;
 
   return (
     <>
       <CardBody>
+        <div className="flex items-center">
+          {/* <PhoneIcon className="w-6 h-6" /> */}
+          <a
+            href={`tel:${venueName}`}
+            className="font-semibold text-medium ml-2 hover:underline text-blue-700"
+          >
+            {venueName}
+          </a>
+        </div>
         <div className="flex items-center">
           <PhoneIcon className="w-6 h-6" />
           <a
@@ -134,7 +144,7 @@ export default function VenueInfo(props: { venueId: any }) {
           </Button>
         </CardBody>
       ) : (
-        <div>Please login to book this venue</div>
+        <div> <span className="italic text-danger-500"> Please login to book this venue</span></div>
       )}
     </>
   );

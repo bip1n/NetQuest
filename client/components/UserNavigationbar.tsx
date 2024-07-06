@@ -23,7 +23,7 @@ import {
   Image,
 } from "@nextui-org/react";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
-import { Logo, NetQuestLogo,NetQuest} from "@/components/Icons";
+import { Logo} from "@/components/Icons";
 import Cookies from "js-cookie";
 
 // Define the UserDetails interface

@@ -20,9 +20,10 @@ import {
   DropdownItem,
   Avatar,
   Skeleton,
+  Image,
 } from "@nextui-org/react";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
-import { Logo } from "@/components/Icons";
+import { Logo} from "@/components/Icons";
 import Cookies from "js-cookie";
 
 // Define the UserDetails interface
@@ -93,6 +94,7 @@ export const UserNavigationbar = () => {
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
+            {/* <Image src="https://res.cloudinary.com/dwc7juq50/image/upload/v1719647627/About/netquest_lrfvf2.png" alt="NetQuest"  width={180} height={1} /> */}
             <p className="font-bold text-inherit">NetQuest</p>
           </NextLink>
         </NavbarBrand>

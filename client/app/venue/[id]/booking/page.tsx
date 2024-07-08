@@ -35,7 +35,6 @@ const BookingPage = () => {
           if (!response.ok) {
             router.push(`/venue/${id}`)
           } else {
-            console.log("User is logged in")
             setIsLoggedIn(true);
           }
         } catch (error) {
@@ -57,7 +56,7 @@ const BookingPage = () => {
       {isLoggedIn ? (
       <Card>
         <CardHeader><h4 className="font-medium text-lg">Booking</h4></CardHeader>
-        <Booking venueId={id as string} />
+        <Booking venueId={id as string}/>
       </Card>
        ) : (
         <div></div>

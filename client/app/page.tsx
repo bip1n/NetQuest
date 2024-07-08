@@ -63,9 +63,7 @@ const HomePage = () => {
       <Searchbar /> 
 
       <Card className="mt-4">
-        <CardHeader>
-          <p className="text-xl text-secondary font-semibold ml-4">Top Rated</p>
-        </CardHeader>
+         <Searchbar/>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2">
           {loading ? (
             Array.from({ length: 4 }).map((_, index) => (

@@ -1,21 +1,4 @@
-const mongoose = require("mongoose");
-
-
-const upvotesschema = new mongoose.Schema({
-    user_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
-});
-
-const downvotesschema = new mongoose.Schema({
-    user_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
-});
+const mongoose = require("mongoose"); 
 
 const reviewSchema = new mongoose.Schema({
     user_id: {
@@ -26,8 +9,6 @@ const reviewSchema = new mongoose.Schema({
     content: {
         type: String,
     },
-    upvotes: [upvotesschema],
-    downvotes: [downvotesschema],
     createdAt: {
         type: Date,
         default: Date.now,

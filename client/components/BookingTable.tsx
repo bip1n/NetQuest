@@ -42,25 +42,41 @@ interface Slot {
 export const BookingTable = () => {
   const router = useRouter();
   const venueOwner = true;
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [checkedSlots, setCheckedSlots] = useState<number[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<CalendarDate>(today(getLocalTimeZone()));
 
-  // Simulate data fetching
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const simulatedSlots: Slot[] = [
-        { time: "7:00 AM", rate: 1200, status: "AVAILABLE" },
-        { time: "8:00 AM", rate: 1200, status: "BOOKED" },
-        { time: "9:00 AM", rate: 1200, status: "AVAILABLE" },
-      ];
-      setSlots(simulatedSlots);
-      setIsLoading(false);
-    }, 2000); // 2 seconds delay to simulate fetching time
+  // Function to fetch data from the server
+  const fetchSlots = async (date: CalendarDate) => {
+    setIsLoading(true);
+    try {
+      const token = "YOUR_AUTH_TOKEN"; // Replace with your actual token
+      const response = await fetch(`http://localhost:4000/api/venues/booking-settings?date=${date.toString()}`, {
+        method: "GET",
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-    return () => clearTimeout(timer); // Cleanup the timer on unmount
+      if (!response.ok) {
+        throw new Error("Failed to fetch slots data");
+      }
+
+      const data: Slot[] = await response.json(); // Assuming the API returns an array of Slot objects
+      setSlots(data);
+    } catch (error) {
+      console.error(error);
+      // Handle error state (e.g., show an error message)
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch initial data on component mount
+  useEffect(() => {
+    fetchSlots(selectedDate);
   }, []);
 
   const handleStatusChange = (slotIndex: number, newStatus: string) => {
@@ -81,15 +97,19 @@ export const BookingTable = () => {
       setIsOpen(false);
     }
   };
+
   const selectedSlots = checkedSlots.map((index) => slots[index]);
   const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.rate, 0);
+
   return (
     <>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <CardBody>
-          <CardHeader><h4 className="font-medium text-lg text-secondary">Open Hours and Rate</h4></CardHeader>
+          <CardHeader>
+            <h4 className="font-medium text-lg text-secondary">Open Hours and Rate</h4>
+          </CardHeader>
           <CardBody>
-            <div className="mb-4">
+            <div className="mb-4 flex gap-2 items-center">
               <DatePicker
                 label={"Select Date"}
                 className="max-w-[284px]"
@@ -100,6 +120,7 @@ export const BookingTable = () => {
                 defaultValue={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
               />
+              <Button onClick={() => fetchSlots(selectedDate)}>Search</Button>
             </div>
 
             <div className="flex gap-4">
@@ -131,71 +152,77 @@ export const BookingTable = () => {
             <Checkbox defaultSelected isReadOnly className="mt-2"> Apply Same For All</Checkbox>
           </CardBody>
 
-          <CardFooter> <Button color="primary" variant="solid"> Save Changes</Button></CardFooter>
-          <CardHeader><h4 className="font-medium text-lg text-secondary">Booking Status</h4></CardHeader>
-          <Table aria-label="Example static collection table">
-            <TableHeader>
-              <TableColumn>TIME</TableColumn>
-              <TableColumn>RATE</TableColumn>
-              <TableColumn>STATUS</TableColumn>
-              <TableColumn>{venueOwner ? "EDIT" : "SELECT"}</TableColumn>
-            </TableHeader>
-
-            <TableBody>
-              {slots.map((slot, index) => (
-                <TableRow key={index}>
-                  <TableCell>{slot.time}</TableCell>
-                  <TableCell>{slot.rate}</TableCell>
-                  <TableCell>
-                    <Chip
-                      radius="sm"
-                      size="sm"
-                      color={
-                        slot.status === "AVAILABLE"
-                          ? "success"
-                          : slot.status === "BOOKED"
+          <CardFooter>
+            <Button color="primary" variant="solid"> Save Changes</Button>
+          </CardFooter>
+          <CardHeader>
+            <h4 className="font-medium text-lg text-secondary">Booking Status</h4>
+          </CardHeader>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <Table aria-label="Example static collection table">
+              <TableHeader>
+                <TableColumn>TIME</TableColumn>
+                <TableColumn>RATE</TableColumn>
+                <TableColumn>STATUS</TableColumn>
+                <TableColumn>{venueOwner ? "EDIT" : "SELECT"}</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {slots.map((slot, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{slot.time}</TableCell>
+                    <TableCell>{slot.rate}</TableCell>
+                    <TableCell>
+                      <Chip
+                        radius="sm"
+                        size="sm"
+                        color={
+                          slot.status === "AVAILABLE"
+                            ? "success"
+                            : slot.status === "BOOKED"
                             ? "danger"
                             : slot.status === "RESERVED"
-                              ? "warning"
-                              : "default"
-                      }
-                    >
-                      {slot.status}
-                    </Chip>
-                  </TableCell>
-                  <TableCell>
-                    <Dropdown backdrop="opaque">
-                      <DropdownTrigger>
-                        <Button size="sm" variant="shadow" color="secondary">
-                          EDIT
-                        </Button>
-                      </DropdownTrigger>
-                      <DropdownMenu
-                        variant="faded"
-                        onAction={(key) => handleStatusChange(index, key as string)}
+                            ? "warning"
+                            : "default"
+                        }
                       >
-                        <DropdownItem key="AVAILABLE">
-                          <p className="text-green-500">AVAILABLE</p>
-                        </DropdownItem>
-                        <DropdownItem key="RESERVED">
-                          <p className="text-orange-400">RESERVED</p>
-                        </DropdownItem>
-                        <DropdownItem key="BOOKED">
-                          <p className="text-red-600">BOOKED</p>
-                        </DropdownItem>
-                        <DropdownItem key="UNAVAILABLE">
-                          <p>UNAVAILABLE</p>
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                        {slot.status}
+                      </Chip>
+                    </TableCell>
+                    <TableCell>
+                      <Dropdown backdrop="opaque">
+                        <DropdownTrigger>
+                          <Button size="sm" variant="shadow" color="secondary">
+                            EDIT
+                          </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          variant="faded"
+                          onAction={(key) => handleStatusChange(index, key as string)}
+                        >
+                          <DropdownItem key="AVAILABLE">
+                            <p className="text-green-500">AVAILABLE</p>
+                          </DropdownItem>
+                          <DropdownItem key="RESERVED">
+                            <p className="text-orange-400">RESERVED</p>
+                          </DropdownItem>
+                          <DropdownItem key="BOOKED">
+                            <p className="text-red-600">BOOKED</p>
+                          </DropdownItem>
+                          <DropdownItem key="UNAVAILABLE">
+                            <p>UNAVAILABLE</p>
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardBody>
       </div>
-      
     </>
   );
 };

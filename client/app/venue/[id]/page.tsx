@@ -60,6 +60,8 @@ const VenueProfile = () => {
     fetchVenue();
   }, [id]);
 
+  
+
   if (loading) {
     return <div>Loading...</div>;
   }

@@ -60,7 +60,7 @@ const HomePage = () => {
   return (
     <>
       <UserNavigationbar />
-      <Searchbar />
+      <Searchbar /> 
 
       <Card className="mt-4">
         <CardHeader>

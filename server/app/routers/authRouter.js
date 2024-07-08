@@ -3,7 +3,6 @@ const router = require('express').Router();
 const authCtrl = require('../controllers/authCtrl');
 const loginLimiter = require('../middleware/loginLimiter');
 const upload = require("../middleware/multer");
-const verifyToken = require('../middleware/verifyToken');
 
 
 // Define route for user registration
@@ -18,6 +17,8 @@ router.post('/adminregister', upload.fields([
   { name: 'images', maxCount: 6 },
   { name: 'video', maxCount: 1 }
 ]), authCtrl.register_admin);
+
+router.post('/resetPass', authCtrl.resetPass);
 
 // Export the router to be used in other parts of the application
 module.exports = router;

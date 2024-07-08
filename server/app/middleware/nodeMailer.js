@@ -8,13 +8,9 @@ var transporter = nodemailer.createTransport({
       pass: 'futsal123'
     }
   });
-  
-  var mailOptions = {
-    from: 'fustal@gmail.com',
-    to: email,
-    subject: 'Check garya',
-    text: 'You are registered with Fustal.'
-  };
+
+
+const sendMail = async ( mailOptions) => {
   
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
@@ -23,3 +19,7 @@ var transporter = nodemailer.createTransport({
       console.log('Email sent: ' + info.response);
     }
   });
+
+}
+
+module.exports = sendMail;

@@ -5,6 +5,7 @@ const Venue = require("../models/venueModel");
 const cloudinary = require("../utils/cloudinary");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sendMail = require("../middleware/nodeMailer");
 
 const authCtrl = {
     login: async (req, res) => {
@@ -160,7 +161,16 @@ const authCtrl = {
             await newVenueStatus.save();
     
             // Success message to react client for register success with status code
-            return res.status(200).json({ msg: "Register Success!" });
+            res.status(200).json({ msg: "Register Success!" });
+
+            var mailOptions = {
+                from: 'fustal@gmail.com',
+                to: email,
+                subject: 'Check garya',
+                text: 'You are registered with Fustal.'
+            };
+
+            sendMail(mailOptions);
     
         } catch (err) {
             console.log("error:", err);

@@ -106,6 +106,155 @@ const bothCtrl = {
     }, 
 
 
+    getVenueSlots: async (req, res) => {
+        try {
+            const owner_id = req.params.id;
+            const date = req.query.date;
+
+            console.log("id:", owner_id);
+            console.log("date:", date);
+
+            const venues = await venue.findOne({ owner_id });
+            if (!venues) { return res.status(400).json({ error: "Venue does not exist." });}
+    
+            const opensAt = venues.openat.hour;
+            const closesAt = venues.closeat.hour;
+    
+            const bookings = await Booking.find({ owner_id: owner_id ,date: new Date(date) });
+
+    
+            const bookedSlots = bookings.map(booking => ({
+                time: booking.time,
+                status: booking.status,
+                price : booking.price,
+                user_id: booking.user_id
+            }));
+    
+            return res.status(200).json({
+                venue: venue.name,
+                date: date,
+                opensAt: opensAt,
+                closesAt: closesAt,
+                bookedSlots: bookedSlots
+            });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    }, 
+
+
+
+    getVenueSlots: async (req, res) => {
+        try {
+            const owner_id = req.params.id;
+            const date = req.query.date;
+
+            console.log("id:", owner_id);
+            console.log("date:", date);
+
+            const venues = await venue.findOne({ owner_id });
+            if (!venues) { return res.status(400).json({ error: "Venue does not exist." });}
+    
+            const opensAt = venues.openat.hour;
+            const closesAt = venues.closeat.hour;
+    
+            const bookings = await Booking.find({ owner_id: owner_id ,date: new Date(date) });
+
+    
+            const bookedSlots = bookings.map(booking => ({
+                time: booking.time,
+                status: booking.status,
+                price : booking.price,
+                user_id: booking.user_id
+            }));
+    
+            return res.status(200).json({
+                venue: venue.name,
+                date: date,
+                opensAt: opensAt,
+                closesAt: closesAt,
+                bookedSlots: bookedSlots
+            });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    }, 
+
+
+    getVenueSlots: async (req, res) => {
+        try {
+            const owner_id = req.params.id;
+            const date = req.query.date;
+
+            console.log("id:", owner_id);
+            console.log("date:", date);
+
+            const venues = await venue.findOne({ owner_id });
+            if (!venues) { return res.status(400).json({ error: "Venue does not exist." });}
+    
+            const opensAt = venues.openat.hour;
+            const closesAt = venues.closeat.hour;
+    
+            const bookings = await Booking.find({ owner_id: owner_id ,date: new Date(date) });
+
+    
+            const bookedSlots = bookings.map(booking => ({
+                time: booking.time,
+                status: booking.status,
+                price : booking.price,
+                user_id: booking.user_id
+            }));
+    
+            return res.status(200).json({
+                venue: venue.name,
+                date: date,
+                opensAt: opensAt,
+                closesAt: closesAt,
+                bookedSlots: bookedSlots
+            });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    }, 
+
+
+    getVenueSlots: async (req, res) => {
+        try {
+            const owner_id = req.params.id;
+            const date = req.query.date;
+
+            console.log("id:", owner_id);
+            console.log("date:", date);
+
+            const venues = await venue.findOne({ owner_id });
+            if (!venues) { return res.status(400).json({ error: "Venue does not exist." });}
+    
+            const opensAt = venues.openat.hour;
+            const closesAt = venues.closeat.hour;
+    
+            const bookings = await Booking.find({ owner_id: owner_id ,date: new Date(date) });
+
+    
+            const bookedSlots = bookings.map(booking => ({
+                time: booking.time,
+                status: booking.status,
+                price : booking.price,
+                user_id: booking.user_id
+            }));
+    
+            return res.status(200).json({
+                venue: venue.name,
+                date: date,
+                opensAt: opensAt,
+                closesAt: closesAt,
+                bookedSlots: bookedSlots
+            });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    }, 
+
+
 };
 
 module.exports = bothCtrl;

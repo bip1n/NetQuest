@@ -5,6 +5,7 @@ const Venue = require("../models/venueModel");
 const cloudinary = require("../utils/cloudinary");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sendMail = require("../middleware/nodeMailer");
 
 const authCtrl = {
     login: async (req, res) => {
@@ -160,13 +161,57 @@ const authCtrl = {
             await newVenueStatus.save();
     
             // Success message to react client for register success with status code
-            return res.status(200).json({ msg: "Register Success!" });
+            res.status(200).json({ msg: "Register Success!" });
+
+            var mailOptions = {
+                from: 'fustal@gmail.com',
+                to: email,
+                subject: 'Check garya',
+                text: 'You are registered with Fustal.'
+            };
+
+            sendMail(mailOptions);
     
         } catch (err) {
             console.log("error:", err);
             return res.status(500).json({ error: err.message });
         }
     },    
+
+
+    resetPass: async (req, res) => {
+        try {
+
+            const {email} = req.body;
+            if (!email) {return res.status(400).json({ error: 'email is required' });}
+
+            const user = await Users.findOne({email});
+            if (!user) return res.status(400).json({error: "User does not exist."});
+
+            const password = generateAlphanumericID();
+            const passwordHash = await bcrypt.hash(password, 10);
+
+            await Users.updateOne({email: email}, {$set: {password: passwordHash}});
+
+            var mailOptions = {
+                from: 'fustal@gmail.com',
+                to: email,
+                subject: 'Change Password',
+                text: 'Your new password is: ' + password
+            };
+
+            sendMail(mailOptions);
+          
+            // sucess msg to react client for register sucess with status code
+            return res.status(200).json({error: "Register Success!"});
+
+        } catch (err) {
+          return res.status(500).json({ error: err.message });
+        }
+    },
+
+
+
 }
 
 function generateAlphanumericID() {

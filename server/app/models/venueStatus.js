@@ -21,7 +21,7 @@ const StatusSchema = new mongoose.Schema({
     videos: [{
         type: String,
         required: true,
-    }],
+    }], 
     isActivated: {
         type: Boolean,
         default: false,

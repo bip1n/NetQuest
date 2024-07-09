@@ -74,6 +74,8 @@ const VenueProfile = () => {
     fetchVenue();
   }, [id]);
 
+  
+
   if (loading) {
     return <div>...</div>;
   }

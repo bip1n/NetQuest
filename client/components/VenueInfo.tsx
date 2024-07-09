@@ -138,13 +138,14 @@ export default function VenueInfo(props: { venueId: any }) {
             color="secondary"
             radius="md"
             size="md"
+            className="w-1/6"
             onClick={() => router.push(`/venue/${venueId}/booking`)}
           >
             Book Now
           </Button>
         </CardBody>
       ) : (
-        <div> <span className="italic text-danger-500"> Please login to book this venue</span></div>
+        <div> <span className="italic text-danger-500"> Please login to book venue.</span></div>
       )}
     </>
   );

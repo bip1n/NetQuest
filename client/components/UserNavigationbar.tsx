@@ -142,7 +142,6 @@ export const UserNavigationbar = () => {
                 </DropdownItem>
                 <DropdownItem href="/user/profile" key="settings">Profile</DropdownItem>
                 <DropdownItem key="team_settings" href="/user/booking">Booking</DropdownItem>
-                <DropdownItem key="analytics">Notifications</DropdownItem>
                 <DropdownItem key="system" href="/venue/profile/setting">
                   Change Password
                 </DropdownItem>

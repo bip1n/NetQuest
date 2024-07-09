@@ -12,6 +12,9 @@ import {
   Tabs,
   Tab,
   Link,
+  Input,
+  Button,
+  Textarea,
   
 } from "@nextui-org/react";
 import { MessageIcon, GalleryIcon, VenueIcon, ClickedDoubledownIcon } from "@/components/Icons";
@@ -124,6 +127,8 @@ const VenueProfile = () => {
               </CardBody>
           
           </Card>        
+    
+          
         </>
       ) : (
         <div>No venue data found</div>

@@ -63,7 +63,6 @@ const HomePage = () => {
       <Searchbar /> 
 
       <Card className="mt-4">
-         <Searchbar/>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2">
           {loading ? (
             Array.from({ length: 4 }).map((_, index) => (
@@ -131,7 +130,7 @@ const HomePage = () => {
           <div className="text-center text-red-500 mt-4">{error}</div>
         )}
       </Card>
-
+      
       <FooterContent />
     </>
   );

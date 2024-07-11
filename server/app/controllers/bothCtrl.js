@@ -15,6 +15,7 @@ const bothCtrl = {
                 const response = {
                     username: owner.fullname,
                     avatar: owner.profilepic,
+                    role: "owner",
                 };
                 console.log("response:", response);
                 return res.status(200).json({ user: response });
@@ -26,6 +27,7 @@ const bothCtrl = {
                 const response = {
                     username: user.username,
                     avatar: user.profilepic,
+                    role: "user",
                 };
                 return res.status(200).json({ user: response });
             }

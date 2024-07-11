@@ -6,6 +6,8 @@ const cloudinary = require("../utils/cloudinary");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../middleware/nodeMailer");
+const Admins = require('../models/adminModel');
+
 
 const authCtrl = {
     login: async (req, res) => {
@@ -210,6 +212,67 @@ const authCtrl = {
         }
     },
 
+    login: async (req, res) => {
+        try {
+            const { email, password } = req.body;
+            console.log("req.body:", req.body);
+
+            if (!email) {
+                return res.status(400).json({ error: 'Email is required' });
+            }
+            if (!password) {
+                return res.status(400).json({ error: 'Password is required' });
+            }
+            console.log("email:", email);
+            const admin = await Admins.findOne({ email });
+            console.log("admin:", admin);
+            if (!admin) {
+                return res.status(400).json({ error: "Admin does not exist." });
+            }
+            const isMatch = await bcrypt.compare(password, admin.password);
+            if (!isMatch) {
+                return res.status(400).json({ error: "Incorrect password." });
+            }
+            // If login success, create access token and refresh token
+            const access_token = createAccessToken({ id: admin._id, email: admin.email });
+            const refresh_token = createRefreshToken({ id: admin._id, email: admin.email });
+
+            // send the access token and refresh token to the client with status code
+            return res.status(200).json({ message: "Login Success!", access_token, refresh_token });
+
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+
+    register_admin: async (req, res) => {
+        try {
+            const { name, email, password, access } = req.body;
+
+            if (!name) { return res.status(400).json({ error: 'Name is required' });}
+            if (!email) { return res.status(400).json({ error: 'Email is required' });}
+            if (!password) { return res.status(400).json({ error: 'Password is required' });}
+            const admin = await Admins.findOne({ email });
+            if (admin) {
+                return res.status(400).json({ error: "The email already exists." });
+            }
+
+            if (password.length < 6) {
+                return res.status(400).json({ error: "Password must be at least 6 characters long." });
+            }
+            const passwordHash = await bcrypt.hash(password, 10);
+
+            const newAdmin = new Admins({
+                name, email, password: passwordHash, access
+            });
+            await newAdmin.save();
+
+            return res.status(200).json({ message: "Register Success!" });
+
+        } catch (err) {
+            return res.status(500).json({ error: err.message });
+        }
+    },
 
 
 }

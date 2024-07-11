@@ -140,11 +140,14 @@ export default function Booking(props: { venueId: any; }) {
     const bookingData = {
       date: selectedDate.toString(),
       slots: selectedSlots,
-      totalRate: totalRate,
+      price: totalRate,   
+      owner_id: venueId,
+      altcontact: "1234567890",
     };
 
     try {
-      const response = await fetch(`http://localhost:4000/api/venue/${venueId}/book`, {
+   
+      const response = await fetch(`http://localhost:4000/api/bookvenue`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

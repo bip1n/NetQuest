@@ -117,7 +117,7 @@ export default function RegisterVenue() {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <Card className="w-full min-w-[400px] md:min-w-[500px] max-w-[500px]">
+        <Card className="w-full items-center justify-center">
           <CardHeader className="flex gap-3">
             <Link color="foreground" href="/">
               <span><Logo /></span>

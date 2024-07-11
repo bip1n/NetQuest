@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { UserNavigationbar } from "@/components/UserNavigationbar";
 import { Searchbar } from "@/components/Searchbar";
 import { FooterContent } from "@/components/Footer";
+import { AboutUsPage } from "@/components/AboutUs";
 import {
   Card,
   CardHeader,
@@ -13,6 +14,7 @@ import {
   Button,
   Skeleton,
 } from "@nextui-org/react";
+import { log } from "console";
 
 interface Venue {
   _id: number;
@@ -22,6 +24,7 @@ interface Venue {
   price: number;
   profilepic: string;
 }
+
 
 const HomePage = () => {
   const router = useRouter();
@@ -59,78 +62,81 @@ const HomePage = () => {
 
   return (
     <>
-      <UserNavigationbar />
-      <Searchbar /> 
+      {/* <UserNavigationbar /> */}
+      <Searchbar />
 
       <Card className="mt-4">
+        <CardHeader>
+          <p className="text-primary-500 font-bold text-xl ml-4">Top Rated🔥</p>
+        </CardHeader>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2">
-          {loading ? (
-            Array.from({ length: 4 }).map((_, index) => (
-              <Card key={index}>
-                <CardBody>
-                  <Skeleton className="flex rounded-lg w-full h-full" />
-                </CardBody>
-                <CardFooter className="pb-0 pt-2 px-4 flex-col items-start">
-                  <Skeleton className="h-5 mb-2 w-full rounded-lg" />
-                  <Skeleton className="h-4 mb-2 w-full rounded-lg" />
-                  <Skeleton className="h-4 mb-2 w-full rounded-lg" />
-                </CardFooter>
-              </Card>
-            ))
-          ) : (
-            venues.map((venue) => (
-              <Card key={venue._id}>
-                <CardBody>
-                  <Image
-                    isBlurred
-                    height={"100%"}
-                    width={"100%"}
-                    src={venue.profilepic}
-                  />
-                </CardBody>
-                <CardFooter className="pb-0 pt-2 px-4 flex flex-col items-start">
-                  <h4 className="font-semibold text-large uppercase">
-                    {venue.venueName}{" "}
-                    <span>
-                      <small className="text-primary-500 mb-2 text-tiny">
-                        [{venue.rating}/5]
-                      </small>
-                    </span>
-                  </h4>
+          {loading
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <Card key={index}>
+                  <CardBody>
+                    <Skeleton className="flex rounded-lg w-full h-full" />
+                  </CardBody>
+                  <CardFooter className="pb-0 pt-2 px-4 flex-col items-start">
+                    <Skeleton className="h-5 mb-2 w-full rounded-lg" />
+                    <Skeleton className="h-4 mb-2 w-full rounded-lg" />
+                    <Skeleton className="h-4 mb-2 w-full rounded-lg" />
+                  </CardFooter>
+                </Card>
+              ))
+            : venues.map((venue) => (
+                <Card key={venue._id}>
+                  <CardBody>
+                    <Image
+                      isBlurred
+                      height={"100%"}
+                      width={"100%"}
+                      src="https://5.imimg.com/data5/SELLER/Default/2021/5/EY/RW/SB/3103550/futsal-court-construction-1000x1000.jpg"
+                    />
+                  </CardBody>
+                  <CardFooter className="pb-0 pt-2 px-4 flex flex-col items-start">
+                    <h4 className="font-semibold text-large uppercase">
+                      {venue.venueName}{" "}
+                      <span>
+                        <small className="text-primary-500 mb-2 text-tiny">
+                          [{venue.rating}/5]
+                        </small>
+                      </span>
+                    </h4>
 
-                  <div className="w-full flex items-center justify-between mb-2">
-                    <div>
-                      <p className="text-default-600 text-small">
-                        {venue.location}
-                      </p>
-                      <p className="text-default-600 text-small">
-                        Starting from{" "}
-                        <span className="text-success"> Rs.{venue.price}</span>
-                      </p>
+                    <div className="w-full flex items-center justify-between mb-2">
+                      <div>
+                        <p className="text-default-600 text-small">
+                          {venue.location}
+                        </p>
+                        <p className="text-default-600 text-small">
+                          Starting from{" "}
+                          <span className="text-success">
+                            {" "}
+                            Rs.{venue.price}
+                          </span>
+                        </p>
+                      </div>
+
+                      <Button
+                        color="primary"
+                        radius="full"
+                        size="sm"
+                        variant="solid"
+                        onClick={() => router.push(`/venue/${venue._id}`)}
+                      >
+                        Book Now
+                      </Button>
                     </div>
-
-                    <Button
-                      color="primary"
-                      radius="full"
-                      size="sm"
-                      variant="solid"
-                      onClick={() =>
-                        router.push(`/venue/${venue._id}`)
-                      }
-                    >
-                      Book Now
-                    </Button>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))
-          )}
+                  </CardFooter>
+                </Card>
+              ))}
         </div>
         {error && !loading && (
           <div className="text-center text-red-500 mt-4">{error}</div>
         )}
       </Card>
-      
+      <AboutUsPage />
+
       <FooterContent />
     </>
   );

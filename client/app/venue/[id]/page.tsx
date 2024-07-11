@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { UserNavigationbar } from "@/components/UserNavigationbar";
 import { FooterContent } from "@/components/Footer";
+import { useRouter } from "next/navigation";
 import VenueInfo from "@/components/VenueInfo"; // Correct the import if it's a default export
 import {
   Card,
@@ -47,6 +48,7 @@ const VenueProfile = () => {
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchVenue = async () => {
@@ -89,7 +91,7 @@ const VenueProfile = () => {
 
   return (
     <>
-    <UserNavigationbar />
+    {/* <UserNavigationbar /> */}
     
      
      <div className="w-100 md:mx-10 mx-0 mt-2">
@@ -118,6 +120,16 @@ const VenueProfile = () => {
                 </Tab>
                 <Tab key="music" title="Reviews">
                     <Reviews/>
+                    <Button
+                        color="default"
+                        radius="md"
+                        size="md"
+                        variant="flat"
+                        className="w-1/8 ml-2"
+                        onClick={() => router.push(`/venue/${id}/review`)}
+                      >
+                        Read More
+                      </Button>
                   </Tab>
                 <Tab key="videos" title="Photo">
                   <VenueImage venueId={id as string} />

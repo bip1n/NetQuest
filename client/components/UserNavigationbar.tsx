@@ -33,6 +33,11 @@ interface UserDetails {
   // Add other properties as needed
 }
 
+export async function getServerSideProps() {
+  console.log("Server side props");
+}
+
+
 export const UserNavigationbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loginStatus, setLoginStatus] = useState(false);
@@ -115,7 +120,6 @@ export const UserNavigationbar = () => {
           </NavbarItem>
         ))}
       </NavbarMenu>
-
       <NavbarContent as="div" justify="end">
         <ThemeSwitch />
         {loading ? (

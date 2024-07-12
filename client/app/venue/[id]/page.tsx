@@ -16,6 +16,9 @@ import {
   Input,
   Button,
   Textarea,
+  CardFooter,
+  Skeleton,
+  User
   
 } from "@nextui-org/react";
 import { MessageIcon, GalleryIcon, VenueIcon, ClickedDoubledownIcon } from "@/components/Icons";
@@ -82,7 +85,18 @@ const VenueProfile = () => {
   
 
   if (loading) {
-    return <div>...</div>;
+    return <div>
+      <UserNavigationbar />
+          <Card className="w-2/3 m-10 ">    
+                  <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+                    <Skeleton className="h-60 mb-8 w-1/3 mt-4 rounded-lg" />
+                    <Skeleton className="h-5 mb-4 w-2/4 rounded-lg" />
+                    <Skeleton className="h-5 mb-4 w-2/4 rounded-lg" />
+                    <Skeleton className="h-5 mb-4 w-2/4 rounded-lg" />
+                  </CardHeader>
+            </Card>
+          <FooterContent />
+    </div>;
   }
 
   if (error) {
@@ -91,7 +105,7 @@ const VenueProfile = () => {
 
   return (
     <>
-    {/* <UserNavigationbar /> */}
+    <UserNavigationbar />
     
      
      <div className="w-100 md:mx-10 mx-0 mt-2">

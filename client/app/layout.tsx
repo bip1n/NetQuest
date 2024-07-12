@@ -1,15 +1,10 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 import { Providers } from "./providers";
-
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { UserNavigationbar } from "@/components/UserNavigationbar";
-import { Hero } from "@/components/Hero";
-import { TopRated } from "@/components/TopRated";
-import { Searchbar } from "@/components/Searchbar";
 import { Inter } from "next/font/google";
 
 export const metadata: Metadata = {
@@ -50,7 +45,7 @@ export default function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
-            <UserNavigationbar/>
+          
             <main className="flex-grow">{children}</main> {/* Render children here */}
           </div>
         </Providers>

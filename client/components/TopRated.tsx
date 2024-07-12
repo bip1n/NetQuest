@@ -1,110 +1,136 @@
-import React from "react";
-import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
+"use client";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Image,
+  Button,
+  Skeleton,
+} from "@nextui-org/react";
+
+
+interface Venue {
+  _id: number;
+  venueName: string;
+  location: string;
+  rating: number;
+  price: number;
+  profilepic: string;
+}
+
 
 export const TopRated = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [venues, setVenues] = useState<Venue[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchVenues = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/api/getVenue", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          const errorResponse = await response.json();
+          throw new Error(errorResponse.error || "Failed to fetch data");
+        }
+
+        const responseData = await response.json();
+        setVenues(responseData.owners);
+      } catch (error) {
+        console.error("Error fetching venue data:", error);
+        setError("An error occurred while fetching venue data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVenues();
+  }, []);
+
   return (
-    <div className="shadow-xl">
-      
-      <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex-shrink-0 py-4 ml-5"> <h4> Top Rated</h4></div>
-      <div  className="flex overflow-x-auto h-96 space-x-4">
+    <>
+      {/* <UserNavigationbar /> */}
 
-     
-      <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex-shrink-0 py-4 m-2">
-        <CardBody className="overflow-visible py-2">
-          <Image
-            alt="Card background"
-            className="object-cover rounded-xl"
-            src="https://nextui.org/images/hero-card-complete.jpeg"
-            width={370}
-          />
-        </CardBody>
-        <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-          <h4 className="font-bold text-large">Kick Futsal</h4>
-          <p className="text-tiny uppercase ">Lalitpur</p>
-          <small className="text-default-500">Starting from </small>
+      <Card className="mt-4">
+        <CardHeader>
+          <p className="text-primary-500 font-bold text-xl ml-4">Top Rated🔥</p>
         </CardHeader>
-      </Card>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2">
+          {loading
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <Card key={index}>
+                  <CardBody>
+                    <Skeleton className="flex rounded-lg w-full h-full" />
+                  </CardBody>
+                  <CardFooter className="pb-0 pt-2 px-4 flex-col items-start">
+                    <Skeleton className="h-5 mb-2 w-full rounded-lg" />
+                    <Skeleton className="h-4 mb-2 w-full rounded-lg" />
+                    <Skeleton className="h-4 mb-2 w-full rounded-lg" />
+                  </CardFooter>
+                </Card>
+              ))
+            : venues.map((venue) => (
+                <Card key={venue._id}>
+                  <CardBody>
+                    <Image
+                      isBlurred
+                      height={"100%"}
+                      width={"100%"}
+                      src="https://5.imimg.com/data5/SELLER/Default/2021/5/EY/RW/SB/3103550/futsal-court-construction-1000x1000.jpg"
+                    />
+                  </CardBody>
+                  <CardFooter className="pb-0 pt-2 px-4 flex flex-col items-start">
+                    <h4 className="font-semibold text-large uppercase">
+                      {venue.venueName}{" "}
+                      <span>
+                        <small className="text-primary-500 mb-2 text-tiny">
+                          [{venue.rating}/5]
+                        </small>
+                      </span>
+                    </h4>
 
-      <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex-shrink-0 py-4 m-2">
-        <CardBody className="overflow-visible py-2">
-          <Image
-            alt="Card background"
-            className="object-cover rounded-xl"
-            src="https://nextui.org/images/hero-card-complete.jpeg"
-            width={370}
-          />
-        </CardBody>
-        <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-          <p className="text-tiny uppercase font-bold">Daily Mix</p>
-          <small className="text-default-500">12 Tracks</small>
-          <h4 className="font-bold text-large">Frontend Radio</h4>
-        </CardHeader>
-      </Card>
+                    <div className="w-full flex items-center justify-between mb-2">
+                      <div>
+                        <p className="text-default-600 text-small">
+                          {venue.location}
+                        </p>
+                        <p className="text-default-600 text-small">
+                          Starting from{" "}
+                          <span className="text-success">
+                            {" "}
+                            Rs.{venue.price}
+                          </span>
+                        </p>
+                      </div>
 
-      <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex-shrink-0 py-4 m-2">
-        <CardBody className="overflow-visible py-2">
-          <Image
-            alt="Card background"
-            className="object-cover rounded-xl"
-            src="https://nextui.org/images/hero-card-complete.jpeg"
-            width={370}
-          />
-        </CardBody>
-        <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-          <p className="text-tiny uppercase font-bold">Daily Mix</p>
-          <small className="text-default-500">12 Tracks</small>
-          <h4 className="font-bold text-large">Frontend Radio</h4>
-        </CardHeader>
+                      <Button
+                        color="primary"
+                        radius="full"
+                        size="sm"
+                        variant="solid"
+                        onClick={() => router.push(`/venue/${venue._id}`)}
+                      >
+                        Book Now
+                      </Button>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
+        </div>
+        {error && !loading && (
+          <div className="text-center text-red-500 mt-4">{error}</div>
+        )}
       </Card>
-
-      <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex-shrink-0 py-4 m-2">
-        <CardBody className="overflow-visible py-2">
-          <Image
-            alt="Card background"
-            className="object-cover rounded-xl"
-            src="https://nextui.org/images/hero-card-complete.jpeg"
-            width={370}
-          />
-        </CardBody>
-        <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-          <p className="text-tiny uppercase font-bold">Daily Mix</p>
-          <small className="text-default-500">12 Tracks</small>
-          <h4 className="font-bold text-large">Frontend Radio</h4>
-        </CardHeader>
-      </Card>
-
-      <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex-shrink-0 py-4 m-2">
-        <CardBody className="overflow-visible py-2">
-          <Image
-            alt="Card background"
-            className="object-cover rounded-xl"
-            src="https://nextui.org/images/hero-card-complete.jpeg"
-            width={370}
-          />
-        </CardBody>
-        <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-          <p className="text-tiny uppercase font-bold">Daily Mix</p>
-          <small className="text-default-500">12 Tracks</small>
-          <h4 className="font-bold text-large">Frontend Radio</h4>
-        </CardHeader>
-      </Card>
-
-      <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex-shrink-0 py-4 m-2">
-        <CardBody className="overflow-visible py-2">
-          <Image
-            alt="Card background"
-            className="object-cover rounded-xl"
-            src="https://nextui.org/images/hero-card-complete.jpeg"
-            width={370}
-          />
-        </CardBody>
-        <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-          <p className="text-tiny uppercase font-bold">Daily Mix</p>
-          <small className="text-default-500">12 Tracks</small>
-          <h4 className="font-bold text-large">Frontend Radio</h4>
-        </CardHeader>
-      </Card>
-      </div>
-    </div>
+    </>
   );
 };

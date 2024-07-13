@@ -20,18 +20,6 @@ export const Reviews = () => {
                 Ekdam jhur. mat ma ni dulo pareko chha..bekkar ko futsal...owner ni thado thado kura garchha #WorstExperience
                 </p>
             </CardBody>
-            {/* <CardFooter className="gap-3">
-                <div className="flex gap-1">
-                
-                <DoubleupIcon/>
-                <p className="font-semibold text-default-400 text-small">1</p>
-                </div>
-                <div className="flex gap-1">
-                
-                <ClickedDoubledownIcon/>
-                <p className="font-semibold text-default-400 text-small">8</p>
-                </div>
-            </CardFooter> */}
         </Card>
        
        {/* Skeleton */}

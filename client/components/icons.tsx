@@ -1,8 +1,12 @@
 import * as React from "react";
 import { Image } from "@nextui-org/react";
 
-import { IconSvgProps } from "@/types";
 
+interface IconSvgProps extends React.SVGProps<SVGSVGElement> {
+  size?: number;
+  width?: number;
+  height?: number;
+}
 export const Logo: React.FC<IconSvgProps> = ({
   size = 36,
   width,
@@ -24,9 +28,6 @@ export const Logo: React.FC<IconSvgProps> = ({
     />
   </svg>
 );
-
-
-
 
 export const DiscordIcon: React.FC<IconSvgProps> = ({
   size = 24,

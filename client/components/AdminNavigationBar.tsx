@@ -78,7 +78,7 @@ export const AdminNavigationBar = () => {
       ) : (
         <NavbarContent as="div" justify="end">
           <ThemeSwitch />
-          <SigninModel />
+          {/* <SigninModel /> */}
         </NavbarContent>
       )}
     </NextUINavbar>

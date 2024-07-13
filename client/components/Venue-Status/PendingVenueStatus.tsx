@@ -1,7 +1,15 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip } from "@nextui-org/react";
 import { EditIcon, DeleteIcon, EyeIcon } from "../Icons";
+
+type Venue = {
+  _id: string;
+  owner_id: string;
+  images: string[];
+  venueID: string;
+  status: 'active' | 'rejected' | 'pending';
+};
 
 const columns = [
   { name: "OWNER", uid: "ownerID" },
@@ -10,14 +18,14 @@ const columns = [
   { name: "ACTIONS", uid: "actions" },
 ];
 
-const statusColorMap = {
+const statusColorMap: { [key in Venue['status']]: 'success' | 'danger' | 'primary' } = {
   active: "success",
   rejected: "danger",
   pending: "primary",
 };
 
-export const VenueRegistrationTable = () => {
-  const [venues, setVenues] = useState([]);
+export const PendingVenueStatus: React.FC = () => {
+  const [venues, setVenues] = useState<Venue[]>([]);
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -35,9 +43,7 @@ export const VenueRegistrationTable = () => {
           throw new Error('Network response was not ok');
         }
 
-        console.log(response)
-
-        const data = await response.json();
+        const data: Venue[] = await response.json();
 
         console.log(data);
         setVenues(data);
@@ -49,9 +55,7 @@ export const VenueRegistrationTable = () => {
     fetchVenues();
   }, []);
 
-  
-
-  const handleVerify = async (id) => {
+  const handleVerify = async (id: string) => {
     try {
       const response = await fetch("http://localhost:4000/api/verifyVenue", {
         method: "POST",
@@ -72,7 +76,7 @@ export const VenueRegistrationTable = () => {
     }
   };
 
-  const handleReject = async (id) => {
+  const handleReject = async (id: string) => {
     try {
       const response = await fetch("http://localhost:4000/api/rejectVenue", {
         method: "POST",
@@ -93,49 +97,60 @@ export const VenueRegistrationTable = () => {
     }
   };
 
-  const renderCell = React.useCallback((venue, columnKey) => {
-    const cellValue = venue[columnKey];
+  const renderCell = useCallback((venue: Venue, columnKey: string) => {
+    if (columnKey === "actions") {
+      return (
+        <div className="relative flex items-center gap-2">
+          <Tooltip content="Details">
+            <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+              <EyeIcon />
+            </span>
+          </Tooltip>
+          <Tooltip content="Edit">
+            <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => handleVerify(venue._id)}>
+              <EditIcon />
+            </span>
+          </Tooltip>
+        </div>
+      );
+    }
+
+    const cellValue = venue[columnKey as keyof Venue];
 
     switch (columnKey) {
       case "ownerID":
         return (
-          <User
-            avatarProps={{ radius: "lg", src: venue.images[0] }}
-            name={venue.owner_id}
-          >
-          </User>
+          <>
+          <div>
+            <User
+              avatarProps={{ radius: "lg", src: venue.images[0] }}
+              name="ashdjas"
+              description= "user@gmail.com"
+
+
+            >
+            </User>
+          </div>
+          </>
+          
         );
       case "venueID":
         return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+          <>
+           <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue}</p> //venue name
           </div>
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue}</p> //venue location
+        </div>
+          </>
+         
         );
       case "status":
         return (
-          <Chip className="capitalize" color={statusColorMap[venue.status]} size="sm" variant="flat">
+          <Chip className="capitalize" color={'warning'} size="sm" variant="flat">
             {cellValue || 'pending'}
           </Chip>
-        );
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip content="Details">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EyeIcon />
-              </span>
-            </Tooltip>
-            <Tooltip content="Verify venue">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => handleVerify(venue._id)}>
-                <EditIcon />
-              </span>
-            </Tooltip>
-            <Tooltip color="danger" content="Reject venue">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => handleReject(venue._id)}>
-                <DeleteIcon />
-              </span>
-            </Tooltip>
-          </div>
         );
       default:
         return cellValue;
@@ -154,31 +169,10 @@ export const VenueRegistrationTable = () => {
       <TableBody items={venues}>
         {(item) => (
           <TableRow key={item._id}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            {(columnKey) => <TableCell>{renderCell(item, String(columnKey))}</TableCell>}
           </TableRow>
         )}
       </TableBody>
-
-      <TableBody items={venues}>
-        {(item) => (
-          <TableRow key={item._id}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-
-      <TableBody items={venues}>
-        {(item) => (
-          <TableRow key={item._id}>
-            <div className="flex flex-col">
-              asd
-            </div>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-
     </Table>
   );
 };
-

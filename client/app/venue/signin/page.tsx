@@ -26,7 +26,7 @@ export default function RegisterVenue() {
     setError(""); // Clear any existing errors
 
     try {
-      const response = await fetch("http://localhost:4000/api/loginadmin", {
+      const response = await fetch("http://localhost:4000/api/loginowner", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

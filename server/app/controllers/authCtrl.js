@@ -1,5 +1,5 @@
 const Users = require("../models/userModel");
-const Admin = require("../models/ownerModel");
+const Owner = require("../models/ownerModel");
 const VenueStatus = require("../models/venueStatus");
 const Venue = require("../models/venueModel");
 const cloudinary = require("../utils/cloudinary");
@@ -10,66 +10,8 @@ const Admins = require('../models/adminModel');
 
 
 const authCtrl = {
-    login: async (req, res) => {
-        try {
-            const {email, password} = req.body;
-            console.log("req.body:", req.body);
 
-            if (!email) {return res.status(400).json({ error: 'email is required' });}
-            if (!password) {return res.status(400).json({ error: 'password is required' });}
-            console.log("email:", email);
-            const user = await Users.findOne({email});
-            console.log("user:", user);
-            if (!user){ 
-                return res.status(400).json({error: "User does not exist."})
-            }
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch){
-                return res.status(400).json({error: "Incorrect password."})
-            }
-            // If login success, create access token and refresh token
-            const access_token = createAccessToken({id: user._id, email: user.email});
-            const refresh_token = createRefreshToken({id: user._id, email: user.email});
-
-            // send the access token and refresh token to the client with status code
-            return res.status(200).json({error: "Login Success!", access_token, refresh_token});
-            
-        } catch (err) {
-          return res.status(500).json({ msg: err.message });
-        }
-    },
-
-    login_admin: async (req, res) => {
-        try {
-            const {email, password, venueID} = req.body;
-
-
-            if (!email) {return res.status(400).json({ error: 'email is required' });}
-            if (!password) {return res.status(400).json({ error: 'password is required' });}
-            if (!venueID) {return res.status(400).json({ error: 'venueID is required' });}
-
-            const admin = await Admin.findOne({email});
-            if (!admin) return res.status(400).json({error: "Admin does not exist."});
-
-            const venue = await Venue.findOne({owner_id: admin._id});
-            if (!venue) return res.status(400).json({error: "Venue does not exist."});
-
-            if (venue.venueID !== venueID) return res.status(400).json({error: "Venue ID does not match."});
-
-            const isMatch = await bcrypt.compare(password, admin.password);
-            if (!isMatch) return res.status(400).json({error: "Incorrect password."});
-
-            // If login success, create access token and refresh token
-            const access_token = createAccessToken({id: admin._id, email: admin.email});
-            const refresh_token = createRefreshToken({id: admin._id, email: admin.email});
-
-            // send the access token and refresh token to the client with status code
-            return res.status(200).json({error: "Login Success!", access_token, refresh_token});
-            
-        } catch (err) {
-          return res.status(500).json({ msg: err.message });
-        }
-    },
+    //user Section
 
     register_user: async (req, res) => {
         try {
@@ -99,9 +41,39 @@ const authCtrl = {
           return res.status(500).json({ error: err.message });
         }
     },
-    
-    
-    register_admin: async (req, res) => {
+
+    login: async (req, res) => {
+        try {
+            const {email, password} = req.body;
+            console.log("req.body:", req.body);
+
+            if (!email) {return res.status(400).json({ error: 'email is required' });}
+            if (!password) {return res.status(400).json({ error: 'password is required' });}
+            console.log("email:", email);
+            const user = await Users.findOne({email});
+            console.log("user:", user);
+            if (!user){ 
+                return res.status(400).json({error: "User does not exist."})
+            }
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch){
+                return res.status(400).json({error: "Incorrect password."})
+            }
+            // If login success, create access token and refresh token
+            const access_token = createAccessToken({id: user._id, email: user.email});
+            const refresh_token = createRefreshToken({id: user._id, email: user.email});
+
+            // send the access token and refresh token to the client with status code
+            return res.status(200).json({error: "Login Success!", access_token, refresh_token});
+            
+        } catch (err) {
+          return res.status(500).json({ msg: err.message });
+        }
+    },
+
+    //owner Section
+
+    register_owner: async (req, res) => {
         try {
             const { fullname, phone, venueName, panNumber, mapCoord, email, password } = req.body;
     
@@ -113,16 +85,16 @@ const authCtrl = {
             if (!email) return res.status(400).json({ error: 'email is required' });
             if (!password) return res.status(400).json({ error: 'password is required' });
     
-            const reg_email = await Admin.findOne({ email });
+            const reg_email = await Owner.findOne({ email });
             if (reg_email) return res.status(400).json({ error: "The email already exists." });
     
-            const reg_phone = await Admin.findOne({ phone });
+            const reg_phone = await Owner.findOne({ phone });
             if (reg_phone) return res.status(400).json({ error: "The phone number already exists." });
     
             if (password.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters long." });
             const passwordHash = await bcrypt.hash(password, 10);
     
-            const newAdmin = new Admin({
+            const newAdmin = new Owner({
                 fullname, phone, venueName, panNumber, mapCoord, email, password: passwordHash
             });
     
@@ -180,7 +152,102 @@ const authCtrl = {
         }
     },    
 
+    login_owner: async (req, res) => {
+        try {
+            const {email, password, venueID} = req.body;
 
+
+            if (!email) {return res.status(400).json({ error: 'email is required' });}
+            if (!password) {return res.status(400).json({ error: 'password is required' });}
+            if (!venueID) {return res.status(400).json({ error: 'venueID is required' });}
+
+            const admin = await Owner.findOne({email});
+            if (!admin) return res.status(400).json({error: "Owner does not exist."});
+
+            const venue = await Venue.findOne({owner_id: admin._id});
+            if (!venue) return res.status(400).json({error: "Venue does not exist."});
+
+            if (venue.venueID !== venueID) return res.status(400).json({error: "Venue ID does not match."});
+
+            const isMatch = await bcrypt.compare(password, admin.password);
+            if (!isMatch) return res.status(400).json({error: "Incorrect password."});
+
+            // If login success, create access token and refresh token
+            const access_token = createAccessToken({id: admin._id, email: admin.email});
+            const refresh_token = createRefreshToken({id: admin._id, email: admin.email});
+
+            // send the access token and refresh token to the client with status code
+            return res.status(200).json({error: "Login Success!", access_token, refresh_token});
+            
+        } catch (err) {
+          return res.status(500).json({ msg: err.message });
+        }
+    },
+
+    //Owner Section
+    
+    register_admin: async (req, res) => {
+        try {
+            const { name, email, password, access } = req.body;
+
+            if (!name) { return res.status(400).json({ error: 'Name is required' });}
+            if (!email) { return res.status(400).json({ error: 'Email is required' });}
+            if (!password) { return res.status(400).json({ error: 'Password is required' });}
+            const admin = await Admins.findOne({ email });
+            if (admin) {
+                return res.status(400).json({ error: "The email already exists." });
+            }
+
+            if (password.length < 6) {
+                return res.status(400).json({ error: "Password must be at least 6 characters long." });
+            }
+            const passwordHash = await bcrypt.hash(password, 10);
+
+            const newAdmin = new Admins({
+                name, email, password: passwordHash, access
+            });
+            await newAdmin.save();
+
+            return res.status(200).json({ message: "Register Success!" });
+
+        } catch (err) {
+            return res.status(500).json({ error: err.message });
+        }
+    },
+
+    login_admin: async (req, res) => {
+        try {
+            const { email, password } = req.body;
+            console.log("req.body:", req.body);
+
+            if (!email) {
+                return res.status(400).json({ error: 'Email is required' });
+            }
+            if (!password) {
+                return res.status(400).json({ error: 'Password is required' });
+            }
+            console.log("email:", email);
+            const admin = await Admins.findOne({ email });
+            console.log("admin:", admin);
+            if (!admin) {
+                return res.status(400).json({ error: "Owner does not exist." });
+            }
+            const isMatch = await bcrypt.compare(password, admin.password);
+            if (!isMatch) {
+                return res.status(400).json({ error: "Incorrect password." });
+            }
+            // If login success, create access token and refresh token
+            const access_token = createAccessToken({ id: admin._id, email: admin.email });
+            const refresh_token = createRefreshToken({ id: admin._id, email: admin.email });
+
+            // send the access token and refresh token to the client with status code
+            return res.status(200).json({ message: "Login Success!", access_token, refresh_token });
+
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+    
     resetPass: async (req, res) => {
         try {
 
@@ -211,69 +278,6 @@ const authCtrl = {
           return res.status(500).json({ error: err.message });
         }
     },
-
-    login: async (req, res) => {
-        try {
-            const { email, password } = req.body;
-            console.log("req.body:", req.body);
-
-            if (!email) {
-                return res.status(400).json({ error: 'Email is required' });
-            }
-            if (!password) {
-                return res.status(400).json({ error: 'Password is required' });
-            }
-            console.log("email:", email);
-            const admin = await Admins.findOne({ email });
-            console.log("admin:", admin);
-            if (!admin) {
-                return res.status(400).json({ error: "Admin does not exist." });
-            }
-            const isMatch = await bcrypt.compare(password, admin.password);
-            if (!isMatch) {
-                return res.status(400).json({ error: "Incorrect password." });
-            }
-            // If login success, create access token and refresh token
-            const access_token = createAccessToken({ id: admin._id, email: admin.email });
-            const refresh_token = createRefreshToken({ id: admin._id, email: admin.email });
-
-            // send the access token and refresh token to the client with status code
-            return res.status(200).json({ message: "Login Success!", access_token, refresh_token });
-
-        } catch (err) {
-            return res.status(500).json({ msg: err.message });
-        }
-    },
-
-    register_admin: async (req, res) => {
-        try {
-            const { name, email, password, access } = req.body;
-
-            if (!name) { return res.status(400).json({ error: 'Name is required' });}
-            if (!email) { return res.status(400).json({ error: 'Email is required' });}
-            if (!password) { return res.status(400).json({ error: 'Password is required' });}
-            const admin = await Admins.findOne({ email });
-            if (admin) {
-                return res.status(400).json({ error: "The email already exists." });
-            }
-
-            if (password.length < 6) {
-                return res.status(400).json({ error: "Password must be at least 6 characters long." });
-            }
-            const passwordHash = await bcrypt.hash(password, 10);
-
-            const newAdmin = new Admins({
-                name, email, password: passwordHash, access
-            });
-            await newAdmin.save();
-
-            return res.status(200).json({ message: "Register Success!" });
-
-        } catch (err) {
-            return res.status(500).json({ error: err.message });
-        }
-    },
-
 
 }
 

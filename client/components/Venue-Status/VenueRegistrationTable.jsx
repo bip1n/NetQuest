@@ -159,6 +159,25 @@ export const VenueRegistrationTable = () => {
         )}
       </TableBody>
 
+      <TableBody items={venues}>
+        {(item) => (
+          <TableRow key={item._id}>
+            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+          </TableRow>
+        )}
+      </TableBody>
+
+      <TableBody items={venues}>
+        {(item) => (
+          <TableRow key={item._id}>
+            <div className="flex flex-col">
+              asd
+            </div>
+            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+          </TableRow>
+        )}
+      </TableBody>
+
     </Table>
   );
 };

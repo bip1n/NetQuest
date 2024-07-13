@@ -3,7 +3,10 @@ const adminCtrl = require('../controllers/adminCtrl');
 const loginLimiter = require('../middleware/loginLimiter');
 
 
-router.post('/viewData', authCtrl.viewData);
-router.post('/statusVenue', authCtrl.statusVenue);
+router.post('/viewData', adminCtrl.viewData);
+router.post('/getPendingVenue', adminCtrl.getPendingVenue);
+router.post('/verifyVenue', adminCtrl.verifyVenue);
+router.post('/rejectVenue', adminCtrl.rejectVenue);
+router.post('/changeStatus', adminCtrl.changeStatus);
 
 module.exports = router;

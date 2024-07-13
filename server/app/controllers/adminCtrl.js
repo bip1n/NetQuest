@@ -1,65 +1,86 @@
 require('dotenv').config();
 const Owner = require("../models/ownerModel");
 const User = require("../models/userModel");
-const venue = require("../models/venueModel");
+const Venue = require("../models/venueModel");
 const Booking = require("../models/bookingSchema");
-
-
+const Status = require("../models/statusModel");
 
 const adminCtrl = {
-    NavDetails: async (req, res) => {
+    getPendingVenue: async (req, res) => {
         try {
-            const id = req.user.id;
+            const pendingStatuses = await Status.find({ status: 'pending' });
 
-            // Try to find the owner by ID
-            const owner = await Owner.findById(id);
-            if (owner) {
-                const response = {
-                    username: owner.fullname,
-                    avatar: owner.profilepic,
-                    role: "owner",
-                };
-                console.log("response:", response);
-                return res.status(200).json({ user: response });
-            }
+            const ownerIds = pendingStatuses.map(status => status.owner_id);
 
-            // If not found, try to find the user by ID
-            const user = await User.findById(id);
-            if (user) {
-                const response = {
-                    username: user.username,
-                    avatar: user.profilepic,
-                    role: "user",
-                };
-                return res.status(200).json({ user: response });
-            }
+            const venues = await Venue.find({ owner_id: { $in: ownerIds } });
 
-            // If neither is found, return an error response
-            return res.status(400).json({ msg: "User not found" });
-
+            return res.status(200).json(venues);
         } catch (err) {
-            // Catch any unexpected errors
             return res.status(500).json({ msg: err.message });
         }
     },
 
-
-            //   const venue = await Owner.find().sort({$natural:1}).limit(5);
-    getVenue: async (req, res) => {
+    verifyVenue: async (req, res) => {
         try {
+            const { venueId } = req.body;
 
-            const owners = await Owner.find().select('-password -panNumber -fullname -mailverified, -email').limit(4);
-            // console.log("owners:", owners);
-            return res.status(200).json({owners});
-                        
-          
+            const status = await Status.findOne({ owner_id: venueId });
+
+            status.status = 'verified';
+
+            await status.save();
+
+            return res.status(200).json({ msg: 'Venue verified successfully' });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
-    }
+    },
 
+    rejectVenue: async (req, res) => {
+        try {
+            const { venueId, adminComment } = req.body;
 
+            const status = await Status.findOne({ owner_id: venueId });
 
+            status.status = 'rejected';
+            status.admin_comment = adminComment;
+
+            await status.save();
+
+            return res.status(200).json({ msg: 'Venue rejected successfully' });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+
+    viewData: async (req, res) => {
+        try {
+            const owners = await Owner.find();
+            const users = await User.find();
+            const venues = await Venue.find();
+            const bookings = await Booking.find();
+
+            return res.status(200).json({ owners, users, venues, bookings });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+
+    changeStatus: async (req, res) => {
+        try {
+            const { venueId, status } = req.body;
+
+            const venue = await Venue.findById(venueId);
+
+            venue.status = status;
+
+            await venue.save();
+
+            return res.status(200).json({ msg: 'Venue status changed successfully' });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
 };
 
 module.exports = adminCtrl;

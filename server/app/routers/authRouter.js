@@ -4,19 +4,17 @@ const authCtrl = require('../controllers/authCtrl');
 const loginLimiter = require('../middleware/loginLimiter');
 const upload = require("../middleware/multer");
 
-
-// Define route for user registration
 router.post('/register', upload.fields([]), authCtrl.register_user);
-
-// Define route for user login
 router.post('/login', loginLimiter, authCtrl.login);
-router.post('/loginadmin', loginLimiter, authCtrl.login_admin);
 
-// Define route for admin registration with file upload handling
+router.post('/loginadmin', loginLimiter, authCtrl.login_admin);
 router.post('/adminregister', upload.fields([
   { name: 'images', maxCount: 6 },
   { name: 'video', maxCount: 1 }
 ]), authCtrl.register_admin);
+
+router.post('/register-admin', authCtrl.register_admin);
+router.post('/login-admin', authCtrl.login);
 
 router.post('/resetPass', authCtrl.resetPass);
 

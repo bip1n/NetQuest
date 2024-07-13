@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const Owner = require("../models/ownerModel");
 const Booking = require("../models/bookingSchema");
 const moment = require('moment');
+const { compareSync } = require("bcrypt");
 
 
 const userCtrl = {
@@ -9,7 +10,14 @@ const userCtrl = {
     bookvenue: async (req, res) => {
         try {
             // Extract required fields from the request body
-            const { user_id, owner_id, date, price, time, altcontact } = req.body;
+            const user_id = req.user.id
+            console.log(user_id);
+            const { owner_id, date, price, time, altcontact } = req.body;
+            console.log(owner_id);
+            console.log(date);
+            console.log(price);
+            console.log(time);
+            console.log(altcontact);
     
             // Validate required fields
             if (!user_id) return res.status(400).json({ error: "User ID is required." });
@@ -141,6 +149,8 @@ const userCtrl = {
 
         const now = moment();
 
+        console.log("Now:", now);
+
         const pastBookings = [];
         const futureOrPresentBookings = [];
 
@@ -167,6 +177,8 @@ const userCtrl = {
         bookingsWithVenueDetails.forEach(booking => {
             const bookingDate = moment(booking.date);
 
+            console.log("Booking date:", bookingDate);
+
             const formattedDate = bookingDate.format('YYYY/MM/DD');
             const formattedTime = bookingDate.format('HH:mm');
 
@@ -185,6 +197,7 @@ const userCtrl = {
 
         console.log("Past bookings:", pastBookings);
         console.log("Future or present bookings:", futureOrPresentBookings);
+
 
         return res.status(200).json({
             pastBookings,

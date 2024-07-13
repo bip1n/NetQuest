@@ -5,7 +5,7 @@ const verifyToken = require('../middleware/verifyToken');
 
 
 // Define route for user registration
-router.post('/bookvenue', userCtrl.bookvenue);
+router.post('/bookvenue', verifyToken, userCtrl.bookvenue);
 router.get('/userprofile', verifyToken, userCtrl.userprofile);
 router.get('/getBooking', verifyToken, userCtrl.getBooking);
 router.get('/getUserName', verifyToken, userCtrl.getUserName);

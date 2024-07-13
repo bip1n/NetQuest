@@ -3,16 +3,20 @@ const Owner = require("../models/ownerModel");
 const User = require("../models/userModel");
 const Venue = require("../models/venueModel");
 const Booking = require("../models/bookingSchema");
-const Status = require("../models/statusModel");
+const venueStatus = require("../models/venueStatus");
 
 const adminCtrl = {
     getPendingVenue: async (req, res) => {
         try {
-            const pendingStatuses = await Status.find({ status: 'pending' });
+
+            console.log('getPendingVenue');
+            const pendingStatuses = await venueStatus.find({ status: 'pending' });
 
             const ownerIds = pendingStatuses.map(status => status.owner_id);
 
             const venues = await Venue.find({ owner_id: { $in: ownerIds } });
+
+            console.log('venues', venues); 
 
             return res.status(200).json(venues);
         } catch (err) {
@@ -24,7 +28,7 @@ const adminCtrl = {
         try {
             const { venueId } = req.body;
 
-            const status = await Status.findOne({ owner_id: venueId });
+            const status = await venueStatus.findOne({ owner_id: venueId });
 
             status.status = 'verified';
 
@@ -40,7 +44,7 @@ const adminCtrl = {
         try {
             const { venueId, adminComment } = req.body;
 
-            const status = await Status.findOne({ owner_id: venueId });
+            const status = await venueStatus.findOne({ owner_id: venueId });
 
             status.status = 'rejected';
             status.admin_comment = adminComment;

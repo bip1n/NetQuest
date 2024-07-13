@@ -290,7 +290,6 @@ function generateAlphanumericID() {
     return id;
 }
 
-
 const generateUniqueVenueID = async () => {
     let isUnique = false;
     let venueID;

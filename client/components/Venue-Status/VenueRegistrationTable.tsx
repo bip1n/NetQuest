@@ -68,6 +68,7 @@ export const VenueRegistrationTable = () =>  {
                   </Dropdown>
               </span>
             </Tooltip>
+      
           </div>
         );
       default:

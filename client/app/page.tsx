@@ -21,7 +21,7 @@ interface Venue {
 
 const HomePage = () => {
   return (
-    <>
+    <main className="flex flex-col justify-center p-4">
       <UserNavigationbar/>
       <Searchbar />
       <TopRated/>
@@ -29,7 +29,7 @@ const HomePage = () => {
       <AboutUsPage />
       <FAQ />
       <FooterContent />
-    </>
+    </main>
   );
 };
 

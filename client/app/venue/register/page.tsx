@@ -88,7 +88,7 @@ export default function RegisterVenue() {
 
     try {
 
-      const response = await fetch("http://localhost:4000/api/adminregister", {
+      const response = await fetch("http://localhost:4000/api/ownerregister", {
         method: "POST",
         body: formData,
       });

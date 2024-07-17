@@ -29,7 +29,6 @@ import {
 import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
 import { useRouter } from 'next/navigation';
 import Cookies from "js-cookie";
-import axios from "axios";
 
 
 // Define a type for the slot objects
@@ -139,35 +138,19 @@ export default function Booking(props: { venueId: any; }) {
     const selectedSlots = checkedSlots.map((index) => slots[index]);
     const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
 
-    // const bookingData = {
-    //   date: selectedDate.toString(),
-    //   slots: selectedSlots,
-    //   price: totalRate,   
-    //   owner_id: venueId,
-    //   altcontact: "1234567890",
-    // };
-
-    const payload = {
-      "return_url": "http://localhost:3000/user/booking",
-      "website_url": "http://localhost:3000",
-      "amount": totalRate * 100,
-      "purchase_order_id": "test12",
-      "purchase_order_name": "test",
-      "customer_info": {
-          "name": "Khalti Bahadur",
-          "email": "example@gmail.com",
-          "phone": "9800000123"
-      },
-      // "merchant_username": "merchant_name",
-      // "merchant_extra": "merchant_extra"
+    const data = {
+      date: selectedDate.toString(),
+      slots: selectedSlots,
+      price: totalRate,   
+      owner_id: venueId,
+      timestamp: new Date().getTime()
     };
 
-    const response = await axios.post(`http://localhost:4000/api/khalti/payment`, payload);
-    if (response) {
-      window.location.href = `${response?.data?.payment_url}`;
-      // console.log(response.data.payment_url);
-    }
+    localStorage.setItem('Bookdata', JSON.stringify(data));
 
+    router.push('booking/checkout');
+
+  
   };
 
   const selectedSlots = checkedSlots.map((index) => slots[index]);

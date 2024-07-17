@@ -73,7 +73,12 @@ export default function Signin({ onLogin }: SigninProps) {
         // Handle successful sign-in (e.g., redirect to another page)
         handleClose();
         onLogin(); // Notify parent component about the login
-        router.push("/");
+        //get page url
+        const url = window.location.pathname;
+        router.push(url);
+
+       // reload page
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error during sign-in:", error);

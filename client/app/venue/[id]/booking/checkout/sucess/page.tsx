@@ -11,7 +11,6 @@ const sucessPage = () => {
   const { id } = useParams();
   const [status, setStatus] = useState('');
 
-
   useEffect(() => {
     const fetchData = async () => {
       const urlParams = new URLSearchParams(window.location.search);

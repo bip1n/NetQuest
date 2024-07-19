@@ -1,7 +1,6 @@
 "use client"
 import React, { useState } from "react";
 import {Card,CardBody,CardHeader,Accordion, AccordionItem,} from "@nextui-org/react";
-import {AdminNavigationBar} from "@/components/AdminNavigationBar"
 import {PendingVenueStatus} from "@/components/Venue-Status/PendingVenueStatus"
 import {ActiveVenueStatus} from "@/components/Venue-Status/ActiveVenueStatus"
 import {RejectedVenueStatus} from "@/components/Venue-Status/RejectedVenueStatus"
@@ -10,7 +9,6 @@ import {RejectedVenueStatus} from "@/components/Venue-Status/RejectedVenueStatus
 export default function UsersTablePage() {
   return (
    <>
-   <AdminNavigationBar/>
    <div className="p-4">
      <Accordion selectionMode="multiple"  defaultExpandedKeys={["1","2","3"]}>
       <AccordionItem key="1" aria-label="Accordion 1" startContent={<p className="text-primary font-semibold">Pending Venue </p> }>

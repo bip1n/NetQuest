@@ -1,3 +1,4 @@
+import { AdminNavigationBar } from "@/components/Admin/AdminNavigationBar";
 export default function AdminLayout({
     children,
   }: {
@@ -5,6 +6,7 @@ export default function AdminLayout({
   }) {
     return (
       <section>
+        <AdminNavigationBar/>
           {children}
       </section>
     );

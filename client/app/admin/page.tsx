@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, RadioGroup, Radio,Card,CardBody,CardFooter,CardHeader, Link} from "@nextui-org/react";
-import {AdminNavigationBar} from "@/components/AdminNavigationBar"
+import {AdminNavigationBar} from "@/components/Admin/AdminNavigationBar"
 import { PendingVenueStatus } from "@/components/Venue-Status/PendingVenueStatus";
 
 export default function Admin() {
   return (
    <>
-   <AdminNavigationBar/>
+   {/* <AdminNavigationBar/> */}
    <div>
     <Card className="p-4 m-2"> 
       <CardHeader>

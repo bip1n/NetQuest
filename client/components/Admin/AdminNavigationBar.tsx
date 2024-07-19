@@ -11,7 +11,7 @@ import {
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import SigninModel from "./UserSignin";
+import SigninModel from "../UserSignin";
 import {
   Dropdown,
   DropdownTrigger,
@@ -50,7 +50,7 @@ export const AdminNavigationBar = () => {
               <Button variant="bordered"> <Link href={"/admin/venue-status"}> Venue-Status </Link> </Button> 
           </NavbarItem>
           <NavbarItem>
-              <Button variant="bordered"> <Link href={"/admin/report"}> Log Report </Link> </Button> 
+              <Button variant="bordered"> <Link href={"/admin/log-report"}> Log Report </Link> </Button> 
           </NavbarItem>
           <ThemeSwitch />
 

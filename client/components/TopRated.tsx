@@ -62,8 +62,8 @@ export const TopRated = () => {
       {/* <UserNavigationbar /> */}
 
       <Card className="mt-4">
-        <CardHeader>
-          <p className="text-primary-500 font-bold text-xl ml-4">Top Rated🔥</p>
+        <CardHeader className="flex flex-row justify-center">
+          <p className="text-danger-500 font-bold text-xl ml-4 uppercase">Top Rated🔥</p>
         </CardHeader>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2">
           {loading

@@ -6,14 +6,14 @@ import { Card, CardBody,CardHeader } from '@nextui-org/react';
 export const AboutUsPage = () => {
   return (
         <Card>
-          <CardHeader>
-            <p className="text-primary-500 font-bold text-xl ml-4">About NetQuest</p>
+          <CardHeader className='flex flex-row justify-center'>
+            <p className="text-danger-500 font-bold text-xl uppercase">About NetQuest</p>
           </CardHeader>
-          <CardBody className="md:w-1/2 p-6">
-            <p className="mb-6">
+          <CardBody>
+            <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed hendrerit purus vitae lectus tincidunt, sed blandit risus vulputate. Pellentesque ultrices urna sit amet justo finibus, at bibendum ligula tincidunt.
             </p>
-            <p className="mb-6">
+            <p>
               Fusce ultricies augue non orci commodo, ac scelerisque orci vehicula. Duis feugiat justo ac risus finibus, sit amet faucibus enim fermentum.
             </p>
             <p>

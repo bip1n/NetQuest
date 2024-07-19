@@ -4,8 +4,8 @@ import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 export const FeaturedVenue = () => {
   return (
     <Card>
-       <CardHeader>
-          <p className="text-primary-500 font-bold text-xl ml-4">Featured</p>
+       <CardHeader className="flex flex-row justify-center">
+          <p className="text-danger-500 font-bold text-xl ml-4 uppercase">Featured</p>
         </CardHeader>
         <CardBody>
           <CardBody>

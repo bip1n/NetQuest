@@ -47,7 +47,6 @@ export const TopRated = () => {
         const responseData = await response.json();
         setVenues(responseData.owners);
       } catch (error) {
-        console.error("Error fetching venue data:", error);
         setError("An error occurred while fetching venue data.");
       } finally {
         setLoading(false);

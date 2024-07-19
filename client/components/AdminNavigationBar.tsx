@@ -23,6 +23,7 @@ import {
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { Logo } from "@/components/Icons";
+import Link from "next/link";
 
 const isAdmin = true;
 // const [isLogin, setIsLoginTrue] = useState(false);
@@ -42,7 +43,17 @@ export const AdminNavigationBar = () => {
 
       {isAdmin ? (
         <NavbarContent as="div" justify="end">
+          <NavbarItem>
+              <Button variant="bordered"> <Link href={"/admin"}> Home </Link> </Button> 
+          </NavbarItem>
+          <NavbarItem>
+              <Button variant="bordered"> <Link href={"/admin/venue-status"}> Venue-Status </Link> </Button> 
+          </NavbarItem>
+          <NavbarItem>
+              <Button variant="bordered"> <Link href={"/admin/report"}> Log Report </Link> </Button> 
+          </NavbarItem>
           <ThemeSwitch />
+
 
           <Dropdown placement="bottom-end">
             <DropdownTrigger>

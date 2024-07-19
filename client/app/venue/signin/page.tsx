@@ -1,150 +1,176 @@
-"use client";
-import React, { useState } from "react";
-import { useRouter } from 'next/navigation';
-import { Button, Card, CardHeader, CardBody, CardFooter, Divider, Link, Input } from "@nextui-org/react";
-import Cookies from "js-cookie"; // Import js-cookie library
-import { Logo } from "../../../components/Icons";
-import { EyeFilledIcon } from "../../../components/Assets/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "../../../components/Assets/EyeSlashFilledIcon";
-import { FooterContent } from "@/components/Footer";
+"use client"
+import React, { useEffect, useState, useCallback } from 'react';
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip } from "@nextui-org/react";
+import { EditIcon, DeleteIcon, EyeIcon } from "@/components/Icons";
 
-export default function RegisterVenue() {
-  const router = useRouter();
-  const [isVisible, setIsVisible] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [venueID, setVenueID] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+type Venue = {
+  _id: string;
+  owner_id: string;
+  images: string[];
+  venueID: string;
+  status: 'active' | 'rejected' | 'pending';
+  fullname?: string;
+  email?: string;
+  venueName?: string;
+  location?: string;
+};
 
-  const toggleVisibility = () => setIsVisible(!isVisible);
+const columns = [
+  { name: "OWNER", uid: "ownerID" },
+  { name: "VENUE", uid: "venueID" },
+  { name: "STATUS", uid: "status" },
+  { name: "ACTIONS", uid: "actions" },
+];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    setLoading(true);
-    setError(""); // Clear any existing errors
+const statusColorMap: { [key in Venue['status']]: 'success' | 'danger' | 'primary' } = {
+  active: "success",
+  rejected: "danger",
+  pending: "primary",
+};
 
+export const RejectedVenueStatus: React.FC = () => {
+  const [venues, setVenues] = useState<Venue[]>([]);
+  
+  useEffect(() => {
+    const fetchVenues = async () => {
+      try {
+        console.log("Fetching rejected venues");
+        const response = await fetch("http://localhost:4000/api/rejectVenue", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data: Venue[] = await response.json();
+        console.log(data);
+        setVenues(data);
+      } catch (error) {
+        console.error('Error fetching venue data:', error);
+      }
+    };
+
+    fetchVenues();
+  }, []);
+
+  const handleVerify = async (id: string) => {
     try {
-      const response = await fetch("http://localhost:4000/api/loginowner", {
+      const response = await fetch("http://localhost:4000/api/verifyVenue", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password, venueID })
+        body: JSON.stringify({ id })
       });
 
       if (!response.ok) {
-        const errorResponse = await response.json();
-        setError(errorResponse.error || "Failed to login. Please try again.");
-      } else {
-        // Handle successful login
-        const responseData = await response.json();
-        console.log("Login successful:", responseData);
-
-        // Set cookies with high security
-        Cookies.set('__securedAccess', responseData.access_token, { 
-          expires: 7, // token expiry in days
-          secure: true,
-          sameSite: 'strict',
-          path: '/',
-        });
-        Cookies.set('__securedRefresh', responseData.refresh_token, { 
-          expires: 30, // refresh token expiry in days
-          secure: true,
-          sameSite: 'strict',
-          path: '/',
-        });
-
-        // Redirect to the dashboard or home page after successful login
-        router.push(`/venue/${venueID}/`); // Replace with your desired route
+        throw new Error('Network response was not ok');
       }
+
+      // Update the venues state after verification
+      setVenues(venues.map(venue => venue._id === id ? { ...venue, status: 'active' } : venue));
     } catch (error) {
-      console.error("Error submitting form:", error);
-      setError("Failed to login. Please try again.");
-    } finally {
-      setLoading(false);
-      console.log("Form submission complete.");
+      console.error('Error verifying venue:', error);
     }
   };
 
+  const handleReject = async (id: string) => {
+    try {
+      const response = await fetch("http://localhost:4000/api/rejectVenue", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      // Update the venues state after rejection
+      setVenues(venues.map(venue => venue._id === id ? { ...venue, status: 'rejected' } : venue));
+    } catch (error) {
+      console.error('Error rejecting venue:', error);
+    }
+  };
+
+  const renderCell = useCallback((venue: Venue, columnKey: string) => {
+    if (columnKey === "actions") {
+      return (
+        <div className="relative flex items-center gap-2">
+          <Tooltip content="Details">
+            <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+              <EyeIcon />
+            </span>
+          </Tooltip>
+          <Tooltip content="Verify venue">
+            <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => handleVerify(venue._id)}>
+              <EditIcon />
+            </span>
+          </Tooltip>
+          <Tooltip color="danger" content="Reject venue">
+            <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => handleReject(venue._id)}>
+              <DeleteIcon />
+            </span>
+          </Tooltip>
+        </div>
+      );
+    }
+
+    const cellValue = venue[columnKey as keyof Venue];
+    switch (columnKey) {
+      case "ownerID":
+        return (
+          <User
+            avatarProps={{ radius: "lg", src: venue.images[0] }}
+            name={venue.fullname}
+            description={venue.email}
+          />
+        );
+      case "venueID":
+        return (
+          <>
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">{venue.venueName}</p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">{venue.location}</p>
+            </div>
+          </>
+        );
+      case "status":
+        return (
+          <Chip className="capitalize" color={statusColorMap[venue.status]} size="sm" variant="flat">
+            {cellValue || 'rejected'}
+          </Chip>
+        );
+      default:
+        return cellValue;
+    }
+  }, [venues]);
+
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <Card className="w-full min-w-[400px] md:min-w-[500px] max-w-[500px]">
-          <CardHeader className="flex gap-3">
-            <Link color="foreground" href="/">
-              <span><Logo /></span>
-              <p className="font-bold text-inherit mt-1">NetQuest</p>
-            </Link>
-          </CardHeader>
-          <CardHeader className="flex justify-between items-center">
-            <p className="font-bold text-inherit mt-1">Login into your Venue</p>
-          </CardHeader>
-
-          <CardBody>
-            <Input
-              fullWidth
-              type="email"
-              label="Email"
-              value={email}
-              required
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </CardBody>
-
-          <CardBody>
-            <Input
-              type={isVisible ? "text" : "password"}
-              label="Password"
-              value={password}
-              required
-              onChange={(e) => setPassword(e.target.value)}
-              endContent={
-                <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                  {isVisible ? (
-                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                  ) : (
-                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                  )}
-                </button>
-              }
-            />
-          </CardBody>
-
-          <CardBody>
-            <Input
-              fullWidth
-              type="text"
-              label="Venue ID"
-              value={venueID}
-              required
-              onChange={(e) => setVenueID(e.target.value)}
-            />
-          </CardBody>
-
-          {error && (
-            <CardBody>
-              <p className="text-red-500">{error}</p>
-            </CardBody>
-          )}
-
-          <CardFooter className="flex justify-center">
-            <Button
-              color="primary"
-              radius="lg"
-              className="w-full"
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : "Login"}
-            </Button>
-          </CardFooter>
-
-          <Divider />
-        </Card>
-      </form>
-      <FooterContent />
-    </>
+    <Table removeWrapper aria-label="Example table with custom cells">
+      <TableHeader columns={columns}>
+        {(column) => (
+          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
+            {column.name}
+          </TableColumn>
+        )}
+      </TableHeader>
+      <TableBody items={venues}>
+        {(item) => (
+          <TableRow key={item._id}>
+            {(columnKey) => <TableCell>{renderCell(item, String(columnKey))}</TableCell>}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
-}
+};

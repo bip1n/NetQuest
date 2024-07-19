@@ -9,6 +9,10 @@ type Venue = {
   images: string[];
   venueID: string;
   status: 'active' | 'rejected' | 'pending';
+  fullname?: string;
+  email?: string;
+  venueName?: string;
+  location?: string;
 };
 
 const columns = [
@@ -26,11 +30,11 @@ const statusColorMap: { [key in Venue['status']]: 'success' | 'danger' | 'primar
 
 export const RejectedVenueStatus: React.FC = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
-
+  
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        console.log("Fetching pending venues");
+        console.log("Fetching rejected venues");
         const response = await fetch("http://localhost:4000/api/rejectVenue", {
           method: "POST",
           headers: {
@@ -44,7 +48,6 @@ export const RejectedVenueStatus: React.FC = () => {
         }
 
         const data: Venue[] = await response.json();
-
         console.log(data);
         setVenues(data);
       } catch (error) {
@@ -121,30 +124,26 @@ export const RejectedVenueStatus: React.FC = () => {
     }
 
     const cellValue = venue[columnKey as keyof Venue];
-
     switch (columnKey) {
       case "ownerID":
         return (
           <User
-          avatarProps={{ radius: "lg", src: venue.images[0] }}
-          name={venue.fullname}
-          description= {venue.email}
-          >
-          </User>
+            avatarProps={{ radius: "lg", src: venue.images[0] }}
+            name={venue.fullname}
+            description={venue.email}
+          />
         );
       case "venueID":
         return (
           <>
-           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{venue.venueName}</p>
-          </div>
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{venue.location}</p>
-        </div>
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">{venue.venueName}</p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">{venue.location}</p>
+            </div>
           </>
-         
         );
-
       case "status":
         return (
           <Chip className="capitalize" color={statusColorMap[venue.status]} size="sm" variant="flat">

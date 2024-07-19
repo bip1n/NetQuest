@@ -20,7 +20,7 @@ import {
   CardFooter
 } from "@nextui-org/react";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 
 const CheckoutPage = () => {
@@ -36,7 +36,7 @@ const CheckoutPage = () => {
     const Bookedprice = venuedata.price;
     const owner = venuedata.owner_id;
     const payload = {
-      "return_url": "http://localhost:3000/venue/"+ owner +"/booking/checkout/sucess",
+      "return_url": "http://localhost:4000/api/khalti/response",
       "website_url": "http://localhost:3000",
       "amount": Bookedprice * 100,
       "purchase_order_id": "test12",

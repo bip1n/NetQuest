@@ -207,6 +207,8 @@ const bothCtrl = {
                 user_id: booking.user_id
             }));
     
+
+            
             return res.status(200).json({
                 venue: venue.name,
                 date: date,

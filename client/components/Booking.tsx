@@ -30,6 +30,7 @@ import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
 import { useRouter } from 'next/navigation';
 import Cookies from "js-cookie";
 
+
 // Define a type for the slot objects
 interface Slot {
   time: string;
@@ -137,33 +138,19 @@ export default function Booking(props: { venueId: any; }) {
     const selectedSlots = checkedSlots.map((index) => slots[index]);
     const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
 
-    const bookingData = {
+    const data = {
       date: selectedDate.toString(),
       slots: selectedSlots,
       price: totalRate,   
       owner_id: venueId,
-      altcontact: "1234567890",
+      timestamp: new Date().getTime()
     };
 
-    try {
-   
-      const response = await fetch(`http://localhost:4000/api/bookvenue`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("__securedAccess")}`,
-        },
-        body: JSON.stringify(bookingData),
-      });
+    localStorage.setItem('Bookdata', JSON.stringify(data));
 
-      if (!response.ok) {
-        throw new Error("Failed to book slots");
-      }
+    router.push('booking/checkout');
 
-      router.push("/venue/booking/checkout");
-    } catch (error) {
-      console.error("Error booking slots:", error);
-    }
+  
   };
 
   const selectedSlots = checkedSlots.map((index) => slots[index]);

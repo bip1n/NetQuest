@@ -126,21 +126,29 @@ export const ActiveVenueStatus: React.FC = () => {
       case "ownerID":
         return (
           <User
-            avatarProps={{ radius: "lg", src: venue.images[0] }}
-            name={venue.owner_id}
+          avatarProps={{ radius: "lg", src: venue.images[0] }}
+          name={venue.fullname}
+          description= {venue.email}
           >
           </User>
         );
       case "venueID":
         return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+          <>
+           <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{venue.venueName}</p>
           </div>
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{venue.location}</p>
+        </div>
+          </>
+         
         );
+
       case "status":
         return (
           <Chip className="capitalize" color={statusColorMap[venue.status]} size="sm" variant="flat">
-            {cellValue || 'pending'}
+            {cellValue || 'active'}
           </Chip>
         );
       default:

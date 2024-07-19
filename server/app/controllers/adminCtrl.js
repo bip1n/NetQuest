@@ -8,17 +8,33 @@ const venueStatus = require("../models/venueStatus");
 const adminCtrl = {
     getPendingVenue: async (req, res) => {
         try {
-
-            console.log('getPendingVenue');
             const pendingStatuses = await venueStatus.find({ status: 'pending' });
 
             const ownerIds = pendingStatuses.map(status => status.owner_id);
 
             const venues = await Venue.find({ owner_id: { $in: ownerIds } });
 
-            console.log('venues', venues); 
+            const owners = await Owner.find({ _id: { $in: ownerIds } });
 
-            return res.status(200).json(venues);
+            const detailedVenues = venues.map(venue => {
+                const owner = owners.find(owner => owner._id.toString() === venue.owner_id.toString());
+                return {
+                    _id: venue._id,
+                    owner_id: venue.owner_id,
+                    venueID: venue.venueID,
+                    images: venue.images,
+                    videos: venue.videos,
+                    amenities: venue.amenities,
+                    reviews: venue.reviews,
+                    fullname: owner.fullname,
+                    email: owner.email,
+                    venueName: owner.venueName,
+                    location: owner.location,
+                    __v: venue.__v
+                };
+            });
+
+            return res.status(200).json(detailedVenues);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
@@ -26,15 +42,33 @@ const adminCtrl = {
 
     verifyVenue: async (req, res) => {
         try {
-            const { venueId } = req.body;
+            const pendingStatuses = await venueStatus.find({ status: 'verified' });
 
-            const status = await venueStatus.findOne({ owner_id: venueId });
+            const ownerIds = pendingStatuses.map(status => status.owner_id);
 
-            status.status = 'verified';
+            const venues = await Venue.find({ owner_id: { $in: ownerIds } });
 
-            await status.save();
+            const owners = await Owner.find({ _id: { $in: ownerIds } });
 
-            return res.status(200).json({ msg: 'Venue verified successfully' });
+            const detailedVenues = venues.map(venue => {
+                const owner = owners.find(owner => owner._id.toString() === venue.owner_id.toString());
+                return {
+                    _id: venue._id,
+                    owner_id: venue.owner_id,
+                    venueID: venue.venueID,
+                    images: venue.images,
+                    videos: venue.videos,
+                    amenities: venue.amenities,
+                    reviews: venue.reviews,
+                    fullname: owner.fullname,
+                    email: owner.email,
+                    venueName: owner.venueName,
+                    location: owner.location,
+                    __v: venue.__v
+                };
+            });
+
+            return res.status(200).json(detailedVenues);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
@@ -42,16 +76,33 @@ const adminCtrl = {
 
     rejectVenue: async (req, res) => {
         try {
-            const { venueId, adminComment } = req.body;
+            const pendingStatuses = await venueStatus.find({ status: 'rejected' });
 
-            const status = await venueStatus.findOne({ owner_id: venueId });
+            const ownerIds = pendingStatuses.map(status => status.owner_id);
 
-            status.status = 'rejected';
-            status.admin_comment = adminComment;
+            const venues = await Venue.find({ owner_id: { $in: ownerIds } });
 
-            await status.save();
+            const owners = await Owner.find({ _id: { $in: ownerIds } });
 
-            return res.status(200).json({ msg: 'Venue rejected successfully' });
+            const detailedVenues = venues.map(venue => {
+                const owner = owners.find(owner => owner._id.toString() === venue.owner_id.toString());
+                return {
+                    _id: venue._id,
+                    owner_id: venue.owner_id,
+                    venueID: venue.venueID,
+                    images: venue.images,
+                    videos: venue.videos,
+                    amenities: venue.amenities,
+                    reviews: venue.reviews,
+                    fullname: owner.fullname,
+                    email: owner.email,
+                    venueName: owner.venueName,
+                    location: owner.location,
+                    __v: venue.__v
+                };
+            });
+
+            return res.status(200).json(detailedVenues);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }

@@ -1,6 +1,7 @@
 {
   "name": "netquest",
   "version": "1.0.0",
+  "type": "module",
   "description": "Futsal booking system",
   "scripts": {
     "start:client": "cd client && npm run dev",
@@ -17,6 +18,7 @@
     "framer-motion": "^11.2.10",
     "history": "^5.3.0",
     "package": "^1.0.1",
+    "punycode": "^2.3.1",
     "react-responsive-carousel": "^3.2.23"
   },
   "devDependencies": {

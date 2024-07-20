@@ -12,27 +12,13 @@ export default function UsersTablePage() {
    <div className="p-4">
      <Accordion selectionMode="multiple"  defaultExpandedKeys={["1","2","3"]}>
       <AccordionItem key="1" aria-label="Accordion 1" startContent={<p className="text-primary font-semibold">Pending Venue </p> }>
-        
-         <Card className="mb-8 mt-4">
-          <CardBody>
             <PendingVenueStatus/>
-          </CardBody>
-        </Card>
       </AccordionItem>
       <AccordionItem key="2" aria-label="Accordion 2" startContent={<p className="text-success font-semibold">Active Venue </p> }>
-          <Card className="mb-8">
-            <CardBody>
-              <ActiveVenueStatus/>
-            </CardBody>
-          </Card>
+          <ActiveVenueStatus/>
       </AccordionItem>
       <AccordionItem key="3" aria-label="Accordion 3" startContent={<p className="text-danger font-semibold">Rejected Venue </p>}>
-        {/* {defaultContent} */}
-          <Card className="mb-8">
-            <CardBody>
-              <RejectedVenueStatus />
-            </CardBody>
-          </Card>
+        <RejectedVenueStatus />
       </AccordionItem>
     </Accordion>
    </div>

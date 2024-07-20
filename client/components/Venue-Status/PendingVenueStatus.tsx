@@ -142,7 +142,7 @@ export const PendingVenueStatus: React.FC = () => {
 
       case "status":
         return (
-          <Chip className="capitalize" color={statusColorMap[venue.status]} size="sm" variant="flat">
+          <Chip className="capitalize" color="warning" size="sm" variant="flat">
             {cellValue || 'pending'}
           </Chip>
         );

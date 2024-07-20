@@ -15,10 +15,6 @@ import {
   Table,
   Chip,
   Checkbox,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
   CardFooter,
   Modal,
   ModalContent,
@@ -30,11 +26,10 @@ import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
 import { useRouter } from 'next/navigation';
 import Cookies from "js-cookie";
 
-
 // Define a type for the slot objects
 interface Slot {
   time: string;
-  price: number; // Rate is now required and defaults to 800
+  price: number; // Rate is now required and defaults to 1800
   status: string;
 }
 
@@ -87,7 +82,6 @@ export default function Booking(props: { venueId: any; }) {
             ...slot,
             status: bookedSlot.status,
             price: bookedSlot.price || slot.price, // Use the booked rate or default to the slot's rate
-            user_id: bookedSlot.user_id
           };
         }
         return slot;
@@ -137,24 +131,25 @@ export default function Booking(props: { venueId: any; }) {
   const handleBooking = async () => {
     const selectedSlots = checkedSlots.map((index) => slots[index]);
     const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
-
+    const selectedTimes = selectedSlots.map(slot => slot.time);
+  
     const data = {
       date: selectedDate.toString(),
       slots: selectedSlots,
       price: totalRate,   
       owner_id: venueId,
-      timestamp: new Date().getTime()
+      timestamp: new Date().getTime(),
+      times: selectedTimes, // Adding the selected times here
     };
-
-    localStorage.setItem('Bookdata', JSON.stringify(data));
-
-    router.push('booking/checkout');
-
   
+    localStorage.setItem('Bookdata', JSON.stringify(data));
+  
+    router.push('booking/checkout');
   };
 
   const selectedSlots = checkedSlots.map((index) => slots[index]);
   const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
+  const selectedTimes = selectedSlots.map(slot => slot.time);
 
   return (
     <>
@@ -257,6 +252,7 @@ export default function Booking(props: { venueId: any; }) {
                     </p>
                   ))}
                   <p>Total: Rs. {totalRate}</p>
+                  <p>Selected Times: {selectedTimes.join(", ")}</p> {/* Display selected times here */}
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={() => { 

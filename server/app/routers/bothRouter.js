@@ -15,6 +15,7 @@ router.get('/venue/:id/slots', bothCtrl.getVenueSlots);
 
 router.post("/khalti/payment", async (req, res) => {
     const payload = req.body;
+    console.log(payload);
     var options = {
     'method': 'POST',
     'url': 'https://a.khalti.com/api/v2/epayment/initiate/',
@@ -27,6 +28,7 @@ router.post("/khalti/payment", async (req, res) => {
     request(options, function (error, response) {
         if (error) throw new Error(error);
         if (response.statusCode == 200) {
+            console.log('Success:', JSON.parse(response.body));
             return res.status(200).json(JSON.parse(response.body));
         }else{
             return res.status(400).json(JSON.parse(response.body));
@@ -74,13 +76,17 @@ router.get("/khalti/response", async (req, res) => {
         if (error) throw new Error(error);
         const responseBody = JSON.parse(response.body);
         if (response.statusCode === 200) {
-            console.log('Success:', responseBody);
-            const redirectUrl = `http://localhost:3000/venue/success?pidx=${responseBody.pidx}&transaction_id=${responseBody.transaction_id}&status=${responseBody.status}`;
-            return res.redirect(redirectUrl);
+            // console.log('Success:', responseBody);
+            if (responseBody.status === 'Completed') {
+                console.log('Payment successful');
+            }
+            // const redirectUrl = `http://localhost:3000/venue/success?pidx=${responseBody.pidx}&transaction_id=${responseBody.transaction_id}&status=${responseBody.status}`;
+            // return res.redirect(redirectUrl);
         } else {
-            console.error('Error:', JSON.parse(response.body));
-            const redirectUrl = `http://localhost:3000/venue/success?detail=${responseBody.detail}&error_key=${responseBody.error_key}`;
-            return res.redirect(redirectUrl);
+            // console.error('Error:', JSON.parse(response.body));
+            // const redirectUrl = `http://localhost:3000/venue/success?detail=${responseBody.detail}&error_key=${responseBody.error_key}`;
+            // return res.redirect(redirectUrl);
+
         }
     })
 });

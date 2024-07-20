@@ -20,7 +20,9 @@ import {
   CardFooter
 } from "@nextui-org/react";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+
 
 
 const CheckoutPage = () => {
@@ -33,12 +35,17 @@ const CheckoutPage = () => {
   };
 
   const handleKhaltiClick = async () => {
-    const Bookedprice = venuedata.price;
-    const owner = venuedata.owner_id;
+    const price = venuedata.price;
+    const owner_id = venuedata.owner_id;
+    const date = new Date(venuedata.date);
+    const times = venuedata.times;
+    const time = times[0];
+    // const time = new Date().getTime()
+    const altcontact = '9840000000';
     const payload = {
-      "return_url": "http://localhost:3000/venue/"+ owner +"/booking/checkout/sucess",
+      "return_url": "http://localhost:4000/api/khalti/response",
       "website_url": "http://localhost:3000",
-      "amount": Bookedprice * 100,
+      "amount": price * 100,
       "purchase_order_id": "test12",
       "purchase_order_name": "test",
       "customer_info": {
@@ -49,11 +56,43 @@ const CheckoutPage = () => {
       // "merchant_username": "merchant_name",
       // "merchant_extra": "merchant_extra"
     };
-
     const response = await axios.post(`http://localhost:4000/api/khalti/payment`, payload);
-    if (response) {
-      window.location.href = `${response?.data?.payment_url}`;
+  
+
+    if (response) { const popup = window.open(response?.data?.payment_url, "paymentPopup", "width=600,height=600");    }
+
+    // get user_id from cookie
+
+    const pidx = response?.data?.pidx;
+
+
+
+
+    const token = Cookies.get("__securedAccess");
+    if (token) {
+      try {
+        
+        const response2 = await fetch("http://localhost:4000/api/bookvenue", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({price, date, owner_id, time, altcontact, pidx})
+        });
+
+        if (!response2.ok) {
+          const errorResponse = await response2.json();
+          console.log(errorResponse);
+        } else {
+          const responseData = await response2.json();
+          console.log(responseData);
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
     }
+
 
   };
 
@@ -63,7 +102,9 @@ const CheckoutPage = () => {
 
 
   useEffect(() => {
+    console.log('useEffect');
     const storedData = localStorage.getItem('Bookdata');
+    console.log(storedData);
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       const currentTime = new Date().getTime();
@@ -74,7 +115,7 @@ const CheckoutPage = () => {
         setvenuedataData(parsedData);
       } else {
         // setvenuedataData('Data has expired');
-        localStorage.removeItem('data');
+        localStorage.removeItem('Bookdata');
         const owner = venuedata.owner_id;
         router.push('/venue/'+ owner);
       }
@@ -86,7 +127,7 @@ const CheckoutPage = () => {
 
   return (
     <>
-      <UserNavigationbar />
+      {/* <UserNavigationbar /> */}
       <Card>
         <CardHeader>
           <p className="text-secondary text-lg font-medium">Booking Confirmation</p>

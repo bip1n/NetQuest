@@ -9,58 +9,55 @@ const userCtrl = {
 
     bookvenue: async (req, res) => {
         try {
-            // Extract required fields from the request body
+
             const user_id = req.user.id
+            const { owner_id, date, price, time, altcontact, pidx } = req.body;
+            const dateObj = new Date(date);
+            const formattedDate = dateObj.toISOString().slice(0, 10);
+
             console.log(user_id);
-            const { owner_id, date, price, time, altcontact } = req.body;
             console.log(owner_id);
-            console.log(date);
+            console.log(formattedDate);
             console.log(price);
             console.log(time);
             console.log(altcontact);
+            console.log(pidx);
     
-            // Validate required fields
             if (!user_id) return res.status(400).json({ error: "User ID is required." });
             if (!owner_id) return res.status(400).json({ error: "Owner ID is required." });
-            if (!date) return res.status(400).json({ error: "Date is required." });
+            if (!formattedDate) return res.status(400).json({ error: "Date is required." });
             if (!price) return res.status(400).json({ error: "Price is required." });
             if (!time) return res.status(400).json({ error: "Time is required." });
             if (!altcontact) return res.status(400).json({ error: "Alternative contact number is required." });
     
-            // Validate User
             const user = await User.findById(user_id);
             if (!user) return res.status(404).json({ error: "User not found." });
-    
-            // Validate Owner
-            const owner = await Owner.findById(owner_id);  // Assuming Owner ID is provided correctly
+
+                const owner = await Owner.findById(owner_id); 
             if (!owner) return res.status(404).json({ error: "Owner not found." });
     
-            // Check for existing booking on the same date and time
             const conflictingBooking = await Booking.findOne({
                 owner_id: owner_id,
-                date: new Date(date),  // Match date
-                time: time             // Match time
+                date: new Date(formattedDate),  
+                time: time         
             });
     
             if (conflictingBooking) {
                 return res.status(409).json({ error: "A booking already exists for the specified date and time." });
             }
     
-            // Create new booking
             const newBooking = new Booking({
                 owner_id: owner_id,
-                date: new Date(date),
+                date: new Date(formattedDate),
                 time: time,
                 price: price,
                 altcontact: altcontact,
-                status: 'available',  // Default status or could be derived from input
+                status: 'available', 
                 user_id: user_id
             });
     
-            // Save to the database
             await newBooking.save();
     
-            // Return the created booking
             return res.status(201).json(newBooking);
         } catch (err) {
             console.error(err);

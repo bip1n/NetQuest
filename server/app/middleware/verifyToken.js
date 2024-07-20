@@ -9,6 +9,8 @@ async function verifyToken(req, res, next) {
     // Extracting the Bearer token from the 'Authorization' header
     const { authorization: BearerToken } = req.headers;
 
+    console.log("BearerToken", BearerToken);
+
     // Splitting the Bearer token to extract the actual token value
     const tokenSpace = BearerToken ? BearerToken.split(' ') : [];
     const token = tokenSpace[1];

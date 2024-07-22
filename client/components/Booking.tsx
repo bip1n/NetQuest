@@ -154,7 +154,7 @@ export default function Booking(props: { venueId: any; }) {
   return (
     <>
       <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
-        <CardBody>
+        <div>
           <div className="flex mb-4 items-center gap-4">
             <DatePicker
               label={"Select Date"}
@@ -217,14 +217,14 @@ export default function Booking(props: { venueId: any; }) {
               <p className="text-center text-danger-500">No slots available for the selected date.</p>
             )
           )}
-          <CardFooter>
+          <div>
             <p className="italic text-xs">
               <span className="text-red-500"> * </span>The{" "}
               <span className="text-orange-500">RESERVED</span> slot might change
               later.<span className="text-red-500"> *</span>
             </p>
-          </CardFooter>
-        </CardBody>
+          </div>
+        </div>
       </div>
       <div className="flex flex-col gap-2">
         <Modal

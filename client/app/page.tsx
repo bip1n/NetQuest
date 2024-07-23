@@ -17,11 +17,9 @@ interface Venue {
   price: number;
   profilepic: string;
 }
-
-
 const HomePage = () => {
   return (
-    <main className="flex flex-col justify-center p-4">
+    <main className="flex flex-col justify-center">
       <UserNavigationbar/>
       <Searchbar />
       <TopRated/>

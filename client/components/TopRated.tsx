@@ -117,7 +117,7 @@ export const TopRated = () => {
                         radius="full"
                         size="sm"
                         variant="solid"
-                        onClick={() => router.push(`/venue/${venue._id}`)}
+                        onClick={() => router.push(`/${venue._id}`)}
                       >
                         Book Now
                       </Button>

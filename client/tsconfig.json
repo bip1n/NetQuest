@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Slider.jsx", "components/Amenities.jsx", "components/CustomCheckbox.jsx", "components/Venue-Status/PendingVenueStatus.tsx", "app/admin/log-report/data.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Slider.jsx", "components/Amenities.jsx", "components/CustomCheckbox.jsx", "components/Venue-Status/PendingVenueStatus.tsx", "app/(admin)/admin/log-report/data.js"],
   "exclude": ["node_modules"]
 }

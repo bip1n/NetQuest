@@ -136,6 +136,53 @@ const adminCtrl = {
             return res.status(500).json({ msg: err.message });
         }
     },
+
+    admin_details: async (req, res) => {
+        try {
+          const bookings = await Booking.find();
+          const owners = await Owner.find();
+          const users = await User.find();
+      
+          const totalUsers = users.length;
+          const registeredVenues = owners.length;
+          const totalTransactions = bookings.reduce((acc, booking) => acc + booking.price, 0);
+      
+          const earningsMap = bookings.reduce((acc, booking) => {
+            const ownerId = booking.owner_id.toString();
+            if (!acc[ownerId]) {
+              acc[ownerId] = 0;
+            }
+            acc[ownerId] += booking.price;
+            return acc;
+          }, {});
+      
+      
+          const ownersMap = owners.reduce((acc, owner) => {
+            acc[owner._id.toString()] = owner;
+            return acc;
+          }, {});
+      
+          const topEarningVenues = Object.keys(earningsMap).map(ownerId => {
+            const owner = ownersMap[ownerId];
+            return {
+              name: owner.venueName,
+              location: owner.location,
+              earnings: earningsMap[ownerId],
+              avatar: owner.profilepic,
+              initials: owner.fullname.split(' ').map(name => name[0]).join('')
+            };
+          });
+      
+          topEarningVenues.sort((a, b) => b.earnings - a.earnings);
+      
+          return res.status(200).json({ totalTransactions, topEarningVenues, totalUsers, registeredVenues });
+        } catch (err) {
+          return res.status(500).json({ msg: err.message });
+        }
+      }
+      
+      
+
 };
 
 module.exports = adminCtrl;

@@ -59,12 +59,11 @@ export const VenueOwnerNavbar = () => {
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
         <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
           <Link
-            href="/venue/dashboard"
-            className="flex items-center gap-2 text-lg font-semibold md:text-base text-default-900"
-          >
-            <Logo />
-            <span className="sr-only">NetQuest</span>
-          </Link>
+              href="/venue/dashboard"
+              className="flex items-center gap-2 text-xl font-bold md:text-base text-default-900 mr-8"
+            ><Logo />
+              <p className="font-bold text-inherit">NetQuest</p>
+            </Link>
           {navLinks.map((navLink) => (
             <Link
               key={navLink.item}
@@ -84,13 +83,12 @@ export const VenueOwnerNavbar = () => {
           </SheetTrigger>
           <SheetContent side="left">
             <nav className="grid gap-6 text-lg font-medium">
-              <Link
-                href="/venue/dashboard"
-                className="flex items-center gap-2 text-lg font-semibold text-default-900"
-              >
-                <Logo />
-                <span className="sr-only">NetQuest</span>
-              </Link>
+            <Link
+              href="/venue/dashboard"
+              className="flex items-center gap-2 text-lg font-bold md:text-base text-default-900 mr-8"
+            ><Logo />
+              <p className="font-bold text-inherit">NetQuest</p>
+            </Link>
               {navLinks.map((navLink) => (
                 <Link
                   key={navLink.item}

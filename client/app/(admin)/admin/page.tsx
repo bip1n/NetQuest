@@ -88,14 +88,14 @@ const Dashboard = () => {
               <CardContent>
                 <div className="flex flex-row justify-between">
                   <div>
-                    <div className="text-2xl font-bold flex flex-row">
+                    <div className="text-2xl text-success font-bold flex flex-row">
                       Rs. {totalTransactions}
                     </div>
                   </div>
                   <div>
                     <Button variant="outline" asChild size="sm" className="ml-auto gap-1">
                       <Link href="#">
-                        View Venue Wise
+                        View Stats
                         <ArrowUpRight className="h-4 w-4" />
                       </Link>
                     </Button>
@@ -111,10 +111,21 @@ const Dashboard = () => {
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+{totalUsers}</div>
-                <p className="text-xs text-muted-foreground">
-                  +180.1% from last month
-                </p>
+                <div className="flex flex-row justify-between">
+                  <div>
+                    <div className="text-2xl font-bold text-secondary flex flex-row">
+                      {totalUsers}
+                    </div>
+                  </div>
+                  <div>
+                    <Button variant="outline" asChild size="sm" className="ml-auto gap-1">
+                      <Link href="#">
+                        View Users
+                        <ArrowUpRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-01-chunk-2">
@@ -123,7 +134,21 @@ const Dashboard = () => {
                 <House className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{registeredVenues}</div>
+                <div className="flex flex-row justify-between">
+                  <div>
+                    <div className="text-2xl font-bold text-secondary flex flex-row">
+                     {registeredVenues}
+                    </div>
+                  </div>
+                  <div>
+                    <Button variant="outline" asChild size="sm" className="ml-auto gap-1">
+                      <Link href="#">
+                        View All
+                        <ArrowUpRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -139,7 +164,7 @@ const Dashboard = () => {
               </div>
               <Button asChild size="sm" className="ml-auto gap-1">
                 <Link href="/admin/venue-status">
-                  Show All Venues
+                  Show All
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -167,7 +192,7 @@ const Dashboard = () => {
                       {venue.location}
                     </p>
                   </div>
-                  <div className="ml-auto font-medium">Rs. {venue.earnings}</div>
+                  <div className="ml-auto text-success font-medium">Rs. {venue.earnings}</div>
                 </div>
               ))}
             </CardContent>

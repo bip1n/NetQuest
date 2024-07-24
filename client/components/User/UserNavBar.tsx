@@ -92,6 +92,11 @@ export const UserNavBar = () => {
       window.location.reload(); // Reload the page after logout
     };
 
+    if ( loginStatus && loading) {
+      return  <Skeleton className="flex rounded-full w-12 h-12" />;
+    }
+
+
 
   return (
     <div className="flex flex-col">
@@ -161,13 +166,8 @@ export const UserNavBar = () => {
               <ThemeSwitch /> 
               { loginStatus && loading?
                 <>
-                <Signin onLogin={handleLoginStateChange} />
-                </>
-                :
-                loginStatus && loading?
-                <>
-                <Skeleton className="flex rounded-full w-12 h-12" />
-                </>
+                  <Skeleton className="flex rounded-full w-12 h-12" />
+                  </>
                 :
                 loginStatus && userDetails ?(
                 <>

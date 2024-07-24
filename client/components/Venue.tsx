@@ -20,7 +20,7 @@ import Image from 'next/image';
 interface Venue {
     _id: number;
     venueName: string;
-    location: string;
+    mapCoord: string;
     rating: number;
     price: number;
     profilepic: string;
@@ -49,6 +49,7 @@ const Venue = () => {
     
             const responseData = await response.json();
             setVenues(responseData.owners);
+            console.log("Venue data fetched:", responseData.owners);
           } catch (error) {
             setError("An error occurred while fetching venue data.");
           } finally {
@@ -59,8 +60,10 @@ const Venue = () => {
         fetchVenues();
       }, []);
 
+      
+
   return (
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
+          <div className="grid gap-8  md:gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {loading
             ? Array.from({ length: 4 }).map((_, index) => (
                 <Card key={index}>
@@ -83,7 +86,7 @@ const Venue = () => {
                 <CardContent>
                     <div className="w-full h-48 overflow-hidden relative">
                         <Image
-                            src="https://images.unsplash.com/photo-1566389437851-a35bddb62402?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fDE2JTNBOXxlbnwwfHwwfHx8MA%3D%3D"
+                            src="https://goalnepal.com/uploads/news/1626144627.jpg"
                             alt="Transaction"
                             layout="intrinsic"
                             width={500}
@@ -101,7 +104,7 @@ const Venue = () => {
                             </div>
                         </div>
                         <div className="text-sm font-normal flex flex-row uppercase">
-                            {venue.location}
+                            {venue.mapCoord}
                         </div>
                     </div>
                     <div className="flex flex-row justify-between">

@@ -178,7 +178,7 @@ export default function Booking(props: { venueId: any; }) {
     };
   
     localStorage.setItem('Bookdata', JSON.stringify(data));
-    router.push(`/venue/${venueId}/checkout`);
+    router.push(`/${venueId}/checkout`);
   };
 
   const selectedSlots = checkedSlots.map((index) => slots[index]);

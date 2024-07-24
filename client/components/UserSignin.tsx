@@ -91,7 +91,7 @@ export default function Signin({ onLogin }: SigninProps) {
   return (
     <>
       <div>
-        <Button color="secondary" onClick={handleOpen}>SignIn</Button>
+        <Button color="default" size="sm" variant="ghost" onClick={handleOpen}>SignIn</Button>
         <Modal placement="center" backdrop={"blur"} isOpen={isOpen} onOpenChange={setIsOpen}>
           <ModalContent>
             <form onSubmit={handleSubmit}>

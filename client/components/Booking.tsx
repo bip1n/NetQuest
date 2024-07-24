@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+
 import {
   Card,
   CardBody,
@@ -25,6 +26,7 @@ import {
 import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
 import { useRouter } from 'next/navigation';
 import Cookies from "js-cookie";
+import { useParams } from "react-router";
 
 // Define a type for the slot objects
 interface Slot {
@@ -40,9 +42,12 @@ export default function Booking(props: { venueId: any; }) {
   const [isLoading, setIsLoading] = useState(false);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [checkedSlots, setCheckedSlots] = useState<number[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // State to track login status
   const [selectedDate, setSelectedDate] = useState<CalendarDate>(today(getLocalTimeZone()));
-
+  
   // Utility function to generate time slots from opensAt to closesAt with default rate
   const generateTimeSlots = (opensAt: number, closesAt: number) => {
     const defaultRate = 1800;
@@ -104,6 +109,36 @@ export default function Booking(props: { venueId: any; }) {
     fetchSlotsForDate(); // Fetch slots when the component mounts
   }, []);
 
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const token = Cookies.get("__securedAccess");
+      if (token) {
+        try {
+          const response = await fetch("http://localhost:4000/api/isUserLoggedIn", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) {
+            const errorResponse = await response.json();
+            setError(errorResponse.error);
+          } else {
+            setIsLoggedIn(true); // Set login status to true if user is logged in
+          }
+        } catch (error) {
+          console.error("Error fetching user login status:", error);
+        }
+      }
+      setLoading(false);
+    };
+
+    fetchUserDetails();
+  }, []); // Empty dependency array to fetch login status only once
+
+
   const handleStatusChange = (slotIndex: number, newStatus: string) => {
     const updatedSlots = [...slots];
     updatedSlots[slotIndex].status = newStatus;
@@ -143,8 +178,7 @@ export default function Booking(props: { venueId: any; }) {
     };
   
     localStorage.setItem('Bookdata', JSON.stringify(data));
-  
-    router.push('booking/checkout');
+    router.push(`/venue/${venueId}/checkout`);
   };
 
   const selectedSlots = checkedSlots.map((index) => slots[index]);
@@ -153,7 +187,6 @@ export default function Booking(props: { venueId: any; }) {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
         <div>
           <div className="flex mb-4 items-center gap-4">
             <DatePicker
@@ -225,7 +258,6 @@ export default function Booking(props: { venueId: any; }) {
             </p>
           </div>
         </div>
-      </div>
       <div className="flex flex-col gap-2">
         <Modal
           isOpen={isOpen}
@@ -239,7 +271,7 @@ export default function Booking(props: { venueId: any; }) {
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1 text-secondary">
-                  Selected Slot/s
+                  Selected Slot
                 </ModalHeader>
                 <ModalBody>
                   {selectedSlots.map((slot, index) => (
@@ -255,15 +287,20 @@ export default function Booking(props: { venueId: any; }) {
                   <p>Selected Times: {selectedTimes.join(", ")}</p> {/* Display selected times here */}
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="danger" variant="light" onPress={() => { 
-                    setCheckedSlots([]);
-                    onClose();
-                  }}>
-                    Cancel
-                  </Button>
-                  <Button color="secondary" variant="shadow" onClick={handleBooking}>
-                    Book
-                  </Button>
+                  
+                  {isLoggedIn ?
+                  <>
+                    <Button color="danger" variant="light" onPress={() => { 
+                      setCheckedSlots([]);
+                      onClose();
+                    }}>
+                      Cancel
+                    </Button>
+                    <Button color="secondary" variant="shadow" onClick={handleBooking}>
+                      Book
+                    </Button>
+                  </>
+                  : <p className="text-danger-500">Please login to continue.</p>}
                 </ModalFooter>
               </>
             )}

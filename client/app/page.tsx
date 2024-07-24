@@ -1,35 +1,43 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { UserNavigationbar } from "@/components/UserNavigationbar";
-import { Searchbar } from "@/components/Searchbar";
-import { FooterContent } from "@/components/Footer";
-import { AboutUsPage } from "@/components/AboutUs";
-import { FeaturedVenue } from "@/components/FeaturedVenue";
-import { FAQ } from "@/components/FAQ";
-import { TopRated } from "@/components/TopRated";
 
-interface Venue {
-  _id: number;
-  venueName: string;
-  location: string;
-  rating: number;
-  price: number;
-  profilepic: string;
-}
+import AboutInfo from "@/components/AboutInfo";
+import { FooterContent } from "@/components/Footer";
+import { FrequentlyAskedQuestions } from "@/components/FrequentlyAskedQuestions";
+import { Searchbar } from "@/components/Searchbar";
+import { UserNavBar } from "@/components/User/UserNavBar";
+import { UserNavigationbar } from "@/components/UserNavigationbar";
+import Venue from "@/components/Venue";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+  } from "@/components/ui/card";
 
 
 const HomePage = () => {
   return (
-    <main className="flex flex-col justify-center p-4">
-      <UserNavigationbar/>
-      <Searchbar />
-      <TopRated/>
-      <FeaturedVenue/>
-      <AboutUsPage />
-      <FAQ />
-      <FooterContent />
-    </main>
+    <div className="flex min-h-screen w-full flex-col">
+        {/* <UserNavigationbar/> */}
+        <UserNavBar/>
+        <main className="flex flex-1 flex-col gap-4 p-3 lg:p-4 md:gap-8 md:p-8">
+            <Searchbar/>          
+            <Card x-chunk="dashboard-01-chunk-0">
+                <CardHeader>
+                    <p className="flex flex-row items-center justify-center sm:justify-start uppercase text-large font-bold">
+                        Featured Venues
+                    </p>
+                </CardHeader>
+                <CardContent>
+                    <Venue/>
+                </CardContent>
+            </Card>
+            <AboutInfo/>
+            <FrequentlyAskedQuestions/>
+            <FooterContent/>
+        </main>
+    </div>
   );
 };
 

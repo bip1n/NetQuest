@@ -1,10 +1,11 @@
 import React from 'react';
 import { Input } from '@nextui-org/input';
 import { SearchIcon } from '@/components/Icons';
+import { Search } from 'lucide-react';
 
 export const Searchbar = () => {
   return (
-    <div className="w-full flex justify-center mt-4">
+    <div className="w-full flex justify-center">
       <Input
         aria-label="Search"
         classNames={{
@@ -22,3 +23,4 @@ export const Searchbar = () => {
     </div>
   );
 };
+

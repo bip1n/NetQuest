@@ -186,37 +186,8 @@ const Venue = () => {
     <div className="flex min-h-screen w-full flex-col bg-muted/40"> 
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          {/* <div className="mx-auto grid max-w-[65rem] flex-1 auto-rows-max gap-4"> */}
             <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
               <div className="grid auto-rows-max items-start gap-4 lg:col-span-1 lg:gap-8">
-                {/* <Card x-chunk="dashboard-07-chunk-0"> */}
-                  {/* <CardHeader>
-                    <CardTitle>Product Details</CardTitle>
-                    <CardDescription>
-                      Lipsum dolor sit amet, consectetur adipiscing elit
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-6">
-                      <div className="grid gap-3">
-                        <Label htmlFor="name">Name</Label>
-                        <Input
-                          id="name"
-                          type="text"
-                          className="w-full"
-                          defaultValue="Gamer Gear Pro Controller"
-                        />
-                      </div>
-                      <div className="grid gap-3">
-                        <Label htmlFor="description">Description</Label>
-                        <Textarea
-                          id="description"
-                          defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec ultricies nunc nisl nec nunc."
-                          className="min-h-32"
-                        />
-                      </div>
-                    </div>
-                  </CardContent> */}
                   <Carousel className="w-[80%]">
                   <CarouselContent>
                       {Array.from({ length: 5 }).map((_, index) => (
@@ -224,7 +195,7 @@ const Venue = () => {
                          
                           <Card>
                               <CardContent className="flex aspect-square items-center justify-center p-4">
-                                <Image src={venue.profilepic} alt="profilepic" layout="intrinsic" width={500} height={300} className="w-full h-full object-cover"/>
+                                {/* <Image src={venue.profilepic} alt="profilepic" layout="intrinsic" width={500} height={300} className="w-full h-full object-cover"/> */}
                               </CardContent>
                           </Card>
                       </CarouselItem>

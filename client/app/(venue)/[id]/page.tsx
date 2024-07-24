@@ -91,40 +91,10 @@ const Venue = () => {
   const { id } = useParams(); // Get the dynamic route parameter
 
   const [venue, setVenue] = useState<string | null>(null);
+  const [VenueDetails, setVenueDetails] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchVenue = async () => {
-      if (!id) {
-        return;
-      }
-      console.log(id);
-      try {
-        setLoading(true); // Start loading
-        const response = await fetch(`http://localhost:4000/api/VenueDetails?owner_id=${id}`, {
-          method: "GET",
-        });
-        
-        if (!response.ok) {
-          const errorResponse = await response.json();
-          throw new Error(errorResponse.error || "Failed to fetch data");
-        }
-
-        const responseData = await response.json();
-        setVenue(responseData.owner);
-        console.log(responseData.owner);
-      } catch (error) {
-        console.error("Error fetching venue data:", error);
-        setError("An error occurred while fetching venue data.");
-      } finally {
-        setLoading(false); // End loading
-      }
-    };
-
-    fetchVenue();
-  }, [id]);
 
   useEffect(() => {
     const fetchVenue = async () => {
@@ -145,7 +115,6 @@ const Venue = () => {
 
         const responseData = await response.json();
         setVenue(responseData.owner);
-        console.log(responseData.owner);
       } catch (error) {
         console.error("Error fetching venue data:", error);
         setError("An error occurred while fetching venue data.");
@@ -157,7 +126,35 @@ const Venue = () => {
     fetchVenue();
   }, [id]);
 
-  
+  useEffect(() => {
+    const VenueDetails = async () => {
+      if (!id) {
+        return;
+      }
+      console.log(id);
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:4000/api/VenueDetails?owner_id=${id}`, {
+          method: "GET",
+        });
+        
+        if (!response.ok) {
+          const errorResponse = await response.json();
+          throw new Error(errorResponse.error || "Failed to fetch data");
+        }
+
+        const VenueDetails = await response.json();
+        console.log(VenueDetails.amenities);
+        setVenueDetails(VenueDetails.amenities);
+        setLoading(false); 
+      } catch (error) {
+        console.error("Error fetching venue data:", error);
+        setError("An error occurred while fetching venue data.");
+        setLoading(true); 
+      }
+    };
+    VenueDetails();
+  }, [id]);
 
   if (loading) {
     return <div>
@@ -195,7 +192,7 @@ const Venue = () => {
                          
                           <Card>
                               <CardContent className="flex aspect-square items-center justify-center p-4">
-                                {/* <Image src={venue.profilepic} alt="profilepic" layout="intrinsic" width={500} height={300} className="w-full h-full object-cover"/> */}
+                              <span className="text-4xl font-semibold">{index + 1}</span>
                               </CardContent>
                           </Card>
                       </CarouselItem>
@@ -217,7 +214,7 @@ const Venue = () => {
                           <MapPin strokeWidth={1.5} size={24}/>
                         </div>
                         <div className="ml-2 ">
-                        {venue.mapCoord}
+                          Balkumari, Lalitpur
                         </div>
                       </div>
                       <div className="flex flex-row mb-2">
@@ -233,7 +230,7 @@ const Venue = () => {
                           <PhoneCall strokeWidth={1.5} size={24}/>
                         </div>
                         <div className="ml-2">
-                          +977 {venue.phone}
+                          +977 9876543210
                         </div>
                       </div>
                       <div className="flex flex-row">
@@ -241,13 +238,14 @@ const Venue = () => {
                           <Flame strokeWidth={1.5} size={24}/>
                         </div>
                         <div className="ml-2">
-                        <div className="flex h-5 items-center space-x-4 text-sm">
-                            <div>Blog</div>
-                            <Separator orientation="vertical" />
-                            <div>Docs</div>
-                            <Separator  orientation="vertical"/>
-                            <div>Source</div>
-                          </div>
+                            <div className="flex h-5 items-center space-x-4 text-sm">
+                              {VenueDetails.length > 0 && VenueDetails.map((amenity, index) => (
+                                <div key={index} className="px-2 py-1 rounded">
+                                  {amenity}
+                                  <Separator  orientation="vertical"/>
+                                </div>
+                              ))}
+                            </div>
                         </div>
                       </div>
                     </CardContent>

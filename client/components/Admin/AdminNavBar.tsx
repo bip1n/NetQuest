@@ -26,13 +26,59 @@ const navLinks = [
   { item: "Log Report", link: "/admin/log-report" },
 ];
 
+interface UserDetails {
+  username: string;
+  avatar: string;
+  // Add other properties as needed
+}
+
 export const AdminNavBar = () => {
   const router = useRouter();
   const [loginStatus, setLoginStatus] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+
   const [authChanged, setAuthChanged] = useState(false); // State to track authentication changes
   const [loading, setLoading] = useState(true); // Loading state for user data fetching
 
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const token = Cookies.get("__securedAccess");
+      if (token) {
+        try {
+          const response = await fetch("http://localhost:4000/api/NavDetails", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) {
+            const errorResponse = await response.json();
+            setError(errorResponse.error);
+          } else {
+            const responseData = await response.json();
+            setUserDetails(responseData.user);
+            console.log("User details:", responseData.user);
+            setLoginStatus(true);
+          }
+        } catch (error) {
+          console.error("Error fetching user details:", error);
+        }
+      }
+      setLoading(false);
+    };
+
+    fetchUserDetails();
+  }, [authChanged]); // Add authChanged to the dependency array
+
+
+    // Function to handle login state change
+    const handleLoginStateChange = () => {
+      setAuthChanged(!authChanged); // Toggle the authChanged state
+    };
   // Function to handle logout
   const handleLogout = () => {
     Cookies.remove("__securedAccess");
@@ -117,7 +163,7 @@ export const AdminNavBar = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>
-                    <span className="text-danger-500 uppercase">Admin</span>
+                    <span className="text-danger-500 uppercase">Username</span>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>

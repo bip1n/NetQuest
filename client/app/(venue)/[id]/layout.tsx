@@ -1,5 +1,5 @@
 import { FooterContent } from "@/components/Footer";
-import { UserNavigationbar } from "@/components/UserNavigationbar";
+import { UserNavBar } from "@/components/User/UserNavBar";
 
 export default function VenueProfileLayout({
     children,
@@ -9,7 +9,7 @@ export default function VenueProfileLayout({
     return (
       <section >
       <div>
-        <UserNavigationbar/>
+        <UserNavBar/>
         {children}
         <FooterContent/>
       </div>

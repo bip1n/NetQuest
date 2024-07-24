@@ -1,4 +1,4 @@
-import { UserNavigationbar } from "@/components/UserNavigationbar";
+import { UserNavBar } from "@/components/User/UserNavBar";
 
 export default function BookingLayout({
     children,
@@ -7,7 +7,7 @@ export default function BookingLayout({
   }) {
     return (
       <section>
-            <UserNavigationbar/>
+          <UserNavBar/>
           {children}
       </section>
     );

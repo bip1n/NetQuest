@@ -103,7 +103,7 @@ export default function SignupPage() {
 
           <CardHeader className="flex justify-between items-center">
             <p className="font-bold text-inherit mt-1">SignUp</p>
-            <Link isExternal showAnchorIcon href="/venue/register">
+            <Link isExternal showAnchorIcon href="/registervenue">
               Register as a venue owner.
             </Link>
           </CardHeader>
@@ -211,7 +211,7 @@ export default function SignupPage() {
 
           <Divider />
           <CardFooter>
-            <Link href="/user/signin">Already have an account? Sign In.</Link>
+            <Link href="/signin">Already have an account? Sign In.</Link>
           </CardFooter>
         </Card>
       </form>

@@ -184,7 +184,7 @@ const authCtrl = {
         }
     },
 
-    //Owner Section
+    //Admin Section
     
     register_admin: async (req, res) => {
         try {
@@ -230,7 +230,7 @@ const authCtrl = {
             const admin = await Admins.findOne({ email });
             console.log("admin:", admin);
             if (!admin) {
-                return res.status(400).json({ error: "Owner does not exist." });
+                return res.status(400).json({ error: "Admin does not exist." });
             }
             const isMatch = await bcrypt.compare(password, admin.password);
             if (!isMatch) {

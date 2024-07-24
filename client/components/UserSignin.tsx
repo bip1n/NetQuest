@@ -101,7 +101,7 @@ export default function Signin({ onLogin }: SigninProps) {
               </ModalHeader>
               <ModalHeader className="flex justify-between items-center">
                 <p className="font-bold text-inherit mt-1">SignIn</p>
-                <Link isExternal showAnchorIcon href="/venue/signin">
+                <Link isExternal showAnchorIcon href="/loginasvenue">
                     Sign is as a Venue Owner
                 </Link>
               </ModalHeader>
@@ -138,7 +138,7 @@ export default function Signin({ onLogin }: SigninProps) {
                 <Link href="#" size="sm">Forgot Password?</Link>
               </ModalBody>
               <ModalBody>
-                <Link href="/user/signup" size="sm">Don't have an account? Signup.</Link>
+                <Link href="/signup" size="sm">Don't have an account? Signup.</Link>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onClick={handleClose}>

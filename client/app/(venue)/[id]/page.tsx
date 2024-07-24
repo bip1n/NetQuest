@@ -104,6 +104,37 @@ const Venue = () => {
       console.log(id);
       try {
         setLoading(true); // Start loading
+        const response = await fetch(`http://localhost:4000/api/VenueDetails?owner_id=${id}`, {
+          method: "GET",
+        });
+        
+        if (!response.ok) {
+          const errorResponse = await response.json();
+          throw new Error(errorResponse.error || "Failed to fetch data");
+        }
+
+        const responseData = await response.json();
+        setVenue(responseData.owner);
+        console.log(responseData.owner);
+      } catch (error) {
+        console.error("Error fetching venue data:", error);
+        setError("An error occurred while fetching venue data.");
+      } finally {
+        setLoading(false); // End loading
+      }
+    };
+
+    fetchVenue();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchVenue = async () => {
+      if (!id) {
+        return;
+      }
+      console.log(id);
+      try {
+        setLoading(true); // Start loading
         const response = await fetch(`http://localhost:4000/api/venues/${id}`, {
           method: "GET",
         });
@@ -115,6 +146,7 @@ const Venue = () => {
 
         const responseData = await response.json();
         setVenue(responseData.owner);
+        console.log(responseData.owner);
       } catch (error) {
         console.error("Error fetching venue data:", error);
         setError("An error occurred while fetching venue data.");
@@ -221,7 +253,7 @@ const Venue = () => {
                          
                           <Card>
                               <CardContent className="flex aspect-square items-center justify-center p-4">
-                              <span className="text-4xl font-semibold">{index + 1}</span>
+                                <Image src={venue.profilepic} alt="profilepic" layout="intrinsic" width={500} height={300} className="w-full h-full object-cover"/>
                               </CardContent>
                           </Card>
                       </CarouselItem>
@@ -243,7 +275,7 @@ const Venue = () => {
                           <MapPin strokeWidth={1.5} size={24}/>
                         </div>
                         <div className="ml-2 ">
-                          Balkumari, Lalitpur
+                        {venue.mapCoord}
                         </div>
                       </div>
                       <div className="flex flex-row mb-2">
@@ -259,7 +291,7 @@ const Venue = () => {
                           <PhoneCall strokeWidth={1.5} size={24}/>
                         </div>
                         <div className="ml-2">
-                          +977 9876543210
+                          +977 {venue.phone}
                         </div>
                       </div>
                       <div className="flex flex-row">

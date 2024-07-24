@@ -104,7 +104,7 @@ export default function Signin() {
 
           <CardHeader className="flex justify-between items-center">
             <p className="font-bold text-inherit mt-1">SignIn</p>
-            <Link isExternal showAnchorIcon href="/venue/signin">
+            <Link isExternal showAnchorIcon href="/loginasvenue">
               Sign is as a Venue Owner
             </Link>
           </CardHeader>
@@ -157,68 +157,12 @@ export default function Signin() {
 
           <Divider />
           <CardFooter>
-            <Link href="/user/signup">Don't have an account? Sign Up.</Link>
+            <Link href="/signup">Don't have an account? Sign Up.</Link>
           </CardFooter>
         </Card>
       </form>
     </div>
-      {/* <div>
-        <Button color="secondary" onClick={handleOpen}>SignIn</Button>
-        <Modal placement="center" backdrop={"blur"} isOpen={isOpen} onOpenChange={setIsOpen}>
-          <ModalContent>
-            <form onSubmit={handleSubmit}>
-              <ModalHeader className="flex flex-row gap-1">
-                <span><Logo /></span>
-                <p className="font-bold text-inherit mt-1">NetQuest</p>
-              </ModalHeader>
-              <ModalHeader className="flex flex-col gap-1">Sign In</ModalHeader>
-              <ModalBody>
-                {error && <span className="text-red-500">{error}</span>}
-              </ModalBody>
-              <ModalBody>
-                <Input
-                  type="email"
-                  label="Email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </ModalBody>
-              <ModalBody>
-                <Input
-                  type={isVisible ? "text" : "password"}
-                  label="Password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  endContent={
-                    <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                      {isVisible ? (
-                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                      ) : (
-                        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                      )}
-                    </button>
-                  }
-                />
-                <Link href="#" size="sm">Forgot Password?</Link>
-              </ModalBody>
-              <ModalBody>
-                <Link href="/user/signup" size="sm">Don't have an account? Signup.</Link>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onClick={handleClose}>
-                  Cancel
-                </Button>
-                <Button color="primary" type="submit" disabled={loading}>
-                  {loading ? "Signing in..." : "Sign In"}
-                </Button>
-              </ModalFooter>
-            </form>
-          </ModalContent>
-   
-        </Modal>
-      </div> */}
+      
       <FooterContent />
     </>
   );

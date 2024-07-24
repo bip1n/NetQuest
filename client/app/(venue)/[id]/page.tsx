@@ -91,6 +91,7 @@ const Venue = () => {
   const { id } = useParams(); // Get the dynamic route parameter
 
   const [venue, setVenue] = useState<string | null>(null);
+  const [VenueDetails, setVenueDetails] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -125,7 +126,35 @@ const Venue = () => {
     fetchVenue();
   }, [id]);
 
-  
+  useEffect(() => {
+    const VenueDetails = async () => {
+      if (!id) {
+        return;
+      }
+      console.log(id);
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:4000/api/VenueDetails?owner_id=${id}`, {
+          method: "GET",
+        });
+        
+        if (!response.ok) {
+          const errorResponse = await response.json();
+          throw new Error(errorResponse.error || "Failed to fetch data");
+        }
+
+        const VenueDetails = await response.json();
+        console.log(VenueDetails.amenities);
+        setVenueDetails(VenueDetails.amenities);
+        setLoading(false); 
+      } catch (error) {
+        console.error("Error fetching venue data:", error);
+        setError("An error occurred while fetching venue data.");
+        setLoading(true); 
+      }
+    };
+    VenueDetails();
+  }, [id]);
 
   if (loading) {
     return <div>
@@ -238,13 +267,14 @@ const Venue = () => {
                           <Flame strokeWidth={1.5} size={24}/>
                         </div>
                         <div className="ml-2">
-                        <div className="flex h-5 items-center space-x-4 text-sm">
-                            <div>Blog</div>
-                            <Separator orientation="vertical" />
-                            <div>Docs</div>
-                            <Separator  orientation="vertical"/>
-                            <div>Source</div>
-                          </div>
+                            <div className="flex h-5 items-center space-x-4 text-sm">
+                              {VenueDetails.length > 0 && VenueDetails.map((amenity, index) => (
+                                <div key={index} className="px-2 py-1 rounded">
+                                  {amenity}
+                                  <Separator  orientation="vertical"/>
+                                </div>
+                              ))}
+                            </div>
                         </div>
                       </div>
                     </CardContent>

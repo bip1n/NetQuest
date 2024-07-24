@@ -1,9 +1,8 @@
 const User = require("../models/userModel");
 const Owner = require("../models/ownerModel");
 const Booking = require("../models/bookingSchema");
+const Venue = require("../models/venueModel");
 const moment = require('moment');
-const { compareSync } = require("bcrypt");
-
 
 const userCtrl = {
 
@@ -87,7 +86,13 @@ const userCtrl = {
 
     addreview: async (req, res) => {
       try {
-        const { review, owner_id, user_id } = req.body;
+
+        const user_id = req.user.id
+        const { review, owner_id } = req.body;
+
+        console.log(user_id);
+        console.log(owner_id);
+        console.log(review);
 
         if (!review || !owner_id || !user_id) {
             return res.status(400).json({ msg: "Missing required fields" });
@@ -103,13 +108,16 @@ const userCtrl = {
             return res.status(404).json({ msg: "Owner not found" });
         }
 
+
         const newReview = {
             user_id: user_id,
-            content: review.content, 
+            content: review, 
             upvotes: 0, 
             downvotes: 0,  
             createdAt: new Date()
         };
+
+        console.log(newReview);
 
         const updatedVenue = await Venue.findOneAndUpdate(
             { owner_id: owner_id }, 
@@ -121,11 +129,9 @@ const userCtrl = {
             return res.status(404).json({ msg: "Venue not found" });
         }
 
-        // Return success response with the updated venue
         return res.status(200).json({ msg: "Review added!", venue: updatedVenue });
 
     } catch (err) {
-        // Return error response if something goes wrong
         return res.status(500).json({ msg: err.message });
     }
   },
@@ -207,7 +213,7 @@ const userCtrl = {
 },
 
 
-getUserName: async (req, res) => {
+    getUserName: async (req, res) => {
         try {
             const user_id = req.user.id;
 
@@ -215,8 +221,7 @@ getUserName: async (req, res) => {
                 return res.status(400).json({ error: "User ID is required." });
             }
 
-            const user
-            = await User.findById(user_id).select('username');
+            const user = await User.findById(user_id).select('username');
 
             if (!user) {
                 return res.status(404).json({ error: "User not found." });
@@ -237,7 +242,37 @@ getUserName: async (req, res) => {
             return res.status(500).json({ msg: error.message });
         }
     },
- 
+
+    getReviews: async (req, res) => {
+        try {
+            const owner_id = req.params.id;
+    
+            // Find all venues with the specified owner_id
+            const venues = await Venue.find({ owner_id });
+    
+            if (!venues.length) {
+                return res.status(404).json({ msg: "No venues found for this owner." });
+            }
+    
+            // Extract reviews from the venues
+            const reviews = venues.reduce((acc, venue) => acc.concat(venue.reviews), []);
+    
+            // Fetch user details for each review
+            const reviewsWithUserDetails = await Promise.all(reviews.map(async (review) => {
+                const user = await User.findById(review.user_id);
+                return {
+                    ...review.toObject(),
+                    user: user ? user.toObject() : null,
+                };
+            }));
+
+            console.log(reviewsWithUserDetails)
+    
+            return res.status(200).json({ reviews: reviewsWithUserDetails });
+        } catch (error) {
+            return res.status(500).json({ msg: error.message });
+        }
+    },
 }
 
 module.exports = userCtrl;

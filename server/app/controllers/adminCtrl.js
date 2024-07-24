@@ -179,8 +179,71 @@ const adminCtrl = {
         } catch (err) {
           return res.status(500).json({ msg: err.message });
         }
-      }
-      
+      },
+
+      logsheet: async (req, res) => {
+        try {
+            const { venueId, timeline } = req.body;
+            const venues = await Venue.findOne({ venueID: venueId });
+            if (!venues) return res.status(400).json({ msg: "This venue does not exist." });
+            const owner = await Owner.findOne({ _id: venues.owner_id });
+            console.log(timeline);
+    
+            let from, to;
+            const date = new Date();
+            to = date.toISOString().split('T')[0];
+    
+            if (timeline == '1') {
+                console.log('1');
+                from = new Date(date.setDate(date.getDate() - 7)).toISOString().split('T')[0];
+            } else if (timeline == '2') {
+                console.log('2');
+                from = new Date(date.setMonth(date.getMonth() - 1)).toISOString().split('T')[0];
+            } else if (timeline == '3') {
+                console.log('3');
+                from = new Date(owner.joindate).toISOString().split('T')[0];
+            }
+    
+            const venueDetails = {
+                name: owner.venueName,
+                pan: owner.panNumber,
+                contact: owner.phone,
+                owner: owner.fullname,
+                from: from,
+                to: to
+            };
+    
+            console.log(venueDetails);
+    
+            const bookings = await Booking.find({
+                owner_id: venues.owner_id,
+                date: { $gte: venueDetails.from, $lte: venueDetails.to }
+            });
+        
+            const bookingSummary = bookings.reduce((acc, booking) => {
+                const bookingDate = booking.date.toISOString().split('T')[0];
+                if (!acc[bookingDate]) {
+                    acc[bookingDate] = {
+                        totalShifts: 0,
+                        totalAmount: 0
+                    };
+                }
+                acc[bookingDate].totalShifts += 1;
+                acc[bookingDate].totalAmount += booking.price;
+                return acc;
+            }, {});
+    
+            console.log(bookingSummary);
+    
+            res.json({
+                venueDetails,
+                bookingSummary
+            });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+    
       
 
 };

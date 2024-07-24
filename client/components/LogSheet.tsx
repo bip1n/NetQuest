@@ -1,132 +1,162 @@
-"use client"
+"use client";
 
-import React from "react";
-import {Card, CardBody,Button} from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
+import { Card, CardBody, Button } from "@nextui-org/react";
 import { Logo } from "@/components/Icons";
-
 import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
-   
-  const invoices = [
-    {
-      invoice: "INV001",
-      paymentStatus: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV003",
-      paymentStatus: "Unpaid",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV004",
-      paymentStatus: "Paid",
-      totalAmount: "$450.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV005",
-      paymentStatus: "Paid",
-      totalAmount: "$550.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV006",
-      paymentStatus: "Pending",
-      totalAmount: "$200.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV007",
-      paymentStatus: "Unpaid",
-      totalAmount: "$300.00",
-      paymentMethod: "Credit Card",
-    },
-  ]
-   
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
+export const LogSheet = ({ venueId, range }) => {
+  const [venueDetails, setVenueDetails] = useState({});
+  const [invoices, setInvoices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-export const LogSheet = () => {
+  useEffect(() => {
+    if (!venueId || !range) {
+      setLoading(false);
+      return;
+    }
+    const timeline = range.target.value;
+
+    if (!venueId || !timeline) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        console.log("fetching data...");
+        const response = await fetch("http://localhost:4000/api/logsheet", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ venueId, timeline }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch data from the server");
+        }
+
+        const data = await response.json();
+        console.log(data);
+        setVenueDetails(data.venueDetails);
+        setInvoices(Object.entries(data.bookingSummary).map(([date, summary]) => ({
+          date,
+          ...summary
+        })));
+        setError(null);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [venueId, range]);
+
+  const printLogSheet = () => {
+    window.print();
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!venueId || !range) {
+    return <div>Please choose a venue ID and range.</div>;
+  }
+
   return (
-    <>
     <Card className="p-4">
-        <div>
-            <div className="flex -col items-center justify-center">
-                <div className="flex flex-row ">
-                    <div>
-                        <Logo />
-                    </div>
-                    <div>
-                        <p className="font-bold text-large  mt-1">NETQUEST</p>
-                    </div>
-                </div>
+      <div>
+        <div className="flex -col items-center justify-center">
+          <div className="flex flex-row">
+            <div>
+              <Logo />
             </div>
-              <div className="flex justify-center">
-                <p className="italic text-default-500 text-sm ">- An Ultimate Futsal Booking System</p>
-              </div>
+            <div>
+              <p className="font-bold text-large mt-1">NETQUEST</p>
+            </div>
+          </div>
         </div>
-    
-        <CardBody className="text-end"> Date: 2024/07/22</CardBody>
-        <CardBody>
-            <p className="text-medium">Venue: <span className="uppercase font-medium">Kick Futsal , Lalitpur</span></p>
-            <p className="text-medium">PAN: <span className="uppercase font-medium">0431598</span></p>
-            <p className="text-medium">Contact: <span className="uppercase font-medium">9876543210</span></p>
-            <p className="text-medium">Owner: <span className="uppercase font-medium">Ram Bahadur</span></p>
-            <p className="text-medium">From: <span className="uppercase font-medium">2023/07/06</span></p>
-            <p className="text-medium">To: <span className="uppercase font-medium">2023/07/09</span></p>
-        </CardBody>
-        <CardBody>
-        <Table>
-            <TableCaption>A list of your recent invoices.</TableCaption>
-            <TableHeader>
+        <div className="flex justify-center">
+          <p className="italic text-default-500 text-sm">
+            - An Ultimate Futsal Booking System
+          </p>
+        </div>
+      </div>
+
+      <CardBody className="text-end">Date: 2024/07/22</CardBody>
+      <CardBody>
+        <p className="text-medium">
+          Venue: <span className="uppercase font-medium">{venueDetails.name}</span>
+        </p>
+        <p className="text-medium">
+          PAN: <span className="uppercase font-medium">{venueDetails.pan}</span>
+        </p>
+        <p className="text-medium">
+          Contact: <span className="uppercase font-medium">{venueDetails.contact}</span>
+        </p>
+        <p className="text-medium">
+          Owner: <span className="uppercase font-medium">{venueDetails.owner}</span>
+        </p>
+        <p className="text-medium">
+          From: <span className="uppercase font-medium">{venueDetails.from}</span>
+        </p>
+        <p className="text-medium">
+          To: <span className="uppercase font-medium">{venueDetails.to}</span>
+        </p>
+      </CardBody>
+      <CardBody>
+        <Table className="printable-table">
+          <TableCaption>A list of your recent invoices.</TableCaption>
+          <TableHeader>
             <TableRow>
-                <TableHead className="w-[100px] uppercase">Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+              <TableHead className="w-[100px] uppercase">Date</TableHead>
+              <TableHead className="text-right">Total Shifts</TableHead>
+              <TableHead className="text-right">Total Amount</TableHead>
             </TableRow>
-            </TableHeader>
-            <TableBody>
+          </TableHeader>
+          <TableBody>
             {invoices.map((invoice) => (
-                <TableRow key={invoice.invoice}>
-                <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                <TableCell>{invoice.paymentStatus}</TableCell>
-                <TableCell>{invoice.paymentMethod}</TableCell>
+              <TableRow key={invoice.date}>
+                <TableCell>{invoice.date}</TableCell>
+                <TableCell className="text-right">{invoice.totalShifts}</TableCell>
                 <TableCell className="text-right">{invoice.totalAmount}</TableCell>
-                </TableRow>
+              </TableRow>
             ))}
-            </TableBody>
-            <TableFooter>
+          </TableBody>
+          <TableFooter>
             <TableRow>
-                <TableCell colSpan={3}>Total</TableCell>
-                <TableCell className="text-right">$2,500.00</TableCell>
+              <TableCell colSpan={2}>Total</TableCell>
+              <TableCell className="text-right">
+                {invoices
+                  .reduce((total, invoice) => total + invoice.totalAmount, 0)
+                  .toLocaleString("en-US", { style: "currency", currency: "USD" })}
+              </TableCell>
             </TableRow>
-            </TableFooter>
+          </TableFooter>
         </Table>
 
-            <div className="justify-end">
-                <Button className="w-20">Print</Button>
-            </div>
-        </CardBody>
+        <div className="justify-end">
+          <Button className="w-20" onClick={printLogSheet}>Print</Button>
+        </div>
+      </CardBody>
     </Card>
-        
-    </>
   );
-}
-
+};

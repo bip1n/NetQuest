@@ -115,7 +115,6 @@ const ownerCtrl = {
               return res.status(404).json({ error: "Owner does not exist." });
           }
 
-          console.log(owner)
   
           // Update owner information
           owner.fullname = username;
@@ -125,7 +124,6 @@ const ownerCtrl = {
          
           await owner.save();
 
-          console.log(username,contact,mapsCoordinate)
   
           // Find the venue by owner_id
           const venues = await venue.findOne({ owner_id });

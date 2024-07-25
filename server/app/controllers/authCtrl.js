@@ -45,13 +45,9 @@ const authCtrl = {
     login: async (req, res) => {
         try {
             const {email, password} = req.body;
-            console.log("req.body:", req.body);
-
             if (!email) {return res.status(400).json({ error: 'email is required' });}
             if (!password) {return res.status(400).json({ error: 'password is required' });}
-            console.log("email:", email);
             const user = await Users.findOne({email});
-            console.log("user:", user);
             if (!user){ 
                 return res.status(400).json({error: "User does not exist."})
             }
@@ -147,7 +143,6 @@ const authCtrl = {
             sendMail(mailOptions);
     
         } catch (err) {
-            console.log("error:", err);
             return res.status(500).json({ error: err.message });
         }
     },    
@@ -218,7 +213,6 @@ const authCtrl = {
     login_admin: async (req, res) => {
         try {
             const { email, password } = req.body;
-            console.log("req.body:", req.body);
 
             if (!email) {
                 return res.status(400).json({ error: 'Email is required' });
@@ -226,9 +220,7 @@ const authCtrl = {
             if (!password) {
                 return res.status(400).json({ error: 'Password is required' });
             }
-            console.log("email:", email);
             const admin = await Admins.findOne({ email });
-            console.log("admin:", admin);
             if (!admin) {
                 return res.status(400).json({ error: "Admin does not exist." });
             }

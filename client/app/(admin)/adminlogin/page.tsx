@@ -49,7 +49,6 @@ export default function RegisterVenue() {
       } else {
         // Handle successful login
         const responseData = await response.json();
-        console.log("Login successful:", responseData);
 
         // Set cookies with high security
         Cookies.set("__securedAccess", responseData.access_token, {
@@ -66,7 +65,6 @@ export default function RegisterVenue() {
         });
 
         // Redirect to the dashboard or home page after successful login
-        console.log(responseData);
         router.push(`/admin`); // Replace with your desired route
       }
     } catch (error) {
@@ -74,7 +72,6 @@ export default function RegisterVenue() {
       setError("Failed to login. Please try again.");
     } finally {
       setLoading(false);
-      console.log("Form submission complete.");
     }
   };
 

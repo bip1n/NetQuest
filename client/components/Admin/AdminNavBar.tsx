@@ -61,7 +61,6 @@ export const AdminNavBar = () => {
           } else {
             const responseData = await response.json();
             setUserDetails(responseData.user);
-            console.log("User details:", responseData.user);
             setLoginStatus(true);
           }
         } catch (error) {

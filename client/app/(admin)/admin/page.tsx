@@ -2,10 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from "next/link";
 import {
-  Activity,
   ArrowUpRight,
-  CreditCard,
-  DollarSign,
   Users,
   House,
 } from "lucide-react";
@@ -26,34 +23,22 @@ import { PendingVenueStatus } from "@/components/Venue-Status/PendingVenueStatus
 import { RupeeIcon } from "@/components/Icons";
 import Cookies from 'js-cookie';
 
-
 const Dashboard = () => {
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [registeredVenues, setRegisteredVenues] = useState(0);
   const [topEarningVenues, setTopEarningVenues] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState('');
-
 
   useEffect(() => {
-    const fetchToken = () => {
+    const fetchTokenAndData = async () => {
       const tokenFromCookie = Cookies.get('__securedAccess');
-      if (tokenFromCookie) {
-        setToken(tokenFromCookie);
-      }
-    };
-
-    fetchToken();
-  }, []);
-
-
-  useEffect(() => {
-    const fetchData = async () => {
+      if (!tokenFromCookie) return;
+      
       try {
         const response = await fetch('http://localhost:4000/api/admin_details', {
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${tokenFromCookie}`
           }
         });
         const data = await response.json();
@@ -61,14 +46,14 @@ const Dashboard = () => {
         setTotalUsers(data.totalUsers);
         setRegisteredVenues(data.registeredVenues);
         setTopEarningVenues(data.topEarningVenues);
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchTokenAndData();
   }, []);
 
   return (
@@ -78,7 +63,7 @@ const Dashboard = () => {
           <div>Loading...</div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
-            <Card x-chunk="dashboard-01-chunk-0">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Total Transactions
@@ -103,7 +88,7 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card x-chunk="dashboard-01-chunk-1">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Total Users
@@ -128,7 +113,7 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card x-chunk="dashboard-01-chunk-2">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Registered Venues</CardTitle>
                 <House className="h-4 w-4 text-muted-foreground" />
@@ -137,7 +122,7 @@ const Dashboard = () => {
                 <div className="flex flex-row justify-between">
                   <div>
                     <div className="text-2xl font-bold text-secondary flex flex-row">
-                     {registeredVenues}
+                      {registeredVenues}
                     </div>
                   </div>
                   <div>
@@ -154,7 +139,7 @@ const Dashboard = () => {
           </div>
         )}
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
+          <Card className="xl:col-span-2">
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
                 <CardTitle>Pending Venue</CardTitle>
@@ -173,7 +158,7 @@ const Dashboard = () => {
               <PendingVenueStatus />
             </CardContent>
           </Card>
-          <Card x-chunk="dashboard-01-chunk-5">
+          <Card>
             <CardHeader>
               <CardTitle>Top Earning Venues</CardTitle>
             </CardHeader>

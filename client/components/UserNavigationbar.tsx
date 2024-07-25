@@ -26,15 +26,9 @@ import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { Logo} from "@/components/Icons";
 import Cookies from "js-cookie";
 
-// Define the UserDetails interface
 interface UserDetails {
   username: string;
   avatar: string;
-  // Add other properties as needed
-}
-
-export async function getServerSideProps() {
-  console.log("Server side props");
 }
 
 

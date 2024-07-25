@@ -37,7 +37,7 @@ export default function UserBooking() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchUserName = async () => {
+    const fetchData = async () => {
       const token = Cookies.get("__securedAccess");
 
       if (!token) {
@@ -46,7 +46,8 @@ export default function UserBooking() {
       }
 
       try {
-        const response = await fetch("http://localhost:4000/api/getUserName", {
+        // Fetch user name
+        const userNameResponse = await fetch("http://localhost:4000/api/getUserName", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -54,35 +55,17 @@ export default function UserBooking() {
           },
         });
 
-        if (!response.ok) {
-          const errorResponse = await response.json();
+        if (!userNameResponse.ok) {
+          const errorResponse = await userNameResponse.json();
           setError(errorResponse.error);
-        } else {
-          const responseData = await response.json();
-          setUserName(responseData.username);
+          return;
         }
-      } catch (error) {
-        console.error("Error fetching user name:", error);
-        setError("Failed to load user information. Please try again later.");
-      }
-    };
 
-    if (typeof window !== "undefined") {
-      fetchUserName();
-    }
-  }, [router]);
+        const userNameData = await userNameResponse.json();
+        setUserName(userNameData.username);
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      const token = Cookies.get("__securedAccess");
-
-      if (!token) {
-        router.push('/'); // Redirect to home page if the token is not found
-        return;
-      }
-
-      try {
-        const response = await fetch("http://localhost:4000/api/getBooking", {
+        // Fetch bookings
+        const bookingsResponse = await fetch("http://localhost:4000/api/getBooking", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -90,22 +73,23 @@ export default function UserBooking() {
           },
         });
 
-        if (!response.ok) {
-          const errorResponse = await response.json();
+        if (!bookingsResponse.ok) {
+          const errorResponse = await bookingsResponse.json();
           setError(errorResponse.error);
-        } else {
-          const responseData = await response.json();
-          setPastBookings(responseData.pastBookings);
-          setFutureOrPresentBookings(responseData.futureOrPresentBookings);
+          return;
         }
+
+        const bookingsData = await bookingsResponse.json();
+        setPastBookings(bookingsData.pastBookings);
+        setFutureOrPresentBookings(bookingsData.futureOrPresentBookings);
       } catch (error) {
-        console.error("Error fetching bookings:", error);
-        setError("Failed to load bookings. Please try again later.");
+        console.error("Error fetching data:", error);
+        setError("Failed to load data. Please try again later.");
       }
     };
 
     if (typeof window !== "undefined") {
-      fetchBookings();
+      fetchData();
     }
   }, [router]);
 
@@ -274,7 +258,7 @@ export default function UserBooking() {
                       <div className="flex justify-between">
                        
                        <p className="font-normal text-sm italic">Name</p>
-                       <p className="text-semibold font-medium">{userName.username}</p>
+                       <p className="text-semibold font-medium">{userName}</p>
                      </div>
                         
                         <div className="flex justify-between">

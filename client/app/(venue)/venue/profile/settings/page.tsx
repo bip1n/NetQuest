@@ -45,7 +45,6 @@ export default function ProfileSetting() {
           }
         });
         if (response.ok) {
-          console.log("this1");
           const data = await response.json();
           setUsername(data.venueName || "");
           setContact(data.phone || "");
@@ -114,9 +113,7 @@ export default function ProfileSetting() {
     files.forEach((file, index) => {
       formData.append(`media`, file);
     });
-  
-    console.log(formData);
-    try {
+      try {
       const response = await fetch("http://localhost:4000/api/savemedia", {
         method: "POST",
         headers: {

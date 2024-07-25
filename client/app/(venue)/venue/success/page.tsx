@@ -25,7 +25,6 @@ const SuccessPage = () => {
 
         if (pidx) {
           const response = await axios.post(`http://localhost:4000/api/verifypayment`, { pidx });
-          console.log("response", response);
           if (response.data.status === 'Completed') {
             setPaymentStatus('Completed');
           } else if (response.data.status === 'Pending') {
@@ -39,7 +38,6 @@ const SuccessPage = () => {
           } else if (response.data.status === 'User canceled') {
             setPaymentStatus('User canceled');
           }
-          console.log("response.data", response.data);
           setResponseData(response.data);
         }else{
           router.push(`/`)

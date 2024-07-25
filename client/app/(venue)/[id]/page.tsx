@@ -1,7 +1,6 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import {
@@ -20,62 +19,51 @@ import {
 } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import Booking from "@/components/Booking";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 
 const Venue = () => {
   const { id } = useParams(); 
   const [venue, setVenue] = useState(null);
   const [venueDetails, setVenueDetails] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const router = useRouter();
 
   useEffect(() => {
-    const fetchVenue = async () => {
-      if (!id) return;
-
-      try {
-        setLoading(true); 
-        const response = await fetch(`http://localhost:4000/api/venues/${id}`);
-        
-        if (!response.ok) throw new Error("Failed to fetch data");
-
-        const responseData = await response.json();
-        setVenue(responseData.owner);
-      } catch (error) {
-        console.error("Error fetching venue data:", error);
-        setError("An error occurred while fetching venue data.");
-      } finally {
-        setLoading(false); 
-      }
-    };
-
-    fetchVenue();
-  }, [id]);
-
-  useEffect(() => {
-    const fetchVenueDetails = async () => {
+    const fetchVenueData = async () => {
       if (!id) return;
 
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:4000/api/VenueDetails?owner_id=${id}`);
         
-        if (!response.ok) throw new Error("Failed to fetch data");
+        const [venueRes, venueDetailsRes, reviewsRes] = await Promise.all([
+          fetch(`http://localhost:4000/api/venues/${id}`),
+          fetch(`http://localhost:4000/api/VenueDetails?owner_id=${id}`),
+          fetch(`http://localhost:4000/api/getReviews/${id}`)
+        ]);
 
-        const responseData = await response.json();
-        setVenueDetails(responseData.amenities);
+        if (!venueRes.ok || !venueDetailsRes.ok || !reviewsRes.ok) {
+          throw new Error("Failed to fetch data");
+        }
+
+        const venueData = await venueRes.json();
+        const venueDetailsData = await venueDetailsRes.json();
+        const reviewsData = await reviewsRes.json();
+        setVenue(venueData.owner);
+        setVenueDetails(venueDetailsData.amenities);
+        setReviews(reviewsData.reviews.slice(0, 2));
       } catch (error) {
-        console.error("Error fetching venue details:", error);
-        setError("An error occurred while fetching venue details.");
+        console.error("Error fetching data:", error);
+        setError("An error occurred while fetching venue data.");
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
-    fetchVenueDetails();
+    fetchVenueData();
   }, [id]);
 
   if (loading) {
@@ -163,26 +151,47 @@ const Venue = () => {
               </Card>
               <Card>
                 <CardHeader>
-                <CardTitle>Reviews</CardTitle>
+                  <CardTitle>Reviews</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid gap-6">
-                    <div className="grid gap-3">
-                      <Card>
-                        <CardContent className="mt-4">
-                          <div className="flex space-x-4">
-                            <Avatar>
-                              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                              <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                            <div className="space-y-2">
-                              <CardDescription>@heroKta <br/> <span className="text-default-900">Great venue. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto veniam iure dolore voluptatibus aliquid rerum mollitia quia, pariatur molestias repudiandae! Suscipit vitae maiores debitis dolor aliquid mollitia esse commodi incidunt.</span></CardDescription>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
+                  {loading ? (
+                    <>
+                      <Skeleton className="flex rounded-full w-12 h-12" />
+                      <Skeleton className="h-3 w-1/5 rounded-lg" />
+                      <Skeleton className="h-3 w-1/5 rounded-lg" />
+                      <Skeleton className="h-4 w-5/5 rounded-lg" />
+                      <br/>
+                      <Skeleton className="flex rounded-full w-12 h-12" />
+                      <Skeleton className="h-3 w-1/5 rounded-lg" />
+                      <Skeleton className="h-3 w-1/5 rounded-lg" />
+                      <Skeleton className="h-4 w-5/5 rounded-lg" />
+                      <br/>
+                    </>
+                  ) : (
+                    <div className="grid gap-6">
+                      
+                      {reviews.map((review, index) => (
+                        <div key={index} className="grid gap-3">
+                          <Card>
+                            <CardContent className="mt-4">
+                              <div className="flex space-x-4">
+                                <Avatar>
+                                  <AvatarImage src={review.user.profilepic} alt={review.user.username} />
+                                  <AvatarFallback>{review.user.username}</AvatarFallback>
+                                </Avatar>
+                                <div className="space-y-2">
+                                  <CardDescription>
+                                    @{review.user.username} <br/> 
+                                    <span className="text-default-900">{review.content}</span>
+                                  </CardDescription>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      ))}
                     </div>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -192,7 +201,7 @@ const Venue = () => {
               <Card>
                 <CardHeader>
                   <CardTitle className="uppercase">Kick Futsal</CardTitle>
-                  <Booking venueId={id as string}/>
+                  <Booking venueId={id} />
                 </CardHeader>
               </Card>
             </div>

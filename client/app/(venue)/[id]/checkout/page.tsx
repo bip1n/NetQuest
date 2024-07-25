@@ -1,33 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { UserNavigationbar } from "@/components/UserNavigationbar";
-import { FooterContent } from "@/components/Footer";
 import { RupeeIcon } from "@/components/Icons";
 import {
   Card,
   CardHeader,
   Button,
-  Link,
   Input,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  ModalContent,
-  CardBody,
   RadioGroup,
   Radio,
-  CardFooter
+  CardBody,
 } from "@nextui-org/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
-
-
 const CheckoutPage = () => {
   const [selectedOption, setSelectedOption] = useState('book');
-  const [venuedata, setvenuedataData] = useState('');
+  const [venuedata, setVenuedata] = useState('');
   const router = useRouter();
 
   const handleChange = (event) => {
@@ -35,13 +25,7 @@ const CheckoutPage = () => {
   };
 
   const handleKhaltiClick = async () => {
-    const price = venuedata.price;
-    const owner_id = venuedata.owner_id;
-    const date = new Date(venuedata.date);
-    const times = venuedata.times;
-    const time = times[0];
-    // const time = new Date().getTime()
-    const altcontact = '9840000000';
+    const { price, owner_id, date, times } = venuedata;
     const payload = {
       "return_url": "http://localhost:4000/api/khalti/response",
       "website_url": "http://localhost:3000",
@@ -49,144 +33,119 @@ const CheckoutPage = () => {
       "purchase_order_id": "test12",
       "purchase_order_name": "test",
       "customer_info": {
-          "name": "Khalti Bahadur",
-          "email": "example@gmail.com",
-          "phone": "9800000123"
+        "name": "Khalti Bahadur",
+        "email": "example@gmail.com",
+        "phone": "9800000123"
       },
-      // "merchant_username": "merchant_name",
-      // "merchant_extra": "merchant_extra"
     };
-    const response = await axios.post(`http://localhost:4000/api/khalti/payment`, payload);
-  
 
-    if (response) { const popup = window.open(response?.data?.payment_url, "paymentPopup", "width=600,height=600");    }
+    try {
+      const response = await axios.post(`http://localhost:4000/api/khalti/payment`, payload);
+      if (response) {
+        window.open(response.data.payment_url, "paymentPopup", "width=600,height=600");
+      }
 
-    // get user_id from cookie
+      const token = Cookies.get("__securedAccess");
+      if (token) {
+        const pidx = response.data.pidx;
+        const altcontact = '9840000000';
 
-    const pidx = response?.data?.pidx;
-
-
-
-
-    const token = Cookies.get("__securedAccess");
-    if (token) {
-      try {
-        
-        const response2 = await fetch("http://localhost:4000/api/bookvenue", {
+        const bookingResponse = await fetch("http://localhost:4000/api/bookvenue", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify({price, date, owner_id, time, altcontact, pidx})
+          body: JSON.stringify({ price, date, owner_id, time: times[0], altcontact, pidx })
         });
 
-        if (!response2.ok) {
-          const errorResponse = await response2.json();
-        } else {
-          const responseData = await response2.json();
+        if (!bookingResponse.ok) {
+          console.error("Error booking venue:", await bookingResponse.json());
         }
-      } catch (error) {
-        console.error("Error fetching user details:", error);
       }
+    } catch (error) {
+      console.error("Error during Khalti payment:", error);
     }
-
-
   };
-
-  const handleEsewaClick = () => {
-   
-  };
-
 
   useEffect(() => {
     const storedData = localStorage.getItem('Bookdata');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       const currentTime = new Date().getTime();
-      const MinuteTime = 2 * 60 * 1000;
+      const expirationTime = 2 * 60 * 1000;
 
-      if (currentTime - parsedData.timestamp < MinuteTime) {
-        setvenuedataData(parsedData);
+      if (currentTime - parsedData.timestamp < expirationTime) {
+        setVenuedata(parsedData);
       } else {
-        // setvenuedataData('Data has expired');
         localStorage.removeItem('Bookdata');
-        const owner = venuedata.owner_id;
-        router.push('/venue/'+ owner);
+        router.push(`/venue/${venuedata.owner_id}`);
       }
     } else {
-      const owner = venuedata.owner_id;
-      router.push('/venue/'+ owner);
+      router.push(`/venue/${venuedata.owner_id}`);
     }
-  }, []);
+  }, [router, venuedata.owner_id]);
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <p className="text-secondary text-lg font-medium">Booking Confirmation</p>
-        </CardHeader>
+    <Card>
+      <CardHeader>
+        <p className="text-secondary text-lg font-medium">Booking Confirmation</p>
+      </CardHeader>
 
-        <CardBody>
-          <Input fullWidth type="number" placeholder="98XXXXXXXX" label="Alternative Contact" required />
-        </CardBody>
+      <CardBody>
+        <Input fullWidth type="number" placeholder="98XXXXXXXX" label="Alternative Contact" required />
+      </CardBody>
 
-        <CardBody>
-          <Input
-            type="string"
-            label="Date of Booking"
-            value={venuedata.date}
-            labelPlacement="outside"
-            readOnly
-            startContent={<div className="pointer-events-none flex items-center"></div>}
-          />
-        </CardBody>
+      <CardBody>
+        <Input
+          type="text"
+          label="Date of Booking"
+          value={venuedata.date}
+          labelPlacement="outside"
+          readOnly
+        />
+      </CardBody>
 
-        <CardBody>
-          <Input
-            type="number"
-            label="Total"
-            value={venuedata.price}
-            labelPlacement="outside"
-            readOnly
-            startContent={
-              <div className="pointer-events-none flex items-center">
-                <span className="text-default-400 text-small"><RupeeIcon /></span>
-              </div>
-            }
-          />
-        </CardBody>
+      <CardBody>
+        <Input
+          type="number"
+          label="Total"
+          value={venuedata.price}
+          labelPlacement="outside"
+          readOnly
+          startContent={<span className="text-default-400 text-small"><RupeeIcon /></span>}
+        />
+      </CardBody>
 
-        <CardBody>
-          <RadioGroup
-            label="Booking Nature"
-            orientation="horizontal"
-            color="secondary"
-            defaultValue="book"
-            onChange={handleChange}
-          >
-            <Radio value="book">Book Venue</Radio>
-            <Radio value="reserve">Reserve Venue</Radio>
-          </RadioGroup>
-          {selectedOption === 'reserve' && (
-            <p className="text-xs mt-4 italic text-red-400">
-              NOTE: If not confirmed your reservation one day earlier, your reservation will be automatically cancelled.
+      <CardBody>
+        <RadioGroup
+          label="Booking Nature"
+          orientation="horizontal"
+          color="secondary"
+          defaultValue="book"
+          onChange={handleChange}
+        >
+          <Radio value="book">Book Venue</Radio>
+          <Radio value="reserve">Reserve Venue</Radio>
+        </RadioGroup>
+        {selectedOption === 'reserve' && (
+          <p className="text-xs mt-4 italic text-red-400">
+            NOTE: If not confirmed your reservation one day earlier, your reservation will be automatically cancelled.
+          </p>
+        )}
+        {selectedOption === 'book' && (
+          <>
+            <p className="text-xs mt-4 uppercase text-green-400">
+              Choose Payment Gateway
             </p>
-          )}
-          {selectedOption === 'book' && (
-            <>
-              <p className="text-xs mt-4 uppercase text-green-400">
-                Choose Payment Gateway
-              </p>
-              <div className="flex gap-4 mt-4">
-                <Button onClick={handleKhaltiClick} color="primary">Khalti</Button>
-                <Button onClick={handleEsewaClick} color="secondary">Esewa</Button>
-              </div>
-            </>
-          )}
-        </CardBody>
-      </Card>
-    </>
+            <div className="flex gap-4 mt-4">
+              <Button onClick={handleKhaltiClick} color="primary">Khalti</Button>
+              <Button color="secondary">Esewa</Button>
+            </div>
+          </>
+        )}
+      </CardBody>
+    </Card>
   );
 };
 

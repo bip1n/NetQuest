@@ -13,14 +13,6 @@ const userCtrl = {
             const { owner_id, date, price, time, altcontact, pidx } = req.body;
             const dateObj = new Date(date);
             const formattedDate = dateObj.toISOString().slice(0, 10);
-
-            console.log(user_id);
-            console.log(owner_id);
-            console.log(formattedDate);
-            console.log(price);
-            console.log(time);
-            console.log(altcontact);
-            console.log(pidx);
     
             if (!user_id) return res.status(400).json({ error: "User ID is required." });
             if (!owner_id) return res.status(400).json({ error: "Owner ID is required." });
@@ -67,13 +59,9 @@ const userCtrl = {
     userprofile: async (req, res) => {
         try {
             const user_id = req.user.id
-            console.log(user_id);
             if (!user_id) { return res.status(400).json({ error: "User ID is required." })};
-            console.log("this1");
             const user = await User.findById(user_id).select('-password -mailverified -Bookedstatus -mailverified, -joindate');
-            console.log("this2");
             if (!user) { return res.status(404).json({ error: "User not found." })};
-            console.log(user);
             return res.status(200).json({ user });
 
         } catch (err) {
@@ -89,10 +77,6 @@ const userCtrl = {
 
         const user_id = req.user.id
         const { review, owner_id } = req.body;
-
-        console.log(user_id);
-        console.log(owner_id);
-        console.log(review);
 
         if (!review || !owner_id || !user_id) {
             return res.status(400).json({ msg: "Missing required fields" });
@@ -116,8 +100,6 @@ const userCtrl = {
             downvotes: 0,  
             createdAt: new Date()
         };
-
-        console.log(newReview);
 
         const updatedVenue = await Venue.findOneAndUpdate(
             { owner_id: owner_id }, 
@@ -152,8 +134,6 @@ const userCtrl = {
 
         const now = moment();
 
-        console.log("Now:", now);
-
         const pastBookings = [];
         const futureOrPresentBookings = [];
 
@@ -180,8 +160,6 @@ const userCtrl = {
         bookingsWithVenueDetails.forEach(booking => {
             const bookingDate = moment(booking.date);
 
-            console.log("Booking date:", bookingDate);
-
             const formattedDate = bookingDate.format('YYYY/MM/DD');
             const formattedTime = bookingDate.format('HH:mm');
 
@@ -197,9 +175,6 @@ const userCtrl = {
                 futureOrPresentBookings.push(formattedBooking);
             }
         });
-
-        console.log("Past bookings:", pastBookings);
-        console.log("Future or present bookings:", futureOrPresentBookings);
 
 
         return res.status(200).json({
@@ -247,17 +222,14 @@ const userCtrl = {
         try {
             const owner_id = req.params.id;
     
-            // Find all venues with the specified owner_id
             const venues = await Venue.find({ owner_id });
     
             if (!venues.length) {
                 return res.status(404).json({ msg: "No venues found for this owner." });
             }
     
-            // Extract reviews from the venues
             const reviews = venues.reduce((acc, venue) => acc.concat(venue.reviews), []);
     
-            // Fetch user details for each review
             const reviewsWithUserDetails = await Promise.all(reviews.map(async (review) => {
                 const user = await User.findById(review.user_id);
                 return {
@@ -266,7 +238,6 @@ const userCtrl = {
                 };
             }));
 
-            console.log(reviewsWithUserDetails)
     
             return res.status(200).json({ reviews: reviewsWithUserDetails });
         } catch (error) {

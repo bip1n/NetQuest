@@ -49,7 +49,6 @@ const Venue = () => {
     
             const responseData = await response.json();
             setVenues(responseData.owners);
-            console.log("Venue data fetched:", responseData.owners);
           } catch (error) {
             setError("An error occurred while fetching venue data.");
           } finally {

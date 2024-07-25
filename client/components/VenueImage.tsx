@@ -6,7 +6,6 @@ import { Card, CardBody } from "@nextui-org/react";
 export default function VenueImage (props: { venueId: any; }) {
   const [items, setItems] = useState([]);
   const { venueId } = props;
-  console.log('venueId:', venueId);
   if (!venueId) {
     return <div>No venueId provided</div>;
   }

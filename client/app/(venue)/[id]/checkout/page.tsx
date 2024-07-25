@@ -83,10 +83,8 @@ const CheckoutPage = () => {
 
         if (!response2.ok) {
           const errorResponse = await response2.json();
-          console.log(errorResponse);
         } else {
           const responseData = await response2.json();
-          console.log(responseData);
         }
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -102,16 +100,13 @@ const CheckoutPage = () => {
 
 
   useEffect(() => {
-    console.log('useEffect');
     const storedData = localStorage.getItem('Bookdata');
-    console.log(storedData);
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       const currentTime = new Date().getTime();
       const MinuteTime = 2 * 60 * 1000;
 
       if (currentTime - parsedData.timestamp < MinuteTime) {
-        console.log(parsedData);
         setvenuedataData(parsedData);
       } else {
         // setvenuedataData('Data has expired');

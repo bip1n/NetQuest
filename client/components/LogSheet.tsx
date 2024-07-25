@@ -34,7 +34,6 @@ export const LogSheet = ({ venueId, range }) => {
 
     const fetchData = async () => {
       try {
-        console.log("fetching data...");
         const response = await fetch("http://localhost:4000/api/logsheet", {
           method: "POST",
           headers: {
@@ -48,7 +47,6 @@ export const LogSheet = ({ venueId, range }) => {
         }
 
         const data = await response.json();
-        console.log(data);
         setVenueDetails(data.venueDetails);
         setInvoices(Object.entries(data.bookingSummary).map(([date, summary]) => ({
           date,

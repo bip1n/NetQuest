@@ -30,7 +30,6 @@ export const PendingVenueStatus: React.FC = () => {
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        console.log("Fetching pending venues");
         const response = await fetch("http://localhost:4000/api/getPendingVenue", {
           method: "POST",
           headers: {
@@ -44,8 +43,6 @@ export const PendingVenueStatus: React.FC = () => {
         }
 
         const data: Venue[] = await response.json();
-
-        console.log(data);
         setVenues(data);
       } catch (error) {
         console.error('Error fetching venue data:', error);

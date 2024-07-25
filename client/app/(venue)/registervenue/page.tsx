@@ -127,7 +127,6 @@ export default function RegisterVenue() {
       } else {
         // Handle successful registration
         const responseData = await response.json();
-        console.log("Registration successful:", responseData);
         setError("Registration successful:");
 
         // redirect to login
@@ -138,7 +137,6 @@ export default function RegisterVenue() {
       setError("Failed to register the venue. Please try again.");
     } finally {
       setLoading(false);
-      console.log("Form submission complete.");
     }
   };
 

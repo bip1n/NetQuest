@@ -35,8 +35,6 @@ export default function Signin({ onLogin }: SigninProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Sign-in form submitted:", { email, password });
-
     setLoading(true);
     setError("");
 
@@ -54,7 +52,6 @@ export default function Signin({ onLogin }: SigninProps) {
         setError(errorResponse.error);
       } else {
         const responseData = await response.json();
-        console.log("Sign-in successful:", responseData);
 
         // Set cookies with high security
         Cookies.set('__securedAccess', responseData.access_token, { 

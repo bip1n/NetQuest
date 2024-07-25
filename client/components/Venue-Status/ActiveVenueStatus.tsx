@@ -42,10 +42,7 @@ export const ActiveVenueStatus: React.FC = () => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
         const data: Venue[] = await response.json();
-
-        console.log(data);
         setVenues(data);
       } catch (error) {
         console.error('Error fetching venue data:', error);

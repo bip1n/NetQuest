@@ -52,7 +52,6 @@ export default function SignupPage() {
     formData.append("password", password);
 
     setLoading(true);
-    console.log("Submitting form, please wait...");
 
     try {
       const response = await fetch("http://localhost:4000/api/register", {
@@ -73,7 +72,6 @@ export default function SignupPage() {
       } else {
         // Handle successful registration
         const responseData = await response.json();
-        console.log("Registration successful:", responseData);
         setError("Registration successful:");
         // redirect to login
         router.push("/");
@@ -83,7 +81,6 @@ export default function SignupPage() {
       setError("Failed to register. Please try again.");
     } finally {
       setLoading(false);
-      console.log("Form submission complete.");
     }
   };
 

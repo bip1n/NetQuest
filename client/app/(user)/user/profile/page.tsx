@@ -47,7 +47,6 @@ export default function UserProfile() {
             setError(errorResponse.error);
           } else {
             const responseData = await response.json();
-            // console.log('responseData:', responseData);
             setUserDetails(responseData.user);
           }
         } catch (error) {

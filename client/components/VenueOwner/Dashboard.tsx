@@ -93,7 +93,7 @@ const Dashboard = () => {
                   {isLoadingRevenue ? (
                     <div className="text-2xl font-bold flex flex-row">Loading...</div>
                   ) : (
-                    <div className="text-2xl font-bold flex flex-row">Rs. {revenue.toFixed(2)}</div>
+                    <div className="text-2xl font-bold flex flex-row">Rs. {revenue}</div>
                   )}
                 </div>
                 <div>

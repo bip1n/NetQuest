@@ -184,6 +184,8 @@ const adminCtrl = {
       logsheet: async (req, res) => {
         try {
             const { venueId, timeline } = req.body;
+            console.log(venueId)
+            console.log(timeline)
             const venues = await Venue.findOne({ venueID: venueId });
             if (!venues) return res.status(400).json({ msg: "This venue does not exist." });
             const owner = await Owner.findOne({ _id: venues.owner_id });

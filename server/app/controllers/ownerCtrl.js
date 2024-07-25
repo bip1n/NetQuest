@@ -4,6 +4,7 @@ const VenueStatus = require("../models/venueStatus");
 const venue = require("../models/venueModel");
 const cloudinary = require("../utils/cloudinary");
 const Booking = require("../models/bookingSchema");
+const user = require("../models/userModel");
 
 
 const ownerCtrl = {
@@ -278,62 +279,78 @@ const ownerCtrl = {
     }
   },
 
-    recentbooking: async (req, res) => {
-      try {
-        const owner_id = req.user.id;
-        if (!owner_id) {
-          return res.status(400).json({ error: "Owner ID is required." });
-        }
-    
-        // Get current date and time
-        const now = new Date();
-        const today = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-        const currentTime = now.toTimeString().split(' ')[0].substring(0, 5); // Format: HH:MM
-    
-        // Fetch all bookings for the owner
-        const bookings = await Booking.find({ owner_id });
-    
-        console.log(`Total bookings: ${bookings.length}`);
-        console.log(`Current Time: ${currentTime}`);
-        
-        // Filter future bookings from today onwards
-        const futureBookings = bookings.filter(booking => {
-          const bookingDate = booking.date.toISOString().split('T')[0];
-          const bookingTime = booking.time;
-    
-          // Convert bookingTime and currentTime to comparable formats (HHMM)
-          const bookingTimeFormatted = bookingTime.replace(':', '');
-          const currentTimeFormatted = currentTime.replace(':', '');
-    
-          // Return bookings that are today and time is after or equal to current time
-          // or bookings that are for future dates
-          return (bookingDate > today) || (bookingDate === today && bookingTimeFormatted >= currentTimeFormatted);
-        });
-    
-        console.log(`Filtered future bookings: ${futureBookings.length}`);
-        
-        // Sort bookings by date, time, and bookedAt
-        futureBookings.sort((a, b) => {
-          const dateComparison = new Date(a.date).getTime() - new Date(b.date).getTime();
-          if (dateComparison === 0) {
-            const timeComparison = a.time.localeCompare(b.time);
-            if (timeComparison === 0) {
-              return new Date(b.bookedAt).getTime() - new Date(a.bookedAt).getTime();
-            }
-            return timeComparison;
-          }
-          return dateComparison;
-        });
-    
-        console.log(`Sorted future bookings: ${futureBookings.length}`);
-        
-        // Return filtered and sorted future bookings
-        return res.status(200).json({ recentBookings: futureBookings });
-        
-      } catch (err) {
-        return res.status(500).json({ msg: err.message });
+  recentbooking: async (req, res) => {
+    try {
+      const owner_id = req.user.id;
+      if (!owner_id) {
+        return res.status(400).json({ error: "Owner ID is required." });
       }
-    },
+  
+      // Get current date and time
+      const now = new Date();
+      const today = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+      const currentTime = now.toTimeString().split(' ')[0].substring(0, 5); // Format: HH:MM
+  
+      // Fetch all bookings for the owner
+      const bookings = await Booking.find({ owner_id });
+  
+      
+      // Filter future bookings from today onwards
+      const futureBookings = bookings.filter(booking => {
+        const bookingDate = booking.date.toISOString().split('T')[0];
+        const bookingTime = booking.time;
+  
+        // Convert bookingTime and currentTime to comparable formats (HHMM)
+        const bookingTimeFormatted = bookingTime.replace(':', '');
+        const currentTimeFormatted = currentTime.replace(':', '');
+  
+        // Return bookings that are today and time is after or equal to current time
+        // or bookings that are for future dates
+        return (bookingDate > today) || (bookingDate === today && bookingTimeFormatted >= currentTimeFormatted);
+      });
+        
+      // Sort bookings by date, time, and bookedAt
+      futureBookings.sort((a, b) => {
+        const dateComparison = new Date(a.date).getTime() - new Date(b.date).getTime();
+        if (dateComparison === 0) {
+          const timeComparison = a.time.localeCompare(b.time);
+          if (timeComparison === 0) {
+            return new Date(b.bookedAt).getTime() - new Date(a.bookedAt).getTime();
+          }
+          return timeComparison;
+        }
+        return dateComparison;
+      });
+  
+
+      // Fetch user data for each booking
+      const userIds = futureBookings.map(booking => booking.user_id);
+      const users = await User.find({ _id: { $in: userIds } }).lean();
+  
+      // Map user data to bookings
+      const recentBookings = futureBookings.map(booking => {
+        const user = users.find(user => user._id.equals(booking.user_id));
+        return {
+          customer: {
+            name: user.username,
+            contact: user.phone,
+            avatarUrl: user.profilepic
+          },
+          date: booking.date.toISOString().split('T')[0],
+          time: booking.time,
+          amount: booking.price
+        };
+      });
+
+      console.log(recentBookings);
+  
+      // Return filtered and sorted future bookings with user data
+      return res.status(200).json({ recentBookings });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  
 }
 
 module.exports = ownerCtrl;

@@ -17,6 +17,7 @@ export default function BookingSettingsPage() {
       <Card>
         <BookingTable />
       </Card>
+      
     </>
   );
 }

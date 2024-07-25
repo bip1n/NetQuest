@@ -65,7 +65,7 @@ export default function RegisterVenue() {
         });
 
         // Redirect to the dashboard or home page after successful login
-        router.push(`/venue/dashboard`); // Replace with your desired route
+        router.push(`/venue`); // Replace with your desired route
       }
     } catch (error) {
       console.error("Error submitting form:", error);

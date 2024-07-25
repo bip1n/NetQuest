@@ -26,7 +26,7 @@ import { Skeleton } from "../ui/skeleton";
 const navLinks = [
   { item: "Home", link: "/" },
   { item: "Bookings", link: "/user/booking" },
-  { item: "History", link: "/user/history" },
+  // { item: "History", link: "/user/history" },
 ];
 
 // Define the UserDetails interface

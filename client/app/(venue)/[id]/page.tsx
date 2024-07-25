@@ -259,9 +259,17 @@ const Venue = () => {
                     </CardContent>
                 </Card>
                 <Card x-chunk="dashboard-07-chunk-3">
-                  <CardHeader>
-                    <CardTitle>Reviews</CardTitle>
-                  </CardHeader>
+                 
+                      <CardHeader>
+                        <div className="flex flex-row justify-between">
+                          <div>
+                              <CardTitle>Reviews</CardTitle>
+                          </div>
+                          <div>
+                            <Button variant={"outline"} onClick={() => router.push(`/${venue._id}/review`)}>View All</Button>
+                          </div>
+                        </div>
+                      </CardHeader>
                   <CardContent>
                       <div className="grid gap-6">
                         <div className="grid gap-3">

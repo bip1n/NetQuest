@@ -22,7 +22,7 @@ import { NotificationModal } from "../NotificationModal";
 import Cookies from "js-cookie";
 
 const navLinks = [
-  { item: "Home", link: "/venue/dashboard" },
+  { item: "Home", link: "/venue" },
   { item: "Booking", link: "/venue/booking" },
   { item: "History", link: "/venue/history" },
   { item: "Analytics", link: "/venue/analytics" },

@@ -16,7 +16,9 @@ export default function BookingSettingsPage() {
     <>
       <Card>
         <Button className="w-1/6"><Link href={"booking/settings"}> Settings</Link></Button>
+        <BookingTable/>
       </Card>
+      
     </>
   );
 }

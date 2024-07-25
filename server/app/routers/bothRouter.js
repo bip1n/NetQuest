@@ -73,17 +73,22 @@ router.get("/khalti/response", async (req, res) => {
     request(options, function (error, response) {
         if (error) throw new Error(error);
         const responseBody = JSON.parse(response.body);
+        console.log(response.statusCode);
         if (response.statusCode === 200) {
             if (responseBody.status === 'Completed') {
                 console.log('Payment successful');
             }
+            return res.status(200).json(responseBody);
+
             // const redirectUrl = `http://localhost:3000/venue/success?pidx=${responseBody.pidx}&transaction_id=${responseBody.transaction_id}&status=${responseBody.status}`;
             // return res.redirect(redirectUrl);
         } else {
-            // console.error('Error:', JSON.parse(response.body));
+            console.log('Error:', response);
             // const redirectUrl = `http://localhost:3000/venue/success?detail=${responseBody.detail}&error_key=${responseBody.error_key}`;
             // return res.redirect(redirectUrl);
+            return res.status(200).json(responseBody);
 
+            // console.log('Error:', responseBody);
         }
     })
 });

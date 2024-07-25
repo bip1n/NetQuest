@@ -16,5 +16,11 @@ router.post('/savemedia', verifyToken, upload.fields([
 ]),  ownerCtrl.savemedia);
 // router.post('/saveimages', verifyToken, ownerCtrl.saveimages);
 // Export the router to be used in other parts of the application
+
+router.get('/venuedata', verifyToken, ownerCtrl.venuedata);
+router.get('/ongoingbooking', verifyToken, ownerCtrl.ongoingbooking);
+router.get('/recentbooking', verifyToken, ownerCtrl.recentbooking);
+
+
 module.exports = router;
  

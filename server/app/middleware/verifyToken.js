@@ -8,11 +8,10 @@ require('dotenv').config();
 async function verifyToken(req, res, next) {
     // Extracting the Bearer token from the 'Authorization' header
     const { authorization: BearerToken } = req.headers;
-
+    
     // Splitting the Bearer token to extract the actual token value
     const tokenSpace = BearerToken ? BearerToken.split(' ') : [];
     const token = tokenSpace[1];
-
     // Checking if the token is missing or set to 'null' or 'undefined'
     if (!token || token === 'null' || token === 'undefined') {
         return res.status(401).json({ message: "Please Login" });

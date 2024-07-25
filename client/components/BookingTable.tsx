@@ -31,6 +31,7 @@ import {
 import { getLocalTimeZone, today, CalendarDate, Time } from "@internationalized/date";
 import { useRouter } from 'next/navigation';
 import { ClockCircleLinearIcon } from './Icons';
+import Cookies from "js-cookie";
 
 // Define a type for the slot objects
 interface Slot {
@@ -48,11 +49,16 @@ export const BookingTable = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<CalendarDate>(today(getLocalTimeZone()));
 
+
   // Function to fetch data from the server
   const fetchSlots = async (date: CalendarDate) => {
     setIsLoading(true);
     try {
-      const token = "YOUR_AUTH_TOKEN"; // Replace with your actual token
+      const token = Cookies.get("__securedAccess");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
       const response = await fetch(`http://localhost:4000/api/venues/booking-settings?date=${date.toString()}`, {
         method: "GET",
         headers: {

@@ -3,6 +3,7 @@ const Owner = require("../models/ownerModel");
 const VenueStatus = require("../models/venueStatus");
 const venue = require("../models/venueModel");
 const cloudinary = require("../utils/cloudinary");
+const Booking = require("../models/bookingSchema");
 
 
 const ownerCtrl = {
@@ -202,8 +203,137 @@ const ownerCtrl = {
         }
     },
 
-    
+    venuedata: async (req, res) => {
+      try {
+          const owner_id = req.user.id;
+          if (!owner_id) {
+              return res.status(400).json({ error: "Owner ID is required." });
+          }
+  
+          const bookings = await Booking.find({ owner_id });
+          
+          // Initialize variables
+          let totalRevenue = 0;
+          const userIds = new Set(); // To keep track of unique user_ids
+  
+          // Calculate total revenue and collect unique user_ids
+          bookings.forEach(booking => {
+              totalRevenue += booking.price;
+              userIds.add(booking.user_id.toString()); // Convert to string to ensure uniqueness
+          });
+  
+          // Calculate the results
+          const totalUsers = userIds.size;
+          const totalBookings = bookings.length;
+  
+          // Create the response object
+          const response = {
+              revenue: totalRevenue,
+              totalUsers: totalUsers,
+              totalBookings: totalBookings
+          };
+  
+          return res.status(200).json(response);
+      } catch (err) {
+          return res.status(500).json({ msg: err.message });
+      }
+  },
 
+  ongoingbooking: async (req, res) => {
+    try {
+      const owner_id = req.user.id;
+      if (!owner_id) {
+        return res.status(400).json({ error: "Owner ID is required." });
+      }
+      
+      // Get current date and time
+      const now = new Date();
+      const today = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+      const currentTime = now.toTimeString().split(' ')[0].substring(0, 5); // Format: HH:MM
+  
+      // Fetch bookings for the owner
+      const bookings = await Booking.find({ owner_id });
+      
+      // Filter bookings to include only those for today with time greater than or equal to current time
+      const ongoingBookings = bookings.filter(booking => {
+        const bookingDate = booking.date.toISOString().split('T')[0];
+        const bookingTime = booking.time;
+        
+        return bookingDate === today && bookingTime >= currentTime;
+      });
+      
+      // Sort ongoing bookings by time in ascending order
+      ongoingBookings.sort((a, b) => {
+        const timeA = a.time.split(':').map(Number);
+        const timeB = b.time.split(':').map(Number);
+        
+        return timeA[0] - timeB[0] || timeA[1] - timeB[1];
+      });
+      
+      // Return filtered and sorted ongoing bookings
+      return res.status(200).json({ bookings: ongoingBookings });
+      
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
+    recentbooking: async (req, res) => {
+      try {
+        const owner_id = req.user.id;
+        if (!owner_id) {
+          return res.status(400).json({ error: "Owner ID is required." });
+        }
+    
+        // Get current date and time
+        const now = new Date();
+        const today = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+        const currentTime = now.toTimeString().split(' ')[0].substring(0, 5); // Format: HH:MM
+    
+        // Fetch all bookings for the owner
+        const bookings = await Booking.find({ owner_id });
+    
+        console.log(`Total bookings: ${bookings.length}`);
+        console.log(`Current Time: ${currentTime}`);
+        
+        // Filter future bookings from today onwards
+        const futureBookings = bookings.filter(booking => {
+          const bookingDate = booking.date.toISOString().split('T')[0];
+          const bookingTime = booking.time;
+    
+          // Convert bookingTime and currentTime to comparable formats (HHMM)
+          const bookingTimeFormatted = bookingTime.replace(':', '');
+          const currentTimeFormatted = currentTime.replace(':', '');
+    
+          // Return bookings that are today and time is after or equal to current time
+          // or bookings that are for future dates
+          return (bookingDate > today) || (bookingDate === today && bookingTimeFormatted >= currentTimeFormatted);
+        });
+    
+        console.log(`Filtered future bookings: ${futureBookings.length}`);
+        
+        // Sort bookings by date, time, and bookedAt
+        futureBookings.sort((a, b) => {
+          const dateComparison = new Date(a.date).getTime() - new Date(b.date).getTime();
+          if (dateComparison === 0) {
+            const timeComparison = a.time.localeCompare(b.time);
+            if (timeComparison === 0) {
+              return new Date(b.bookedAt).getTime() - new Date(a.bookedAt).getTime();
+            }
+            return timeComparison;
+          }
+          return dateComparison;
+        });
+    
+        console.log(`Sorted future bookings: ${futureBookings.length}`);
+        
+        // Return filtered and sorted future bookings
+        return res.status(200).json({ recentBookings: futureBookings });
+        
+      } catch (err) {
+        return res.status(500).json({ msg: err.message });
+      }
+    },
 }
 
 module.exports = ownerCtrl;

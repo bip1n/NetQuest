@@ -12,10 +12,13 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import Image from 'next/image';
+import { CardBody } from "@nextui-org/react";
+import { Skeleton } from "./ui/skeleton";
 
 interface Venue {
     _id: number;
@@ -49,6 +52,7 @@ const Venue = () => {
     
             const responseData = await response.json();
             setVenues(responseData.owners);
+            console.log(responseData.owners);
           } catch (error) {
             setError("An error occurred while fetching venue data.");
           } finally {
@@ -66,6 +70,7 @@ const Venue = () => {
             {loading
             ? Array.from({ length: 4 }).map((_, index) => (
                 <Card key={index}>
+                  Loading...
                   {/* <CardBody>
                     <Skeleton className="flex rounded-lg w-full h-full" />
                   </CardBody>
@@ -85,7 +90,7 @@ const Venue = () => {
                 <CardContent>
                     <div className="w-full h-48 overflow-hidden relative">
                         <Image
-                            src="https://goalnepal.com/uploads/news/1626144627.jpg"
+                            src={venue.profilepic}
                             alt="Transaction"
                             layout="intrinsic"
                             width={500}

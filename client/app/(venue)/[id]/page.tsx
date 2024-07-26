@@ -34,8 +34,6 @@ const Venue = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  console.log(id);
-
   useEffect(() => {
     const fetchVenueData = async () => {
       if (!id) return;
@@ -132,11 +130,11 @@ const Venue = () => {
                   </div>
                   <div className="flex flex-row mb-2">
                     <Star strokeWidth={1.5} size={24} />
-                    <div className="ml-2">[4.5/5]</div>
+                    <div className="ml-2">{venue.ratings}</div>
                   </div>
                   <div className="flex flex-row mb-2">
                     <PhoneCall strokeWidth={1.5} size={24} />
-                    <div className="ml-2">+977 9876543210</div>
+                    <div className="ml-2">+977 {venue.phone}</div>
                   </div>
                   <div className="flex flex-row">
                     <Flame strokeWidth={1.5} size={24} />
@@ -161,8 +159,8 @@ const Venue = () => {
                       </div>
                       <div>
                         <Button variant="outline" asChild size="sm" className="ml-auto gap-1">
-                          <Link href="#">
-                            History
+                          <Link href="`/${venue._id}`">
+                            View All
                             <ArrowUpRight className="h-4 w-4" />
                           </Link>
                         </Button>

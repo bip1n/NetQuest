@@ -26,12 +26,6 @@ const columns = [
   { name: "ACTIONS", uid: "actions" },
 ];
 
-const statusColorMap: { [key in Venue['status']]: 'success' | 'danger' | 'primary' } = {
-  active: "success",
-  rejected: "danger",
-  pending: "primary",
-};
-
 export const RejectedVenueStatus: React.FC = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
   const router = useRouter();

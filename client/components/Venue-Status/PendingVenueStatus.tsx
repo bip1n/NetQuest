@@ -59,6 +59,8 @@ export const PendingVenueStatus: React.FC = () => {
     fetchVenues();
   }, []);
 
+
+  
   const handleVerify = async (id: string) => {
     try {
       const response = await fetch("http://localhost:4000/api/verifyVenue", {
@@ -107,7 +109,7 @@ export const PendingVenueStatus: React.FC = () => {
         <div className="relative flex items-center gap-2">
           <Tooltip content="Details">
             <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-              <Button variant="link" size="icon" onClick={() => router.push(`/admin/${venue._id}-details`)}><EyeIcon /></Button>
+              <Button variant="link" size="icon" onClick={() => router.push(`/admin/${venue.owner_id}-details`)}><EyeIcon /></Button>
             </span>
           </Tooltip>
           <Tooltip content="Edit">

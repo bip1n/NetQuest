@@ -1,4 +1,4 @@
-"use client"; // Indicates this is a client-side component
+"use client"
 import React, { useState, useEffect } from "react";
 import {
   Card,
@@ -105,9 +105,6 @@ export default function UserBooking() {
 
   return (
     <>
-      <p className="text-semibold text-warning-500 text-sm italic ml-4">
-        **Open in Landscape for better view.**
-      </p>
       
       {/* Future or Present Bookings */}
       <Card className="mx-4 mt-4">

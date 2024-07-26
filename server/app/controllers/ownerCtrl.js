@@ -367,8 +367,6 @@ const ownerCtrl = {
       // Fetch user data for each booking
       const userIds = futureBookings.map(booking => booking.user_id);
       const users = await user.find({ _id: { $in: userIds } }).lean();
-
-      console.log(users);
   
       // Map user data to bookings
       const recentBookings = futureBookings.map(booking => {
@@ -403,9 +401,7 @@ const ownerCtrl = {
       if (!date) {
         return res.status(400).json({ error: "Date is required." });
       }
-  
-      console.log(date);
-  
+    
       // Parse the date string to a JavaScript Date object to ensure proper querying
       const queryDate = new Date(date);
       // Set time to 00:00:00 to match only the date part
@@ -442,19 +438,72 @@ const ownerCtrl = {
         return res.status(404).json({ error: "Booking does not exist." });
       }
   
-      console.log("Current booking status:", booking.status); // Debugging line
       booking.status = status;
       await booking.save();
   
-      console.log("Updated booking status:", booking.status); // Debugging line
   
       return res.status(200).json({ message: "Booking status updated successfully!" });
     } catch (err) {
       console.error(err); // Add this line
       return res.status(500).json({ msg: err.message });
     }
-  }
+  },
 
+  saveSettings: async (req, res) => {
+    try {
+      const owner_id = req.user.id;
+      if (!owner_id) {
+        return res.status(400).json({ error: "Owner ID is required." });
+      }
+  
+      const { openTime, closeTime, rate } = req.body;
+  
+      if (!openTime || !closeTime || !rate) {
+        return res.status(400).json({ error: "Open time, close time, and rate are required." });
+      }
+      // Convert openTime and closeTime from strings to objects with hour and minute properties
+      const [openHour, openMinute] = openTime.split(":").map(Number);
+      const [closeHour, closeMinute] = closeTime.split(":").map(Number);
+  
+      const Venue = await venue.findOne({ owner_id });
+
+      if (!Venue) {
+        return res.status(400).json({ error: "Venue does not exist." });
+      }
+  
+      Venue.openat = { hour: openHour, minute: openMinute };
+      Venue.closeat = { hour: closeHour, minute: closeMinute };
+      Venue.rate = rate;
+  
+      await Venue.save();
+  
+      return res.status(200).json({ message: "Settings saved successfully!" });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
+  venuesettings: async (req, res) => {
+    try {
+      const owner_id = req.user.id; // Assuming you have some middleware to set req.user
+      console.log(owner_id);
+      if (!owner_id) {
+        return res.status(400).json({ error: "Owner ID is required." });
+      }
+      const Venue = await venue.findOne({ owner_id });
+      console.log(Venue);
+      if (!Venue) {
+        return res.status(400).json({ error: "Venue does not exist." });
+      }
+      res.status(200).json({
+        openTime: Venue.openat,
+        closeTime: Venue.closeat,
+        rate: Venue.rate
+      });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 }
 
 module.exports = ownerCtrl;

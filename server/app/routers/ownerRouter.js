@@ -14,6 +14,8 @@ router.get('/ongoingbooking', verifyToken, ownerCtrl.ongoingbooking);
 router.get('/recentbooking', verifyToken, ownerCtrl.recentbooking);
 router.get('/venues/booking-settings', verifyToken, ownerCtrl.bookingdetails);
 router.post('/venues/update-booking-status', verifyToken, ownerCtrl.updateBookingStatus);
+router.post('/venues/save-settings', verifyToken, ownerCtrl.saveSettings);
+router.get('/venues/venue-settings', verifyToken, ownerCtrl.venuesettings);
 
 
 

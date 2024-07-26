@@ -32,7 +32,7 @@ export default function RegisterVenue() {
     e.preventDefault();
 
     setLoading(true);
-    setError(""); // Clear any existing errors
+    setError("");
 
     try {
       const response = await fetch("http://localhost:4000/api/loginowner", {
@@ -47,25 +47,22 @@ export default function RegisterVenue() {
         const errorResponse = await response.json();
         setError(errorResponse.error || "Failed to login. Please try again.");
       } else {
-        // Handle successful login
         const responseData = await response.json();
 
-        // Set cookies with high security
         Cookies.set("__securedAccess", responseData.access_token, {
-          expires: 7, // token expiry in days
+          expires: 7, 
           secure: true,
           sameSite: "strict",
           path: "/",
         });
         Cookies.set("__securedRefresh", responseData.refresh_token, {
-          expires: 30, // refresh token expiry in days
+          expires: 30, 
           secure: true,
           sameSite: "strict",
           path: "/",
         });
 
-        // Redirect to the dashboard or home page after successful login
-        router.push(`/venue`); // Replace with your desired route
+        router.push(`/venue`); 
       }
     } catch (error) {
       console.error("Error submitting form:", error);

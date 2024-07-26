@@ -2,6 +2,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip } from "@nextui-org/react";
 import { EditIcon, DeleteIcon, EyeIcon } from "../Icons";
+import { Button } from '../ui/button';
+import { useRouter } from "next/navigation";
 
 type Venue = {
   _id: string;
@@ -30,6 +32,8 @@ const statusColorMap: { [key in Venue['status']]: 'success' | 'danger' | 'primar
 
 export const RejectedVenueStatus: React.FC = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
+  const router = useRouter();
+
   
   useEffect(() => {
     const fetchVenues = async () => {
@@ -103,17 +107,11 @@ export const RejectedVenueStatus: React.FC = () => {
         <div className="relative flex items-center gap-2">
           <Tooltip content="Details">
             <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-              <EyeIcon />
-            </span>
+            <Button variant="link" size="icon" onClick={() => router.push(`/admin/${venue._id}-details`)}><EyeIcon /></Button>            </span>
           </Tooltip>
-          <Tooltip content="Verify venue">
+          <Tooltip content="Edit">
             <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => handleVerify(venue._id)}>
               <EditIcon />
-            </span>
-          </Tooltip>
-          <Tooltip color="danger" content="Reject venue">
-            <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => handleReject(venue._id)}>
-              <DeleteIcon />
             </span>
           </Tooltip>
         </div>
@@ -143,7 +141,7 @@ export const RejectedVenueStatus: React.FC = () => {
         );
       case "status":
         return (
-          <Chip className="capitalize" color={statusColorMap[venue.status]} size="sm" variant="flat">
+          <Chip className="capitalize" color={'danger'} size="sm" variant="solid">
             {cellValue || 'rejected'}
           </Chip>
         );

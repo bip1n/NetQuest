@@ -2,6 +2,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip } from "@nextui-org/react";
 import { EditIcon, DeleteIcon, EyeIcon } from "../Icons";
+import { Button } from '../ui/button';
+import { useRouter } from "next/navigation";
+import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem} from "@nextui-org/react";
+
 
 type Venue = {
   _id: string;
@@ -26,6 +30,8 @@ const statusColorMap: { [key in Venue['status']]: 'success' | 'danger' | 'primar
 
 export const PendingVenueStatus: React.FC = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
+  const router = useRouter();
+
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -44,6 +50,7 @@ export const PendingVenueStatus: React.FC = () => {
 
         const data: Venue[] = await response.json();
         setVenues(data);
+        console.log(data);
       } catch (error) {
         console.error('Error fetching venue data:', error);
       }
@@ -100,12 +107,30 @@ export const PendingVenueStatus: React.FC = () => {
         <div className="relative flex items-center gap-2">
           <Tooltip content="Details">
             <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-              <EyeIcon />
+              <Button variant="link" size="icon" onClick={() => router.push(`/admin/${venue._id}-details`)}><EyeIcon /></Button>
             </span>
           </Tooltip>
           <Tooltip content="Edit">
             <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => handleVerify(venue._id)}>
-              <EditIcon />
+            <Dropdown>
+              <DropdownTrigger>
+                <Button 
+                  variant="link" 
+                >
+                  <EditIcon/>
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu 
+                aria-label="Action event example" 
+                onAction={(key) => alert(key)}
+              >
+                <DropdownItem key="new" className="text-success" color="success">Accepted</DropdownItem>
+                <DropdownItem key="copy" className="text-warning" color="warning">Pending</DropdownItem>
+                <DropdownItem key="delete" className="text-danger" color="danger">
+                  Reject Venue
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
             </span>
           </Tooltip>
         </div>
@@ -118,7 +143,7 @@ export const PendingVenueStatus: React.FC = () => {
       case "ownerID":
         return (
           <User
-          avatarProps={{ radius: "lg", src: venue.images[0] }}
+          avatarProps={{ radius: "lg", src: venue.images }}
           name={venue.fullname}
           description= {venue.email}
           >
@@ -139,7 +164,7 @@ export const PendingVenueStatus: React.FC = () => {
 
       case "status":
         return (
-          <Chip className="capitalize" color="warning" size="sm" variant="flat">
+          <Chip className="capitalize" color="warning" size="sm" variant="solid">
             {cellValue || 'pending'}
           </Chip>
         );

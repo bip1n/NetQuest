@@ -90,10 +90,10 @@ const Venue = () => {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40"> 
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-            <div className="grid auto-rows-max items-start gap-4 lg:col-span-1 lg:gap-8">
-              <Carousel className="w-[80%]">
+        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-4">
+          <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-4">
+            <div className="grid auto-rows-max items-start gap-4 lg:col-span-1 lg:gap-2">
+              <Carousel className="w-[94%]">
                 <CarouselContent>
                   {Array.from({ length: 5 }).map((_, index) => (
                     <CarouselItem key={index}>
@@ -116,7 +116,7 @@ const Venue = () => {
                 <CarouselNext />
               </Carousel>
             </div>
-            <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+            <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-4">
               <Card>
                 <CardHeader>
                   <CardTitle className="uppercase">{venue.venueName}</CardTitle>
@@ -195,6 +195,7 @@ const Venue = () => {
                 </CardContent>
               </Card>
             </div>
+          
           </div>
           <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-5 lg:gap-8">
             <div className="grid auto-rows-max items-start gap-2 lg:col-span-5 lg:gap-4">

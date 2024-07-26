@@ -68,7 +68,7 @@ const ownerCtrl = {
 
         const phone = owner.phone;
         const address = owner.mapCoord;
-        const venue = owner.venueName;
+        const Venues = owner.venueName;
         const fullname = owner.fullname;
         const email = owner.email;
         const location = owner.location;
@@ -95,7 +95,7 @@ const ownerCtrl = {
             amenities,
             startingPrice,
             status,
-            venue,
+            Venues,
             fullname,
             email,
             location,

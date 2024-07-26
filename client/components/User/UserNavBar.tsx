@@ -183,7 +183,7 @@ export const UserNavBar = () => {
                       <DropdownMenuLabel>{userDetails.username}</DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem><Button onClick={() => router.push(`/user/profile`)} variant="ghost" className="w-full">Profile</Button></DropdownMenuItem>
-                      <DropdownMenuItem><Button onClick={() => router.push(`/venue/profile/settings`)} variant="ghost" className="w-full">Settings</Button></DropdownMenuItem>
+                      <DropdownMenuItem><Button onClick={() => router.push(`#`)} variant="ghost" className="w-full">Settings</Button></DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem><Button onClick={handleLogout} variant="destructive" className="w-full">Logout</Button></DropdownMenuItem>
                     </DropdownMenuContent>

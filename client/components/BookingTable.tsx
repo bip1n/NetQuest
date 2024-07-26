@@ -264,25 +264,25 @@ export const BookingTable = () => {
                     <TableCell>{slot.price}</TableCell>
                     <TableCell>
                       <HoverCard>
-                      <HoverCardTrigger>
-                         <Chip
-                        radius="sm"
-                        size="sm"
-                        color={
-                          slot.status === "available"
-                            ? "success"
-                            : slot.status === "booked"
-                            ? "danger"
-                            : slot.status === "reserved"
-                            ? "warning"
-                            : "default"
-                          }
-                          >
-                            {slot.status}
-                          </Chip></HoverCardTrigger>
-                      <HoverCardContent>
-                         @.rambahadurthapa<br/>+977 9807609876
-                      </HoverCardContent>
+                          <HoverCardTrigger>
+                            <Chip
+                            radius="sm"
+                            size="sm"
+                            color={
+                              slot.status === "available"
+                                ? "success"
+                                : slot.status === "booked"
+                                ? "danger"
+                                : slot.status === "reserved"
+                                ? "warning"
+                                : "default"
+                              }
+                              >
+                                {slot.status}
+                              </Chip></HoverCardTrigger>
+                          <HoverCardContent>
+                          @.rambahadurthapa<br/>+977 9807609876
+                          </HoverCardContent>
                     </HoverCard>
                      
                         </TableCell>

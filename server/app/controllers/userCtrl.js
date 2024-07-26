@@ -43,8 +43,9 @@ const userCtrl = {
                 time: time,
                 price: price,
                 altcontact: altcontact,
-                status: 'available', 
-                user_id: user_id
+                status: 'unavailable', 
+                user_id: user_id,
+                pidx : pidx
             });
     
             await newBooking.save();

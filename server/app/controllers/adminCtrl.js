@@ -40,7 +40,7 @@ const adminCtrl = {
         }
     },
 
-    verifyVenue: async (req, res) => {
+    getverifiedVenue: async (req, res) => {
         try {
             const pendingStatuses = await venueStatus.find({ status: 'verified' });
 
@@ -74,7 +74,7 @@ const adminCtrl = {
         }
     },
 
-    rejectVenue: async (req, res) => {
+    getrejectVenue: async (req, res) => {
         try {
             const pendingStatuses = await venueStatus.find({ status: 'rejected' });
 

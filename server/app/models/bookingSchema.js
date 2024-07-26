@@ -38,6 +38,10 @@ const bookingSchema = new mongoose.Schema({
         enum: ['available', 'reserved', 'booked', 'unavailable'],  // Restrict to predefined statuses
         default: 'available',
     },
+    pidx :{
+        type: String,
+        required: true,
+    },
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",  // Assuming you have a User model defined

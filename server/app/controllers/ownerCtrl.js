@@ -290,9 +290,11 @@ const ownerCtrl = {
       const now = new Date();
       const today = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
       const currentTime = now.toTimeString().split(' ')[0].substring(0, 5); // Format: HH:MM
+
   
       // Fetch all bookings for the owner
       const bookings = await Booking.find({ owner_id });
+
   
       
       // Filter future bookings from today onwards
@@ -309,6 +311,7 @@ const ownerCtrl = {
         return (bookingDate > today) || (bookingDate === today && bookingTimeFormatted >= currentTimeFormatted);
       });
         
+
       // Sort bookings by date, time, and bookedAt
       futureBookings.sort((a, b) => {
         const dateComparison = new Date(a.date).getTime() - new Date(b.date).getTime();
@@ -325,7 +328,9 @@ const ownerCtrl = {
 
       // Fetch user data for each booking
       const userIds = futureBookings.map(booking => booking.user_id);
-      const users = await User.find({ _id: { $in: userIds } }).lean();
+      const users = await user.find({ _id: { $in: userIds } }).lean();
+
+      console.log(users);
   
       // Map user data to bookings
       const recentBookings = futureBookings.map(booking => {
@@ -338,11 +343,9 @@ const ownerCtrl = {
           },
           date: booking.date.toISOString().split('T')[0],
           time: booking.time,
-          amount: booking.price
+          price: booking.price
         };
       });
-
-      console.log(recentBookings);
   
       // Return filtered and sorted future bookings with user data
       return res.status(200).json({ recentBookings });

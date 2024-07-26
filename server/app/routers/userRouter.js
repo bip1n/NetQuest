@@ -1,10 +1,8 @@
-// Import required modules
 const router = require('express').Router();
 const userCtrl = require('../controllers/userCtrl.js');
 const verifyToken = require('../middleware/verifyToken');
 
 
-// Define route for user registration
 router.post('/bookvenue', verifyToken, userCtrl.bookvenue);
 router.get('/userprofile', verifyToken, userCtrl.userprofile);
 router.get('/getBooking', verifyToken, userCtrl.getBooking);
@@ -14,6 +12,5 @@ router.post('/reviews', verifyToken, userCtrl.addreview);
 router.get('/getReviews/:id', userCtrl.getReviews);
 
 
-// Export the router to be used in other parts of the application
 module.exports = router;
  

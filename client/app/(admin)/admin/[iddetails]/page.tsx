@@ -75,14 +75,15 @@ const Venue: React.FC = () => {
             <div className="grid auto-rows-max items-start gap-4 lg:col-span-3 lg:gap-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="uppercase">Name of Venue: {id}</CardTitle>
+                  <CardTitle className="uppercase">Name of Venue: {venueDetails?.Venues}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>Venue ID: <span className="font-bold uppercase">{venueDetails?.address}</span></p>
-                  <p>Owner: {id} </p>
+                  <p>Venue ID: <span className="font-bold uppercase">{venueDetails?.venueID}</span></p>
+                  <p>Owner: {venueDetails?.fullname} </p>
+                  <p>Registerd Date: {new Date(venueDetails?.registerdate).toLocaleDateString()} </p>
                   <p>Contact Number: {venueDetails?.phone} </p>
                   <p>Email: {venueDetails?.email}</p>
-                  <p>PAN: {venueDetails?.pan}</p>
+                  <p>PAN: {venueDetails?.panNumber}</p>
                   <p>Opening Rate: {venueDetails?.rate}</p>
                   <p>Location: {venueDetails?.address}</p>
 
@@ -91,28 +92,28 @@ const Venue: React.FC = () => {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle className="uppercase">Submitted Images</CardTitle>
+                  <CardTitle className="uppercase">Submitted Media</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {mediaData.map((media, index) => (
-                      <div key={index} className="w-full">
-                        {media.type === 'image' ? (
-                          <img
-                            src={media.url}
-                            alt={`Media ${index + 1}`}
-                            className="w-full h-auto object-cover"
-                          />
-                        ) : media.type === 'video' ? (
-                          <video
-                            controls
-                            src={media.url}
-                            className="w-full h-auto object-cover"
-                          />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
+                      {venueDetails?.media.map((media, index) => (
+                        <div key={index} className="w-full">
+                          {media.type === 'image' ? (
+                            <img
+                              src={media.url}
+                              alt={`Media ${index + 1}`}
+                              className="w-full h-auto object-cover"
+                            />
+                          ) : media.type === 'video' ? (
+                            <video
+                              controls
+                              src={media.url}
+                              className="w-full h-auto object-cover"
+                            />
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
                 </CardContent>
               </Card>
             </div>

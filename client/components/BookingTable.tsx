@@ -27,6 +27,12 @@ import { getLocalTimeZone, today, CalendarDate, Time } from "@internationalized/
 import { useRouter } from 'next/navigation';
 import { ClockCircleLinearIcon } from './Icons';
 import Cookies from "js-cookie";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+
 
 // Define a type for the slot objects
 interface Slot {
@@ -257,7 +263,9 @@ export const BookingTable = () => {
                     <TableCell>{slot.time}</TableCell>
                     <TableCell>{slot.price}</TableCell>
                     <TableCell>
-                      <Chip
+                      <HoverCard>
+                      <HoverCardTrigger>
+                         <Chip
                         radius="sm"
                         size="sm"
                         color={
@@ -271,7 +279,12 @@ export const BookingTable = () => {
                           }
                           >
                             {slot.status}
-                          </Chip>
+                          </Chip></HoverCardTrigger>
+                      <HoverCardContent>
+                         @.rambahadurthapa<br/>+977 9807609876
+                      </HoverCardContent>
+                    </HoverCard>
+                     
                         </TableCell>
                         <TableCell>
                           <Dropdown backdrop="opaque">

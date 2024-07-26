@@ -122,7 +122,7 @@ export const LogSheet = ({ venueId, range }) => {
       </CardBody>
       <CardBody>
         <Table className="printable-table">
-          <TableCaption>A list of your recent invoices.</TableCaption>
+          <TableCaption>A list of your recent sales.</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px] uppercase">Date</TableHead>
@@ -145,7 +145,7 @@ export const LogSheet = ({ venueId, range }) => {
               <TableCell className="text-right">
                 {invoices
                   .reduce((total, invoice) => total + invoice.totalAmount, 0)
-                  .toLocaleString("en-US", { style: "currency", currency: "USD" })}
+                  .toLocaleString("np-NP", { style: "currency", currency: "NPR" })}
               </TableCell>
             </TableRow>
           </TableFooter>

@@ -75,15 +75,17 @@ const Venue: React.FC = () => {
             <div className="grid auto-rows-max items-start gap-4 lg:col-span-3 lg:gap-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="uppercase">Name of Venue: </CardTitle>
+                  <CardTitle className="uppercase">Name of Venue: {id}</CardTitle>
                 </CardHeader>
                 <CardContent>
+                  <p>Venue ID: <span className="font-bold uppercase">{venueDetails?.address}</span></p>
                   <p>Owner: {id} </p>
                   <p>Contact Number: {venueDetails?.phone} </p>
                   <p>Email: {venueDetails?.email}</p>
                   <p>PAN: {venueDetails?.pan}</p>
                   <p>Opening Rate: {venueDetails?.rate}</p>
                   <p>Location: {venueDetails?.address}</p>
+
                   <p >Status: <span className="uppercase"> <span className={getStatusColor(venueDetails?.status)}>{venueDetails?.status}</span></span> </p>
                 </CardContent>
               </Card>

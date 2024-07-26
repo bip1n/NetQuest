@@ -44,37 +44,75 @@ const ownerCtrl = {
     },
 
     VenueDetails: async (req, res) => {
-        try {
+      try {
+        const { owner_id } = req.query;
 
-            const { owner_id } = req.query;
-
-            if (owner_id == 'undefined') { return res.status(400).json({ error: "Owner ID is required." })};
-            if (!owner_id) { return res.status(400).json({ error: "Owner ID is required." })};
-            const owner = await Owner.findById(owner_id);
-            if (!owner) { return res.status(400).json({ error: "Owner does not exist." });}
-            const venues = await venue.findOne({ owner_id });
-            if (!venues) { return res.status(400).json({ error: "Venue does not exist." });}
-            const venueStatus = await VenueStatus.findOne({ owner_id });
-            if (!venueStatus) { return res.status(400).json({ error: "Venue Status does not exist." });}
-
-            const phone = owner.phone;
-            const address = owner.mapCoord;
-            const amenities = venues.amenities;
-            const startingPrice = venues.minprice; 
-            const status = venueStatus.status;
-            const response = {
-                phone,
-                address,
-                amenities,
-                startingPrice,
-                status
-            };
-            return res.status(200).json(response);
-        } catch (err) {
-            console.error('Error:', err);
-            return res.status(500).json({ msg: err.message });
+        if (owner_id == 'undefined' || !owner_id) {
+            return res.status(400).json({ error: "Owner ID is required." });
         }
-    },
+
+        const owner = await Owner.findById(owner_id);
+        if (!owner) {
+            return res.status(400).json({ error: "Owner does not exist." });
+        }
+
+        const venues = await venue.findOne({ owner_id });
+        if (!venues) {
+            return res.status(400).json({ error: "Venue does not exist." });
+        }
+
+        const venueStatus = await VenueStatus.findOne({ owner_id });
+        if (!venueStatus) {
+            return res.status(400).json({ error: "Venue Status does not exist." });
+        }
+
+        const phone = owner.phone;
+        const address = owner.mapCoord;
+        const venue = owner.venueName;
+        const fullname = owner.fullname;
+        const email = owner.email;
+        const location = owner.location;
+        const panNumber = owner.panNumber;
+        const profilepic = owner.profilepic;
+        const registerdate = owner.joindate;
+        const defaultRate = 800;
+
+        const media = [
+            ...venues.images.map(image => ({ type: 'image', url: image })),
+            ...venues.videos.map(video => ({ type: 'video', url: video })),
+            ...venueStatus.images.map(image => ({ type: 'image', url: image })),
+            ...venueStatus.videos.map(video => ({ type: 'video', url: video }))
+        ];
+
+        const venueID = venues.venueID;
+        const amenities = venues.amenities;
+        const startingPrice = venues.minprice;
+        const status = venueStatus.status;
+
+        const response = {
+            phone,
+            address,
+            amenities,
+            startingPrice,
+            status,
+            venue,
+            fullname,
+            email,
+            location,
+            panNumber,
+            profilepic,
+            registerdate,
+            defaultRate,
+            venueID,
+            media
+        };
+
+        return res.status(200).json(response);
+    } catch (err) {
+        console.error('Error:', err);
+        return res.status(500).json({ msg: err.message });
+    }
+  },
 
 
     viewphotos: async (req, res) => {

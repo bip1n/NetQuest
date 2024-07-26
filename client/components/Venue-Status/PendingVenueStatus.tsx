@@ -45,7 +45,7 @@ export const PendingVenueStatus: React.FC = () => {
 
         const data: Venue[] = await response.json();
         setVenues(data);
-        console.log(data);
+        console.log("asgdjagsdjgajdg",data);
       } catch (error) {
         console.error('Error fetching venue data:', error);
       }

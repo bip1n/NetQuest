@@ -9,6 +9,7 @@ import { useParams } from "next/navigation";
 export default function ReviewsPage() {
   const [reviewText, setReviewText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setisLoggedIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const { id } = useParams();
@@ -25,7 +26,10 @@ export default function ReviewsPage() {
               Authorization: `Bearer ${token}`,
             },
           });
-
+          if (response.ok) {
+            setisLoggedIn(true);
+          }
+          console.log("sgdsgsgdsg",response);
           if (!response.ok) {
             const errorResponse = await response.json();
             setError(errorResponse.error);
@@ -59,6 +63,7 @@ export default function ReviewsPage() {
         },
         body: JSON.stringify({ review: reviewText, owner_id: id }),
       });
+      
 
       if (!response.ok) {
         const errorResponse = await response.json();
@@ -88,6 +93,7 @@ export default function ReviewsPage() {
       <div className="flex flex-col items-center justify-center">
         <Card className="w-full max-w-[100%] md:max-w-[800px] mt-4">
           <CardBody>
+           {isLoggedIn ? 
             <form onSubmit={handleSubmit}>
               <Textarea
                 label="Description"
@@ -107,6 +113,7 @@ export default function ReviewsPage() {
                 {isLoading ? "Submitting..." : "Add Review"}
               </Button>
             </form>
+           :("")}
             {error && <p className="text-red-500">{error}</p>}
             {success && <p className="text-green-500">{success}</p>}
           </CardBody>

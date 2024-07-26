@@ -27,6 +27,12 @@ import { getLocalTimeZone, today, CalendarDate, Time } from "@internationalized/
 import { useRouter } from 'next/navigation';
 import { ClockCircleLinearIcon } from './Icons';
 import Cookies from "js-cookie";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+
 
 // Define a type for the slot objects
 interface Slot {
@@ -312,77 +318,84 @@ export const BookingTable = () => {
         <Checkbox defaultSelected isReadOnly className="mt-2"> Apply Same For All</Checkbox>
       </CardBody>
 
-      <CardFooter>
-        <Button color="primary" variant="solid" onClick={handleSaveChanges}> Save Changes</Button>
-      </CardFooter>
-      <CardHeader>
-        <h4 className="font-medium text-lg text-secondary">Booking Status</h4>
-      </CardHeader>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <Table aria-label="Example static collection table">
-          <TableHeader>
-            <TableColumn>TIME</TableColumn>
-            <TableColumn>RATE</TableColumn>
-            <TableColumn>STATUS</TableColumn>
-            <TableColumn>{venueOwner ? "EDIT" : "SELECT"}</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {slots.map((slot, index) => (
-              <TableRow key={slot._id}>
-                <TableCell>{slot.time}</TableCell>
-                <TableCell>{slot.price}</TableCell>
-                <TableCell>
-                  <Chip
-                    radius="sm"
-                    size="sm"
-                    color={
-                      slot.status === "available"
-                        ? "success"
-                        : slot.status === "booked"
-                        ? "danger"
-                        : slot.status === "reserved"
-                        ? "warning"
-                        : "default"
-                      }
-                      >
-                        {slot.status}
-                      </Chip>
-                    </TableCell>
+          <CardFooter>
+            <Button color="primary" variant="solid"> Save Changes</Button>
+          </CardFooter>
+          <CardHeader>
+            <h4 className="font-medium text-lg text-secondary">Booking Status</h4>
+          </CardHeader>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <Table aria-label="Example static collection table">
+              <TableHeader>
+                <TableColumn>TIME</TableColumn>
+                <TableColumn>RATE</TableColumn>
+                <TableColumn>STATUS</TableColumn>
+                <TableColumn>{venueOwner ? "EDIT" : "SELECT"}</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {slots.map((slot, index) => (
+                  <TableRow key={slot._id}>
+                    <TableCell>{slot.time}</TableCell>
+                    <TableCell>{slot.price}</TableCell>
                     <TableCell>
-                      <Dropdown backdrop="opaque">
-                        <DropdownTrigger>
-                          <Button size="sm" variant="shadow" color="secondary">
-                            EDIT
-                          </Button>
-                        </DropdownTrigger>
-                        <DropdownMenu
-                          variant="faded"
-                          onAction={(key) => handleStatusChange(index, key as string)}
-                        >
-                          <DropdownItem key="available">
-                            <p className="text-green-500">AVAILABLE</p>
-                          </DropdownItem>
-                          <DropdownItem key="reserved">
-                            <p className="text-orange-400">RESERVED</p>
-                          </DropdownItem>
-                          <DropdownItem key="booked">
-                            <p className="text-red-600">BOOKED</p>
-                          </DropdownItem>
-                          <DropdownItem key="unavailable">
-                            <p>UNAVAILABLE</p>
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardBody>
-      </div>
-    </>
+                      <HoverCard>
+                      <HoverCardTrigger>
+                         <Chip
+                        radius="sm"
+                        size="sm"
+                        color={
+                          slot.status === "available"
+                            ? "success"
+                            : slot.status === "booked"
+                            ? "danger"
+                            : slot.status === "reserved"
+                            ? "warning"
+                            : "default"
+                          }
+                          >
+                            {slot.status}
+                          </Chip></HoverCardTrigger>
+                      <HoverCardContent>
+                         @.rambahadurthapa<br/>+977 9807609876
+                      </HoverCardContent>
+                    </HoverCard>
+                     
+                        </TableCell>
+                        <TableCell>
+                          <Dropdown backdrop="opaque">
+                            <DropdownTrigger>
+                              <Button size="sm" variant="shadow" color="secondary">
+                                EDIT
+                              </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                              variant="faded"
+                              onAction={(key) => handleStatusChange(index, key as string)}
+                            >
+                              <DropdownItem key="available">
+                                <p className="text-green-500">AVAILABLE</p>
+                              </DropdownItem>
+                              <DropdownItem key="reserved">
+                                <p className="text-orange-400">RESERVED</p>
+                              </DropdownItem>
+                              <DropdownItem key="booked">
+                                <p className="text-red-600">BOOKED</p>
+                              </DropdownItem>
+                              <DropdownItem key="unavailable">
+                                <p>UNAVAILABLE</p>
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </Dropdown>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardBody>
+          </div>
+        </>
 );
-};        
+};

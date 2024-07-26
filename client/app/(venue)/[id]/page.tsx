@@ -126,11 +126,11 @@ const Venue = () => {
                 <CardContent>
                   <div className="flex flex-row mb-2">
                     <MapPin strokeWidth={1.5} size={24} />
-                    <div className="ml-2">Balkumari, Lalitpur</div>
+                    <div className="ml-2">{venue.mapCoord}</div>
                   </div>
                   <div className="flex flex-row mb-2">
                     <Star strokeWidth={1.5} size={24} />
-                    <div className="ml-2">{venue.ratings}</div>
+                    <div className="ml-2">[5/5]</div>
                   </div>
                   <div className="flex flex-row mb-2">
                     <PhoneCall strokeWidth={1.5} size={24} />
@@ -153,19 +153,8 @@ const Venue = () => {
               </Card>
               <Card>
                 <CardHeader>
-                  <div className="flex flex-row justify-between">
-                      <div>
-                        <CardTitle>Reviews</CardTitle>
-                      </div>
-                      <div>
-                        <Button variant="outline" asChild size="sm" className="ml-auto gap-1">
-                          <Link href="`/${venue._id}`">
-                            View All
-                            <ArrowUpRight className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                      </div>
-                    </div>
+                <CardTitle><Link href={`${id}/review`}>Reviews </Link></CardTitle>
+                     
                 </CardHeader>
                 <CardContent>
                   {loading ? (

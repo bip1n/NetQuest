@@ -34,7 +34,7 @@ export const RejectedVenueStatus: React.FC = () => {
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/rejectVenue", {
+        const response = await fetch("http://localhost:4000/api/getrejectVenue", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json',

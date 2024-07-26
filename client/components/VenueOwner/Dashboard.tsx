@@ -224,7 +224,7 @@ const Dashboard = () => {
               ) : (
                 recentBookings.map((booking, index) => (
                   <div key={index} className="flex items-center gap-4">
-                    {/* <Avatar className="hidden h-9 w-9 sm:flex">
+                    <Avatar className="hidden h-9 w-9 sm:flex">
                       <AvatarImage src={booking.customer.avatarUrl} alt="Avatar" />
                       <AvatarFallback>OM</AvatarFallback>
                     </Avatar>
@@ -234,18 +234,6 @@ const Dashboard = () => {
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {booking.customer.contact}
-                      </p>
-                    </div> */}
-                    <Avatar className="hidden h-9 w-9 sm:flex">
-                      <AvatarImage src="aa.com" alt="Avatar" />
-                      <AvatarFallback>OM</AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                      <p className="text-sm font-medium leading-none ">
-                        Ram
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        000
                       </p>
                     </div>
                     <div className="ml-auto font-medium">{booking.date}</div>

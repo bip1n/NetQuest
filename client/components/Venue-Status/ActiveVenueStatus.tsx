@@ -31,7 +31,7 @@ export const ActiveVenueStatus: React.FC = () => {
     const fetchVenues = async () => {
       try {
      
-        const response = await fetch("http://localhost:4000/api/getPendingVenue", {
+        const response = await fetch("http://localhost:4000/api/getverifiedVenue", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json',

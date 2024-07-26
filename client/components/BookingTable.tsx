@@ -71,6 +71,7 @@ export const BookingTable = () => {
       }
 
       const data: Slot[] = await response.json(); // Assuming the API returns an array of Slot objects
+      console.log(data)
       setSlots(data);
     } catch (error) {
       console.error(error);

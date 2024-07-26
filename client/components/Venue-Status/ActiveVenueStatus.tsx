@@ -79,7 +79,7 @@ export const ActiveVenueStatus: React.FC = () => {
         <div className="relative flex items-center gap-2">
           <Tooltip content="Details">
             <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-            <Button variant="link" size="icon" onClick={() => router.push(`/admin/${venue.owner_id}-details`)}><EyeIcon /></Button>            </span>
+            <Button variant="link" size="icon" onClick={() => router.push(`/admin/${venue._id}-details`)}><EyeIcon /></Button>            </span>
           </Tooltip>
           <Tooltip content="Edit">
             <Dropdown>

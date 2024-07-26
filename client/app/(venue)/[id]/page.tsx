@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import {
+  ArrowUpRight,
   Flame,
   MapPin,
   PhoneCall,
@@ -22,6 +23,8 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import Booking from "@/components/Booking";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 
 const Venue = () => {
@@ -31,6 +34,7 @@ const Venue = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  console.log(id);
 
   useEffect(() => {
     const fetchVenueData = async () => {
@@ -151,7 +155,19 @@ const Venue = () => {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle>Reviews</CardTitle>
+                  <div className="flex flex-row justify-between">
+                      <div>
+                        <CardTitle>Reviews</CardTitle>
+                      </div>
+                      <div>
+                        <Button variant="outline" asChild size="sm" className="ml-auto gap-1">
+                          <Link href="#">
+                            History
+                            <ArrowUpRight className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
                 </CardHeader>
                 <CardContent>
                   {loading ? (
@@ -201,7 +217,7 @@ const Venue = () => {
             <div className="grid auto-rows-max items-start gap-2 lg:col-span-5 lg:gap-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="uppercase">Kick Futsal</CardTitle>
+                  <CardTitle className="uppercase">{venue.venueName}</CardTitle>
                   <Booking venueId={id} />
                 </CardHeader>
               </Card>

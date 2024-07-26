@@ -21,6 +21,18 @@ import {
   Divider,
   Link,
 } from "@nextui-org/react";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { UserNavigationbar } from "@/components/UserNavigationbar";
@@ -98,9 +110,9 @@ export default function UserBooking() {
   }
   
 
-  const handleOpenModal = (booking) => {
+  const handleOpenModal = (booking : string) => {
     setSelectedBooking(booking);
-    onOpen();
+    // onOpen();
   };
 
   return (
@@ -141,9 +153,66 @@ export default function UserBooking() {
                     </Chip>
                   </TableCell>
                   <TableCell>
-                    <Button variant="bordered" size="sm" onPress={() => handleOpenModal(booking)}>
-                      Ticket
-                    </Button>
+                  <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="bordered" size="sm" onClick={() => handleOpenModal(booking)}>Ticket</Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        
+                          <DialogContent>
+                          {selectedBooking && (
+                            <>
+                            <DialogHeader>
+                            <DialogTitle> 
+                              <div className="flex flex-row">
+                                <Logo/> <span className="mt-2">NetQuest</span>
+                              </div>
+                            </DialogTitle>
+                            
+                            <DialogDescription>
+                              You can screenshot this ticket for future reference.
+                            </DialogDescription>
+                          </DialogHeader>
+
+                            <div className="flex justify-between m-2">
+                            <p className="text-xs font-normal">Booking ID: {selectedBooking._id}</p>
+                            <p className="text-xs font-bold">Date: {new Date(selectedBooking.bookedAt).toLocaleDateString()}</p>
+                          </div>
+                          <Divider />
+                          <div className="flex justify-between mt-4">
+                            <p className="font-normal text-sm italic">Venue</p>
+                            <p className="text-semibold font-medium">{selectedBooking.venueName}</p>
+                          </div>
+                          <div className="flex justify-between mt-2">
+                            <p className="font-normal text-sm italic">Location</p>
+                            <p className="text-semibold font-medium">{selectedBooking.location}</p>
+                          </div>
+                          <div className="flex justify-between mt-2">
+                            <p className="font-normal text-sm italic">Date</p>
+                            <p className="text-semibold font-medium">{new Date(selectedBooking.date).toLocaleDateString()}</p>
+                          </div>
+                          <div className="flex justify-between mt-2">
+                            <p className="font-normal text-sm italic">Time</p>
+                            <p className="text-semibold font-medium">{selectedBooking.time}</p>
+                          </div>
+                          <div className="flex justify-between mt-2">
+                            <p className="font-normal text-sm italic">Rate</p>
+                            <p className="text-semibold font-medium">{selectedBooking.price}</p>
+                          </div>
+                          <div className="flex justify-between mt-2">
+                            <p className="font-normal text-sm italic">Status</p>
+                            <p className="text-semibold text-success">{selectedBooking.status}</p>
+                          </div>
+                            </>
+                          )}
+                          </DialogContent>
+                     
+                        
+                        <DialogFooter>
+                          <Button type="submit">Print</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </TableCell>
                 </TableRow>
               ))}
@@ -187,9 +256,66 @@ export default function UserBooking() {
                     </Chip>
                   </TableCell>
                   <TableCell>
-                    <Button variant="bordered" size="sm" onPress={() => handleOpenModal(booking)}>
-                      Ticket
-                    </Button>
+                     <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="bordered" size="sm" onClick={() => handleOpenModal(booking)}>Ticket</Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        
+                          <DialogContent>
+                          {selectedBooking && (
+                            <>
+                            <DialogHeader>
+                            <DialogTitle> 
+                              <div className="flex flex-row">
+                                <Logo/> <span className="mt-2">NetQuest</span>
+                              </div>
+                            </DialogTitle>
+                            
+                            <DialogDescription>
+                              You can screenshot this ticket for future reference.
+                            </DialogDescription>
+                          </DialogHeader>
+
+                            <div className="flex justify-between m-2">
+                            <p className="text-xs font-normal">Booking ID: {selectedBooking._id}</p>
+                            <p className="text-xs font-bold">Date: {new Date(selectedBooking.bookedAt).toLocaleDateString()}</p>
+                          </div>
+                          <Divider />
+                          <div className="flex justify-between mt-4">
+                            <p className="font-normal text-sm italic">Venue</p>
+                            <p className="text-semibold font-medium">{selectedBooking.venueName}</p>
+                          </div>
+                          <div className="flex justify-between mt-2">
+                            <p className="font-normal text-sm italic">Location</p>
+                            <p className="text-semibold font-medium">{selectedBooking.location}</p>
+                          </div>
+                          <div className="flex justify-between mt-2">
+                            <p className="font-normal text-sm italic">Date</p>
+                            <p className="text-semibold font-medium">{new Date(selectedBooking.date).toLocaleDateString()}</p>
+                          </div>
+                          <div className="flex justify-between mt-2">
+                            <p className="font-normal text-sm italic">Time</p>
+                            <p className="text-semibold font-medium">{selectedBooking.time}</p>
+                          </div>
+                          <div className="flex justify-between mt-2">
+                            <p className="font-normal text-sm italic">Rate</p>
+                            <p className="text-semibold font-medium">{selectedBooking.price}</p>
+                          </div>
+                          <div className="flex justify-between mt-2">
+                            <p className="font-normal text-sm italic">Status</p>
+                            <p className="text-semibold text-success">{selectedBooking.status}</p>
+                          </div>
+                            </>
+                          )}
+                          </DialogContent>
+                     
+                        
+                        <DialogFooter>
+                          <Button type="submit">Print</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </TableCell>
                 </TableRow>
               ))}
@@ -197,92 +323,6 @@ export default function UserBooking() {
           </Table>
         </CardBody>
       </Card>
-
-      <Modal
-        size="md"
-        isOpen={isOpen}
-        backdrop="opaque"
-        placement="center"
-        onOpenChange={onOpenChange}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                <span>
-                  <Logo />
-                  <p className="font-bold text-inherit mt-1">NetQuest</p>
-                </span>
-              </ModalHeader>
-              <ModalBody>
-                {selectedBooking && (
-                  <>
-                    <Card>
-                      <CardBody>
-                        <div className="flex justify-between m-2">
-                          <p className="text-xs font-normal">Booking ID: {selectedBooking._id}</p>
-                          <p className="text-xs font-bold">Date: {new Date(selectedBooking.bookedAt).toLocaleDateString()}</p>
-                        </div>
-                        <Divider />
-                        <div className="flex justify-between mt-4">
-                          <p className="font-normal text-sm italic">Venue</p>
-                          <p className="text-semibold font-medium">{selectedBooking.venueName}</p>
-                        </div>
-                        <div className="flex justify-between mt-2">
-                          <p className="font-normal text-sm italic">Location</p>
-                          <p className="text-semibold font-medium">{selectedBooking.location}</p>
-                        </div>
-                        <div className="flex justify-between mt-2">
-                          <p className="font-normal text-sm italic">Date</p>
-                          <p className="text-semibold font-medium">{new Date(selectedBooking.date).toLocaleDateString()}</p>
-                        </div>
-                        <div className="flex justify-between mt-2">
-                          <p className="font-normal text-sm italic">Time</p>
-                          <p className="text-semibold font-medium">{selectedBooking.time}</p>
-                        </div>
-                        <div className="flex justify-between mt-2">
-                          <p className="font-normal text-sm italic">Rate</p>
-                          <p className="text-semibold font-medium">{selectedBooking.price}</p>
-                        </div>
-                        <div className="flex justify-between mt-2">
-                          <p className="font-normal text-sm italic">Status</p>
-                          <p className="text-semibold text-success">{selectedBooking.status}</p>
-                        </div>
-                      </CardBody>
-                    </Card>
-                    <Card>
-                      <CardBody>
-                      <div className="flex justify-between">
-                       
-                       <p className="font-normal text-sm italic">Name</p>
-                       <p className="text-semibold font-medium">{userName}</p>
-                     </div>
-                        
-                        <div className="flex justify-between">
-                       
-                          <p className="font-normal text-sm italic">Contact</p>
-                          <p className="text-semibold font-medium">{selectedBooking.altcontact}</p>
-                        </div>
-                      </CardBody>
-                    </Card>
-                  </>
-                )}
-              </ModalBody>
-              <div>
-                <p className="ml-8 text-tiny text-warning italic">
-                  Screenshot this for future reference.
-                </p>
-              </div>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Save
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-
       <FooterContent />
     </>
   );

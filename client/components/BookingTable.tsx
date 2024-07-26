@@ -20,11 +20,6 @@ import {
   DropdownMenu,
   DropdownItem,
   CardFooter,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   TimeInput,
   Input,
 } from "@nextui-org/react";
@@ -35,10 +30,33 @@ import Cookies from "js-cookie";
 
 // Define a type for the slot objects
 interface Slot {
+  _id: string;
   time: string;
-  rate: number;
+  price: number;
   status: string;
 }
+
+const defaultOpenTime = new Time(6, 0); // 6:00 AM
+const defaultCloseTime = new Time(19, 0); // 7:00 PM
+const defaultRate = 1200;
+
+const initializeSlots = (openTime: Time, closeTime: Time, price: number, date: Date): Slot[] => {
+  const slots = [];
+  let currentTime = new Date();
+  currentTime.setHours(openTime.hour, openTime.minute, 0, 0);
+  
+  while (currentTime.getHours() < closeTime.hour) {
+    const timeString = currentTime.toTimeString().substring(0, 5);
+    const slotDate = new Date(date);
+    slotDate.setHours(currentTime.getHours(), currentTime.getMinutes(), 0, 0);
+    
+    const isPast = new Date() > slotDate;
+    slots.push({ _id: "", time: timeString, price, status: isPast ? 'unavailable' : 'available' });
+    currentTime.setHours(currentTime.getHours() + 1);
+  }
+
+  return slots;
+};
 
 export const BookingTable = () => {
   const router = useRouter();
@@ -49,6 +67,25 @@ export const BookingTable = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<CalendarDate>(today(getLocalTimeZone()));
 
+  const mergeSlots = (defaultSlots: Slot[], fetchedSlots: Slot[]): Slot[] => {
+    const slotMap = new Map();
+    defaultSlots.forEach(slot => slotMap.set(slot.time, slot));
+    fetchedSlots.forEach(slot => slotMap.set(slot.time, slot));
+    
+    // Override default slots with fetched slots
+    fetchedSlots.forEach(slot => {
+      const existingSlot = slotMap.get(slot.time);
+      if (existingSlot) {
+        existingSlot._id = slot._id;
+        existingSlot.price = slot.price;
+        existingSlot.status = slot.status;
+      } else {
+        slotMap.set(slot.time, slot);
+      }
+    });
+
+    return Array.from(slotMap.values());
+  };
 
   // Function to fetch data from the server
   const fetchSlots = async (date: CalendarDate) => {
@@ -70,9 +107,12 @@ export const BookingTable = () => {
         throw new Error("Failed to fetch slots data");
       }
 
-      const data: Slot[] = await response.json(); // Assuming the API returns an array of Slot objects
-      console.log(data)
-      setSlots(data);
+      const fetchedSlots: Slot[] = await response.json();
+      console.log(fetchedSlots);
+
+      const defaultSlots = initializeSlots(defaultOpenTime, defaultCloseTime, defaultRate, date.toDate());
+      const mergedSlots = mergeSlots(defaultSlots, fetchedSlots);
+      setSlots(mergedSlots);
     } catch (error) {
       console.error(error);
       // Handle error state (e.g., show an error message)
@@ -81,18 +121,50 @@ export const BookingTable = () => {
     }
   };
 
-  // Fetch initial data on component mount
-  useEffect(() => {
-    fetchSlots(selectedDate);
-  }, []);
+  // Function to update slot status in the backend
+  const updateSlotStatus = async (slotId: string, newStatus: string) => {
+    try {
+      const token = Cookies.get("__securedAccess");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+      const response = await fetch(`http://localhost:4000/api/venues/update-booking-status`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ id: slotId, status: newStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update slot status");
+      }
+
+      // Optionally, handle the response or any additional logic here
+    } catch (error) {
+      console.error(error);
+      // Handle error state (e.g., show an error message)
+    }
+  };
 
   const handleStatusChange = (slotIndex: number, newStatus: string) => {
     const updatedSlots = [...slots];
-    updatedSlots[slotIndex].status = newStatus;
-    if (newStatus === "UNAVAILABLE") {
-      updatedSlots[slotIndex].rate = 0;
+    const slot = updatedSlots[slotIndex];
+    console.log(slot)
+    slot.status = newStatus;
+    if (newStatus === "unavailable") {
+      slot.price = 0;
     }
     setSlots(updatedSlots);
+    
+    // Call the function to update the backend
+    console.log("Slot ID:", slot._id);
+    if (slot._id) {
+      console.log("Updating status...");
+      updateSlotStatus(slot._id, newStatus);
+    }
   };
 
   const handleCheckboxChange = (index: number, checked: boolean) => {
@@ -106,7 +178,11 @@ export const BookingTable = () => {
   };
 
   const selectedSlots = checkedSlots.map((index) => slots[index]);
-  const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.rate, 0);
+  const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
+
+  useEffect(() => {
+    fetchSlots(selectedDate);
+  }, [selectedDate]);
 
   return (
     <>
@@ -134,7 +210,7 @@ export const BookingTable = () => {
               <TimeInput
                 label="Opens At"
                 labelPlacement="inside"
-                defaultValue={new Time(6, 0)}
+                defaultValue={defaultOpenTime}
                 startContent={
                   <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
                 }
@@ -142,7 +218,7 @@ export const BookingTable = () => {
               <TimeInput
                 label="Closes At"
                 labelPlacement="inside"
-                defaultValue={new Time(19, 0)}
+                defaultValue={defaultCloseTime}
                 startContent={
                   <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
                 }
@@ -151,10 +227,10 @@ export const BookingTable = () => {
           </CardBody>
           <CardBody>
             <Input
-              type="email"
+              type="number"
               label="Rate"
               labelPlacement="inside"
-              defaultValue="1200"
+              defaultValue={defaultRate.toString()}
             />
             <Checkbox defaultSelected isReadOnly className="mt-2"> Apply Same For All</Checkbox>
           </CardBody>
@@ -177,59 +253,59 @@ export const BookingTable = () => {
               </TableHeader>
               <TableBody>
                 {slots.map((slot, index) => (
-                  <TableRow key={index}>
+                  <TableRow key={slot._id}>
                     <TableCell>{slot.time}</TableCell>
-                    <TableCell>{slot.rate}</TableCell>
+                    <TableCell>{slot.price}</TableCell>
                     <TableCell>
                       <Chip
                         radius="sm"
                         size="sm"
                         color={
-                          slot.status === "AVAILABLE"
+                          slot.status === "available"
                             ? "success"
-                            : slot.status === "BOOKED"
+                            : slot.status === "booked"
                             ? "danger"
-                            : slot.status === "RESERVED"
+                            : slot.status === "reserved"
                             ? "warning"
                             : "default"
-                        }
-                      >
-                        {slot.status}
-                      </Chip>
-                    </TableCell>
-                    <TableCell>
-                      <Dropdown backdrop="opaque">
-                        <DropdownTrigger>
-                          <Button size="sm" variant="shadow" color="secondary">
-                            EDIT
-                          </Button>
-                        </DropdownTrigger>
-                        <DropdownMenu
-                          variant="faded"
-                          onAction={(key) => handleStatusChange(index, key as string)}
-                        >
-                          <DropdownItem key="AVAILABLE">
-                            <p className="text-green-500">AVAILABLE</p>
-                          </DropdownItem>
-                          <DropdownItem key="RESERVED">
-                            <p className="text-orange-400">RESERVED</p>
-                          </DropdownItem>
-                          <DropdownItem key="BOOKED">
-                            <p className="text-red-600">BOOKED</p>
-                          </DropdownItem>
-                          <DropdownItem key="UNAVAILABLE">
-                            <p>UNAVAILABLE</p>
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardBody>
-      </div>
-    </>
-  );
+                          }
+                          >
+                            {slot.status}
+                          </Chip>
+                        </TableCell>
+                        <TableCell>
+                          <Dropdown backdrop="opaque">
+                            <DropdownTrigger>
+                              <Button size="sm" variant="shadow" color="secondary">
+                                EDIT
+                              </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                              variant="faded"
+                              onAction={(key) => handleStatusChange(index, key as string)}
+                            >
+                              <DropdownItem key="available">
+                                <p className="text-green-500">AVAILABLE</p>
+                              </DropdownItem>
+                              <DropdownItem key="reserved">
+                                <p className="text-orange-400">RESERVED</p>
+                              </DropdownItem>
+                              <DropdownItem key="booked">
+                                <p className="text-red-600">BOOKED</p>
+                              </DropdownItem>
+                              <DropdownItem key="unavailable">
+                                <p>UNAVAILABLE</p>
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </Dropdown>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardBody>
+          </div>
+        </>
+);
 };

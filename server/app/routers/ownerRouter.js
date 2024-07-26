@@ -12,6 +12,9 @@ router.post('/savemedia', verifyToken, upload.fields([{ name: 'media', maxCount:
 router.get('/venuedata', verifyToken, ownerCtrl.venuedata);
 router.get('/ongoingbooking', verifyToken, ownerCtrl.ongoingbooking);
 router.get('/recentbooking', verifyToken, ownerCtrl.recentbooking);
+router.get('/venues/booking-settings', verifyToken, ownerCtrl.bookingdetails);
+router.post('/venues/update-booking-status', verifyToken, ownerCtrl.updateBookingStatus);
+
 
 
 module.exports = router;

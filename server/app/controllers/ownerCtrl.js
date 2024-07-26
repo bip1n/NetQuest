@@ -391,7 +391,70 @@ const ownerCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  bookingdetails: async (req, res) => {
+    try {
+      const owner_id = req.user.id;
+      if (!owner_id) {
+        return res.status(400).json({ error: "Owner ID is required." });
+      }
   
+      const { date } = req.query;
+      if (!date) {
+        return res.status(400).json({ error: "Date is required." });
+      }
+  
+      console.log(date);
+  
+      // Parse the date string to a JavaScript Date object to ensure proper querying
+      const queryDate = new Date(date);
+      // Set time to 00:00:00 to match only the date part
+      queryDate.setUTCHours(0, 0, 0, 0);
+  
+      // Create the end date for the range query (the next day at 00:00:00)
+      const nextDay = new Date(queryDate);
+      nextDay.setDate(queryDate.getDate() + 1);
+  
+      // Find bookings for the specified date
+      const bookings = await Booking.find({
+        owner_id,
+        date: {
+          $gte: queryDate,
+          $lt: nextDay
+        }
+      });
+  
+      return res.status(200).json(bookings);
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  
+  updateBookingStatus: async (req, res) => {
+    try {
+      const { id, status } = req.body;
+      if (!id || !status) {
+        return res.status(400).json({ error: "Booking ID and status are required." });
+      }
+  
+      const booking = await Booking.findById(id);
+      if (!booking) {
+        return res.status(404).json({ error: "Booking does not exist." });
+      }
+  
+      console.log("Current booking status:", booking.status); // Debugging line
+      booking.status = status;
+      await booking.save();
+  
+      console.log("Updated booking status:", booking.status); // Debugging line
+  
+      return res.status(200).json({ message: "Booking status updated successfully!" });
+    } catch (err) {
+      console.error(err); // Add this line
+      return res.status(500).json({ msg: err.message });
+    }
+  }
+
 }
 
 module.exports = ownerCtrl;

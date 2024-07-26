@@ -124,13 +124,17 @@ const adminCtrl = {
     changeStatus: async (req, res) => {
         try {
             const { venueId, status } = req.body;
-
             const venue = await Venue.findById(venueId);
-
-            venue.status = status;
-
-            await venue.save();
-
+            if (!venue) {
+                return res.status(404).json({ msg: 'Venue not found' });
+            }
+            const venueStatuss = await venueStatus.findOne({ owner_id: venue.owner_id });
+            if (!venueStatuss) {
+                return res.status(404).json({ msg: 'Venue status not found' });
+            }
+            venueStatuss.status = status;
+            await venueStatuss.save();
+    
             return res.status(200).json({ msg: 'Venue status changed successfully' });
         } catch (err) {
             return res.status(500).json({ msg: err.message });

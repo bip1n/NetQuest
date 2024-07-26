@@ -5,6 +5,7 @@ import { EditIcon, DeleteIcon, EyeIcon } from "../Icons";
 import { Button } from '../ui/button';
 import { useRouter } from "next/navigation";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem} from "@nextui-org/react";
+import Cookies from 'js-cookie';
 
 
 type Venue = {
@@ -59,43 +60,22 @@ export const PendingVenueStatus: React.FC = () => {
     fetchVenues();
   }, []);
 
-  const handleVerify = async (id: string) => {
+  const handleAction = async (venueId: string, status: string) => {
     try {
-      const response = await fetch("http://localhost:4000/api/verifyVenue", {
+      const token = Cookies.get('__securedAccess');
+      const response = await fetch("http://localhost:4000/api/changeStatus", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ venueId, status })
       });
 
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
-      // Update the venues state after verification
-      setVenues(venues.map(venue => venue._id === id ? { ...venue, status: 'active' } : venue));
-    } catch (error) {
-      console.error('Error verifying venue:', error);
-    }
-  };
-
-  const handleReject = async (id: string) => {
-    try {
-      const response = await fetch("http://localhost:4000/api/rejectVenue", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id })
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      // Update the venues state after rejection
-      setVenues(venues.map(venue => venue._id === id ? { ...venue, status: 'rejected' } : venue));
+      window.location.reload();
     } catch (error) {
       console.error('Error rejecting venue:', error);
     }
@@ -111,7 +91,6 @@ export const PendingVenueStatus: React.FC = () => {
             </span>
           </Tooltip>
           <Tooltip content="Edit">
-            <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => handleVerify(venue._id)}>
             <Dropdown>
               <DropdownTrigger>
                 <Button 
@@ -122,16 +101,13 @@ export const PendingVenueStatus: React.FC = () => {
               </DropdownTrigger>
               <DropdownMenu 
                 aria-label="Action event example" 
-                onAction={(key) => alert(key)}
+                onAction={(key) => handleAction(venue._id, key)}
               >
-                <DropdownItem key="new" className="text-success" color="success">Accepted</DropdownItem>
-                <DropdownItem key="copy" className="text-warning" color="warning">Pending</DropdownItem>
-                <DropdownItem key="delete" className="text-danger" color="danger">
-                  Reject Venue
-                </DropdownItem>
+                <DropdownItem key="verified" className="text-success" color="success">Accepted</DropdownItem>
+                <DropdownItem key="pending" className="text-warning" color="warning">Pending</DropdownItem>
+                <DropdownItem key="rejected" className="text-danger" color="danger">Reject Venue</DropdownItem>
               </DropdownMenu>
             </Dropdown>
-            </span>
           </Tooltip>
         </div>
       );

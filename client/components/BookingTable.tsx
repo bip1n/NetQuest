@@ -72,6 +72,9 @@ export const BookingTable = () => {
   const [checkedSlots, setCheckedSlots] = useState<number[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<CalendarDate>(today(getLocalTimeZone()));
+  const [openTime, setOpenTime] = useState<Time>(defaultOpenTime);
+  const [closeTime, setCloseTime] = useState<Time>(defaultCloseTime);
+  const [rate, setRate] = useState<number>(defaultRate);
 
   const mergeSlots = (defaultSlots: Slot[], fetchedSlots: Slot[]): Slot[] => {
     const slotMap = new Map();
@@ -94,7 +97,41 @@ export const BookingTable = () => {
   };
 
   // Function to fetch data from the server
-  const fetchSlots = async (date: CalendarDate) => {
+  const fetchVenueSettings = async () => {
+    setIsLoading(true);
+    try {
+      const token = Cookies.get("__securedAccess");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+      const response = await fetch(`http://localhost:4000/api/venues/venue-settings`, {
+        method: "GET",
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch venue settings");
+      }
+
+      const { openTime, closeTime, rate } = await response.json();
+      setOpenTime(new Time(openTime.hour, openTime.minute));
+      setCloseTime(new Time(closeTime.hour, closeTime.minute));
+      setRate(rate);
+
+      // Fetch slots data after fetching venue settings
+      fetchSlots(selectedDate, openTime, closeTime, rate);
+    } catch (error) {
+      console.error(error);
+      // Handle error state (e.g., show an error message)
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchSlots = async (date: CalendarDate, openTime: Time, closeTime: Time, rate: number) => {
     setIsLoading(true);
     try {
       const token = Cookies.get("__securedAccess");
@@ -116,7 +153,7 @@ export const BookingTable = () => {
       const fetchedSlots: Slot[] = await response.json();
       console.log(fetchedSlots);
 
-      const defaultSlots = initializeSlots(defaultOpenTime, defaultCloseTime, defaultRate, date.toDate());
+      const defaultSlots = initializeSlots(openTime, closeTime, rate, date.toDate());
       const mergedSlots = mergeSlots(defaultSlots, fetchedSlots);
       setSlots(mergedSlots);
     } catch (error) {
@@ -183,63 +220,103 @@ export const BookingTable = () => {
     }
   };
 
-  const selectedSlots = checkedSlots.map((index) => slots[index]);
-  const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
+  const handleSaveChanges = async () => {
+    setIsLoading(true);
+    try {
+      const token = Cookies.get("__securedAccess");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
 
-  useEffect(() => {
-    fetchSlots(selectedDate);
-  }, [selectedDate]);
+      const response = await fetch(`http://localhost:4000/api/venues/save-settings`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          openTime: openTime.toString(),
+          closeTime: closeTime.toString(),
+          rate: rate,
+        }),
+      });
 
-  return (
-    <>
+      if (!response.ok)
+        {
+          throw new Error("Failed to save settings");
+          }  // Re-fetch slots to update with new settings
+          fetchSlots(selectedDate, openTime, closeTime, rate);
+        } catch (error) {
+          console.error(error);
+          // Handle error state (e.g., show an error message)
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      const selectedSlots = checkedSlots.map((index) => slots[index]);
+      const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
+      
+      useEffect(() => {
+      fetchVenueSettings();
+      }, []);
+      
+      useEffect(() => {
+      fetchSlots(selectedDate, openTime, closeTime, rate);
+      }, [selectedDate]);
+      
+      return (
+      <>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <CardBody>
-          <CardHeader>
-            <h4 className="font-medium text-lg text-secondary">Open Hours and Rate</h4>
-          </CardHeader>
-          <CardBody>
-            <div className="mb-4 flex gap-2 items-center">
-              <DatePicker
-                label={"Select Date"}
-                className="max-w-[284px]"
-                minValue={today(getLocalTimeZone())}
-                labelPlacement="inside"
-                isRequired
-                maxValue={today(getLocalTimeZone()).add({ days: 7 })}
-                defaultValue={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
-              />
-              <Button onClick={() => fetchSlots(selectedDate)}>Search</Button>
-            </div>
-
-            <div className="flex gap-4">
-              <TimeInput
-                label="Opens At"
-                labelPlacement="inside"
-                defaultValue={defaultOpenTime}
-                startContent={
-                  <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
-                }
-              />
-              <TimeInput
-                label="Closes At"
-                labelPlacement="inside"
-                defaultValue={defaultCloseTime}
-                startContent={
-                  <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
-                }
-              />
-            </div>
-          </CardBody>
-          <CardBody>
-            <Input
-              type="number"
-              label="Rate"
-              labelPlacement="inside"
-              defaultValue={defaultRate.toString()}
-            />
-            <Checkbox defaultSelected isReadOnly className="mt-2"> Apply Same For All</Checkbox>
-          </CardBody>
+      <CardBody>
+      <CardHeader>
+      <h4 className="font-medium text-lg text-secondary">Open Hours and Rate</h4>
+      </CardHeader>
+      <CardBody>
+      <div className="mb-4 flex gap-2 items-center">
+      <DatePicker
+      label={"Select Date"}
+      className="max-w-[284px]"
+      minValue={today(getLocalTimeZone())}
+      labelPlacement="inside"
+      isRequired
+      maxValue={today(getLocalTimeZone()).add({ days: 7 })}
+      defaultValue={selectedDate}
+      onChange={(date) => setSelectedDate(date)}
+      />
+      <Button onClick={() => fetchSlots(selectedDate, openTime, closeTime, rate)}>Search</Button>
+      </div>        <div className="flex gap-4">
+          <TimeInput
+            label="Opens At"
+            labelPlacement="inside"
+            defaultValue={openTime}
+            onChange={setOpenTime}
+            startContent={
+              <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
+            }
+          />
+          <TimeInput
+            label="Closes At"
+            labelPlacement="inside"
+            defaultValue={closeTime}
+            onChange={setCloseTime}
+            startContent={
+              <ClockCircleLinearIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
+            }
+          />
+        </div>
+      </CardBody>
+      <CardBody>
+        <Input
+          type="number"
+          label="Rate"
+          labelPlacement="inside"
+          defaultValue={rate.toString()}
+          onChange={(e) => setRate(Number(e.target.value))}
+        />
+        <Checkbox defaultSelected isReadOnly className="mt-2"> Apply Same For All</Checkbox>
+      </CardBody>
 
           <CardFooter>
             <Button color="primary" variant="solid"> Save Changes</Button>

@@ -35,6 +35,9 @@ const venueSchema = new mongoose.Schema({
     amenities: [{
         type: String,
     }],
+    rate: {
+        type: Number,
+    },
     openat: {
         type: {
             hour: Number,

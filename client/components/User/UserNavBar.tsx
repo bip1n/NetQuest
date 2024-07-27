@@ -21,6 +21,7 @@ import { NotificationModal } from "../NotificationModal";
 import Signin from "../UserSignin";
 import Cookies from "js-cookie";
 import { Skeleton } from "../ui/skeleton";
+import { Avatar } from "@nextui-org/react";
 
 
 const navLinks = [
@@ -64,6 +65,7 @@ export const UserNavBar = () => {
           } else {
             const responseData = await response.json();
             setUserDetails(responseData.user);
+            console.log("user details",responseData.user);
             setLoginStatus(true);
           }
         } catch (error) {
@@ -175,9 +177,8 @@ export const UserNavBar = () => {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="secondary" size="icon" className="rounded-full">
-                        <CircleUser className="h-5 w-5" />
-                        <span className="sr-only">Toggle user menu</span>
-                      </Button>
+                        <Avatar src={userDetails.avatar} />
+                     </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>{userDetails.username}</DropdownMenuLabel>

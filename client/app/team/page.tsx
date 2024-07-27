@@ -6,6 +6,7 @@ import {  Card, CardHeader, CardBody } from "@nextui-org/react";
 import { UserNavigationbar } from "@/components/UserNavigationbar";
 import { GithubIcon } from "@/components/Icons";
 import {InstagramIcon} from "@/components/Assets/Instagram"
+import { UserNavBar } from "@/components/User/UserNavBar";
 
 
 interface DeveloperProps {
@@ -56,7 +57,7 @@ const DeveloperCard: React.FC<DeveloperProps> = ({
 export default function AboutPage() {
   return (
     <>
-      <UserNavigationbar/>
+      <UserNavBar/>
       <Card className="w-full h-full flex flex-col items-center justify-center overflow-auto pt-4">
         <h5 className="text-xl font-bold">THE DEV TEAM</h5>
         <div className="flex flex-col md:flex-row items-center justify-center w-full mt-4 md:space-x-4">
@@ -76,7 +77,7 @@ export default function AboutPage() {
           />
           <DeveloperCard
             name="Subodh Dhami"
-            role="Nalla"
+            role="Helper"
             github="https://www.github.com/subodhami"
             instagram="https://www.instagram.com/subodhami"
             image="https://res.cloudinary.com/dwc7juq50/image/upload/v1717429705/About/subodh_nfchh8.jpg"

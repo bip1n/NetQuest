@@ -68,7 +68,7 @@ const Venue = () => {
   return (
           <div className="grid gap-8  md:gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {loading
-            ? Array.from({ length: 4 }).map((_, index) => (
+            ? Array.from({ length:4}).map((_, index) => (
                 <Card key={index}>
                   Loading...
                   {/* <CardBody>
@@ -83,7 +83,7 @@ const Venue = () => {
               ))
             : venues.map((venue) => (
             
-            <Card x-chunk="dashboard-01-chunk-0">
+            <Card x-chunk="dashboard-01-chunk-0" onClick={() => router.push(`/${venue._id}`)} className="cursor-pointer">
                 <div className="flex flex-row items-center justify-end space-y-0 p-2 mr-1">
                     <Heart className="w-5 text-muted-foreground" />
                 </div>

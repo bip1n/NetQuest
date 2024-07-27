@@ -26,15 +26,9 @@ const AboutInfo = () => {
                         About NetQuest
                     </p>
                 </CardHeader>
-                <CardContent className='text-left'>
+                <CardContent className='text-center'>
                         <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed hendrerit purus vitae lectus tincidunt, sed blandit risus vulputate. Pellentesque ultrices urna sit amet justo finibus, at bibendum ligula tincidunt.
-                        </p>
-                        <p>
-                        Fusce ultricies augue non orci commodo, ac scelerisque orci vehicula. Duis feugiat justo ac risus finibus, sit amet faucibus enim fermentum.
-                        </p>
-                        <p>
-                        Nullam consectetur magna nec erat consequat, ac rhoncus leo tincidunt. Proin imperdiet dui vel est lacinia, et interdum ipsum tristique.
+                        NetQuest,is designed to ease the way of booking futsal venues in Kathmandu. This platform aims to provide a centralized, user-friendly system where players can effortlessly search for, book, and pay for futsal venues in real time. Simultaneously, venue owners will benefit from streamlined booking management, increased visibility, and enhanced revenue opportunities.
                         </p>
                 </CardContent>
             </Card>

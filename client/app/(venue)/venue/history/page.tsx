@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@components/ui/table";
 
 const BookingHistory = () => {
   return (

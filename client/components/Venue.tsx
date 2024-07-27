@@ -104,7 +104,8 @@ const Venue = () => {
                         <div className="text-lg font-medium flex flex-row uppercase">
                             <div className="flex space-x-2">
                                 <span>{venue.venueName}</span>
-                                <span className="text-xs text-primary-500">[{venue.rating}/5]</span>
+                                <span className="text-xs text-primary-500">[4.5
+                                  {venue.rating}/5]</span>
                             </div>
                         </div>
                         <div className="text-sm font-normal flex flex-row uppercase">
@@ -114,7 +115,7 @@ const Venue = () => {
                     <div className="flex flex-row justify-between">
                         <div>
                             <p className="font-light text-sm">
-                            Starting from{" "}
+                            Starting from{"Rs.950"}
                             <span className="text-success">
                                 {" "}
                                 Rs.{venue.price}

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
 import {
   Card,
   CardBody,
@@ -28,32 +27,36 @@ import { useRouter } from 'next/navigation';
 import Cookies from "js-cookie";
 import { useParams } from "react-router";
 
-// Define a type for the slot objects
 interface Slot {
   time: string;
-  price: number; // Rate is now required and defaults to 1800
+  price: number;
   status: string;
 }
 
 export default function Booking(props: { venueId: any; }) {
   const { venueId } = props;
   const router = useRouter();
-  const venueOwner = false; // This should be dynamic based on your user management logic
+  const venueOwner = false;
   const [isLoading, setIsLoading] = useState(false);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [checkedSlots, setCheckedSlots] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // State to track login status
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<CalendarDate>(today(getLocalTimeZone()));
-  
-  // Utility function to generate time slots from opensAt to closesAt with default rate
+
   const generateTimeSlots = (opensAt: number, closesAt: number) => {
     const defaultRate = 1800;
     const timeSlots = [];
+    const now = new Date();
+    const selectedDay = new Date(selectedDate.year, selectedDate.month - 1, selectedDate.day);
+
     for (let hour = opensAt; hour < closesAt; hour++) {
-      timeSlots.push({ time: `${hour}:00`, price: defaultRate, status: "available" });
+      const slotTime = new Date(selectedDay.getTime());
+      slotTime.setHours(hour, 0, 0, 0);
+      const status = slotTime < now ? "unavailable" : "available";
+      timeSlots.push({ time: `${hour}:00`, price: defaultRate, status });
     }
     return timeSlots;
   };
@@ -76,17 +79,15 @@ export default function Booking(props: { venueId: any; }) {
       const data = await response.json();
       const { opensAt, closesAt, bookedSlots } = data;
 
-      // Generate the time slots for the day with default rate
       const generatedSlots = generateTimeSlots(opensAt, closesAt);
 
-      // Map over generated slots and update their status and rate based on booked slots
       const updatedSlots = generatedSlots.map(slot => {
         const bookedSlot = bookedSlots.find((b: { time: string; }) => b.time === slot.time);
         if (bookedSlot) {
           return {
             ...slot,
             status: bookedSlot.status,
-            price: bookedSlot.price || slot.price, // Use the booked rate or default to the slot's rate
+            price: bookedSlot.price || slot.price,
           };
         }
         return slot;
@@ -102,11 +103,11 @@ export default function Booking(props: { venueId: any; }) {
 
   useEffect(() => {
     fetchSlotsForDate();
-    setCheckedSlots([]); // Reset the checked slots whenever the date changes
+    setCheckedSlots([]);
   }, [selectedDate]);
 
   useEffect(() => {
-    fetchSlotsForDate(); // Fetch slots when the component mounts
+    fetchSlotsForDate();
   }, []);
 
   useEffect(() => {
@@ -126,7 +127,7 @@ export default function Booking(props: { venueId: any; }) {
             const errorResponse = await response.json();
             setError(errorResponse.error);
           } else {
-            setIsLoggedIn(true); // Set login status to true if user is logged in
+            setIsLoggedIn(true);
           }
         } catch (error) {
           console.error("Error fetching user login status:", error);
@@ -136,8 +137,7 @@ export default function Booking(props: { venueId: any; }) {
     };
 
     fetchUserDetails();
-  }, []); // Empty dependency array to fetch login status only once
-
+  }, []);
 
   const handleStatusChange = (slotIndex: number, newStatus: string) => {
     const updatedSlots = [...slots];
@@ -155,7 +155,6 @@ export default function Booking(props: { venueId: any; }) {
     }
   };
 
-  // Helper function to convert 24-hour time to 12-hour format
   const convertTo12HourFormat = (time24: string) => {
     const [hours, minutes] = time24.split(':').map(Number);
     const period = hours >= 12 ? 'PM' : 'AM';
@@ -167,16 +166,16 @@ export default function Booking(props: { venueId: any; }) {
     const selectedSlots = checkedSlots.map((index) => slots[index]);
     const totalRate = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
     const selectedTimes = selectedSlots.map(slot => slot.time);
-  
+
     const data = {
       date: selectedDate.toString(),
       slots: selectedSlots,
-      price: totalRate,   
+      price: totalRate,
       owner_id: venueId,
       timestamp: new Date().getTime(),
-      times: selectedTimes, // Adding the selected times here
+      times: selectedTimes,
     };
-  
+
     localStorage.setItem('Bookdata', JSON.stringify(data));
     router.push(`/${venueId}/checkout`);
   };
@@ -187,84 +186,84 @@ export default function Booking(props: { venueId: any; }) {
 
   return (
     <>
-        <div>
-          <div className="flex mb-4 items-center gap-4">
-            <DatePicker
-              label={"Select Date"}
-              className="max-w-[284px]"
-              minValue={today(getLocalTimeZone())}
-              labelPlacement="inside"
-              maxValue={today(getLocalTimeZone()).add({ days: 7 })}
-              defaultValue={selectedDate}
-              onChange={(date) => setSelectedDate(date)}
-            />
-          </div>
-
-          {isLoading ? (
-            <div className="flex justify-center items-center h-32">
-              <Spinner label="Loading..." />
-            </div>
-          ) : (
-            slots.length > 0 ? (
-              <Table removeWrapper aria-label="Example static collection table">
-                <TableHeader>
-                  <TableColumn>TIME</TableColumn>
-                  <TableColumn>RATE</TableColumn>
-                  <TableColumn>STATUS</TableColumn>
-                  <TableColumn>SELECT</TableColumn>
-                </TableHeader>
-                <TableBody>
-                  {slots.map((slot, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{convertTo12HourFormat(slot.time)}</TableCell>
-                      <TableCell>Rs. {slot.price}</TableCell>
-                      <TableCell>
-                        <Chip
-                          radius="sm"
-                          size="sm"
-                          color={
-                            slot.status === "available"
-                              ? "success"
-                              : slot.status === "booked"
-                              ? "danger"
-                              : slot.status === "reserved"
-                              ? "warning"
-                              : "default"
-                          }
-                        >
-                          {slot.status}
-                        </Chip>
-                      </TableCell>
-                      <TableCell>
-                        <Checkbox
-                          isDisabled={slot.status !== "available"}
-                          isSelected={checkedSlots.includes(index)}
-                          onChange={(e) => handleCheckboxChange(index, e.target.checked)}
-                        ></Checkbox>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            ) : (
-              <p className="text-center text-danger-500">No slots available for the selected date.</p>
-            )
-          )}
-          <div>
-            <p className="italic text-xs">
-              <span className="text-red-500"> * </span>The{" "}
-              <span className="text-orange-500">RESERVED</span> slot might change
-              later.<span className="text-red-500"> *</span>
-            </p>
-          </div>
+      <div>
+        <div className="flex mb-4 items-center gap-4">
+          <DatePicker
+            label={"Select Date"}
+            className="max-w-[284px]"
+            minValue={today(getLocalTimeZone())}
+            labelPlacement="inside"
+            maxValue={today(getLocalTimeZone()).add({ days: 7 })}
+            defaultValue={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+          />
         </div>
+
+        {isLoading ? (
+          <div className="flex justify-center items-center h-32">
+            <Spinner label="Loading..." />
+          </div>
+        ) : (
+          slots.length > 0 ? (
+            <Table removeWrapper aria-label="Example static collection table">
+              <TableHeader>
+                <TableColumn>TIME</TableColumn>
+                <TableColumn>RATE</TableColumn>
+                <TableColumn>STATUS</TableColumn>
+                <TableColumn>SELECT</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {slots.map((slot, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{convertTo12HourFormat(slot.time)}</TableCell>
+                    <TableCell>Rs. {slot.price}</TableCell>
+                    <TableCell>
+                      <Chip
+                        radius="sm"
+                        size="sm"
+                        color={
+                          slot.status === "available"
+                            ? "success"
+                            : slot.status === "booked"
+                            ? "danger"
+                            : slot.status === "reserved"
+                            ? "warning"
+                            : "default"
+                        }
+                      >
+                        {slot.status}
+                      </Chip>
+                    </TableCell>
+                    <TableCell>
+                      <Checkbox
+                        isDisabled={slot.status !== "available"}
+                        isSelected={checkedSlots.includes(index)}
+                        onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+                      ></Checkbox>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <p className="text-center text-danger-500">No slots available for the selected date.</p>
+          )
+        )}
+        <div>
+          <p className="italic text-xs">
+            <span className="text-red-500"> * </span>The{" "}
+            <span className="text-orange-500">RESERVED</span> slot might change
+            later.<span className="text-red-500"> *</span>
+          </p>
+        </div>
+      </div>
       <div className="flex flex-col gap-2">
         <Modal
           isOpen={isOpen}
           placement="bottom-center"
           onOpenChange={(isOpen) => {
             setIsOpen(isOpen);
-            if (!isOpen) setCheckedSlots([]); // Clear selected checkboxes when modal is closed
+            if (!isOpen) setCheckedSlots([]);
           }}
         >
           <ModalContent>
@@ -284,10 +283,9 @@ export default function Booking(props: { venueId: any; }) {
                     </p>
                   ))}
                   <p>Total: Rs. {totalRate}</p>
-                  <p>Selected Times: {selectedTimes.join(", ")}</p> {/* Display selected times here */}
+                  <p>Selected Times: {selectedTimes.join(", ")}</p>
                 </ModalBody>
                 <ModalFooter>
-                  
                   {isLoggedIn ?
                   <>
                     <Button color="danger" variant="light" onPress={() => { 

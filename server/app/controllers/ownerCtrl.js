@@ -504,6 +504,22 @@ const ownerCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  bookinghistory: async (req, res) => {
+    try {
+      const owner_id = req.user.id;
+      if (!owner_id) {
+        return res.status(400).json({ error: "Owner ID is required." });
+      }
+  
+      const bookings = await Booking.find({ owner_id });
+      console.log(bookings);
+  
+      return res.status(200).json({ bookings });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  }
 }
 
 module.exports = ownerCtrl;

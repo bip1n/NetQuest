@@ -1,5 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -9,8 +12,47 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ClipLoader } from "react-spinners";
 
 const BookingHistory = () => {
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = Cookies.get("__securedAccess");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const response = await axios.get("http://localhost:4000/api/venues/booking-history", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setBookings(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [router]);
+
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+      <ClipLoader size={50} color={"#123abc"} loading={loading} />
+    </div>
+  );
+
+  if (error) return <p className="text-red-500 text-center mt-4">Error: {error}</p>;
+
   return (
     <main className="flex flex-col justify-center p-4">
       <Table>
@@ -25,13 +67,16 @@ const BookingHistory = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
+          {bookings.map((booking) => (
+            <TableRow key={booking.id}>
+            
+              <TableCell className="font-medium">{new Date(booking.date).toLocaleDateString()}</TableCell>
+              <TableCell>{booking.time}</TableCell>
+              <TableCell>{booking.user}<br/>{booking.contact}</TableCell>
+              <TableCell>{booking.status}</TableCell>
+              <TableCell className="text-right">{booking.amount}</TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </main>

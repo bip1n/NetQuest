@@ -512,10 +512,20 @@ const ownerCtrl = {
         return res.status(400).json({ error: "Owner ID is required." });
       }
   
-      const bookings = await Booking.find({ owner_id });
-      console.log(bookings);
+      // Find bookings by owner_id and populate the user details
+      const bookings = await Booking.find({ owner_id }).populate('user_id', 'username phone');
   
-      return res.status(200).json({ bookings });
+      const formattedBookings = bookings.map(booking => ({
+        id: booking._id,
+        date: booking.date,
+        time: booking.time,
+        user: booking.user_id.username, // Assuming you want the username of the user
+        status: booking.status,
+        amount: `$${booking.price.toFixed(2)}`,
+        contact: booking.user_id.phone
+        }));
+          
+      return res.status(200).json(formattedBookings);
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
